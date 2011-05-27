@@ -1,5 +1,13 @@
 var net = require('net'),
-	irc = {};
+	irc = {}, options;
+
+options = {
+	nick: 'XB-2',
+	user: 'XB',
+	real: 'Callums bitch',
+	server: 'irc.x10hosting.com',
+	port: 6667
+}
 
 irc.socket = new net.Socket();
 
@@ -29,15 +37,18 @@ irc.socket.on('connect', function()
 	});
 	setTimeout(function()
 	{
-		irc.raw('NICK XB-2');
-		irc.raw('USER XB 8 * :Callums bitch');
-		//send_data('JOIN #Giffgaff');
+		irc.raw('NICK ' + options.nick);
+		irc.raw('USER ' + options.user + ' 8 * :' + options.real);
+		irc.join('#cjasdklj', function()
+		{
+			irc.raw('PRIVMSG #cjasdklj :Hello! I am XB, how can I help?');
+		});
 	}, 1000);
 });
 
 irc.socket.setEncoding('ascii');
 irc.socket.setNoDelay();
-irc.socket.connect(6667, 'irc.x10hosting.com');
+irc.socket.connect(options.port, options.server);
 
 //handles incoming messages
 irc.handle = function(data)
@@ -49,6 +60,10 @@ irc.handle = function(data)
 		if (info)
 		{
 			irc.listeners[i][1](info, data);
+			if (irc.listeners[i][2])
+			{
+				irc.listeners.splice(i, 1);
+			}
 		}
 	}
 }
@@ -69,10 +84,20 @@ irc.raw = function(data)
 irc.listeners = [];
 irc.on = function(data, callback)
 {
-	irc.listeners.push([data, callback])
+	irc.listeners.push([data, callback, false])
+}
+irc.on_once = function(data, callback)
+{
+	irc.listeners.push([data, callback, true]);
 }
 
 
 /**
  * Convinience methods:
  */
+
+irc.join = function(chan, callback)
+{
+	irc.on_once(new RegExp('^:' + options.nick + '![^@]+@[^ ]+ JOIN :' + chan), callback);
+	irc.raw('JOIN ' + chan);
+}
