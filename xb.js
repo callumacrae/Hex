@@ -101,3 +101,14 @@ irc.join = function(chan, callback)
 	irc.on_once(new RegExp('^:' + options.nick + '![^@]+@[^ ]+ JOIN :' + chan), callback);
 	irc.raw('JOIN ' + chan);
 }
+
+irc.part = function(chan, msg, callback)
+{
+	if (typeof msg === 'function')
+	{
+		callback = msg;
+		msg = undefined;
+	}
+	irc.on_once(new RegExp('^:' + options.nick + '![^@]+@[^ ]+ PART ' + chan), callback);
+	irc.raw('PART ' + chan + ((msg !== undefined) ? ' :' + msg : ''));
+}
