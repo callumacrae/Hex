@@ -16,6 +16,10 @@ irc.socket.on('error', function(exception)
 irc.socket.on('connect', function()
 {
 	console.log('Established connection, registering and shit...');
+	irc.on('PING :(.+)', function()
+	{
+		irc.raw('PONG :$2');
+	});
 	setTimeout(function()
 	{
 		irc.raw('NICK XB-2');
@@ -51,7 +55,7 @@ irc.handle = function(data)
  */
 irc.raw = function(data)
 {
-	irc.write(data, 'ascii', function()
+	irc.write(data + '\n', 'ascii', function()
 	{
 		console.log('SENT -', data);
 	});
