@@ -5,8 +5,15 @@ irc.socket = new net.Socket();
 
 irc.socket.on('data', function(data)
 {
-	console.log('RECV -', data);
-	irc.handle(data);
+	data = data.split('\n');
+	for (var i = 0; i < data.length; i++)
+	{
+		console.log('RECV -', data[i]);
+		if (data !== '')
+		{
+			irc.handle(data[i].slice(0, -1));
+		}
+	}
 });
 irc.socket.on('error', function(exception)
 {
@@ -16,9 +23,9 @@ irc.socket.on('error', function(exception)
 irc.socket.on('connect', function()
 {
 	console.log('Established connection, registering and shit...');
-	irc.on('PING :(.+)', function()
+	irc.on(/^PING :(.+)$/i, function()
 	{
-		irc.raw('PONG :$2');
+		irc.raw('PONG :$1');
 	});
 	setTimeout(function()
 	{
@@ -28,22 +35,20 @@ irc.socket.on('connect', function()
 	}, 1000);
 });
 
-irc.setEncoding('ascii');
-irc.setNoDelay();
-irc.connect(6667, 'irc.x10hosting.com');
+irc.socket.setEncoding('ascii');
+irc.socket.setNoDelay();
+irc.socket.connect(6667, 'irc.x10hosting.com');
 
 //handles incoming messages
 irc.handle = function(data)
 {
-	foreach (regex in irc.listeners)
+	var i, info;
+	for (i = 0; i < irc.listeners.length; i++)
 	{
-		info = regex.exec(data);
+		info = irc.listeners[i][0].exec(data);
 		if (info)
 		{
-			foreach (callback in irc.listeners[regex])
-			{
-				irc.listeners[regex][callback](info, data);
-			}
+			irc.listeners[i][1](info, data);
 		}
 	}
 }
@@ -55,28 +60,16 @@ irc.handle = function(data)
  */
 irc.raw = function(data)
 {
-	irc.write(data + '\n', 'ascii', function()
+	irc.socket.write(data + '\n', 'ascii', function()
 	{
 		console.log('SENT -', data);
 	});
 }
 
-irc.listeners = {};
+irc.listeners = [];
 irc.on = function(data, callback)
 {
-	if (typeof data !== 'regex')
-	{
-		data = new RegExp('^:([0-9a-zA-Z\\[\\]\\\\`_\\^{|}\\-]+)!~?[0-9a-zA-Z.\\-\\/]+@[0-9a-zA-Z.\\-\\/]+ ' + data, 'i');
-	}
-
-	if (irc.listeners[data] === undefined)
-	{
-		irc.listeners[data] = [callback];
-	}
-	else
-	{
-		irc.listeners[data].push(callback);
-	}
+	irc.listeners.push([data, callback])
 }
 
 
