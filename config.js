@@ -3,7 +3,7 @@ var config = {
 		nick: 'Hex',
 		user: 'Hex',
 		real: 'Callums bitch',
-		pass: ''
+		pass: 'triviumtitch'
 	},
 	server: {
 		addr: 'irc.x10hosting.com',
