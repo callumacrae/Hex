@@ -2,6 +2,7 @@ var net = require('net'),
 	config = require('./config'),
 	irc = {};
 irc.info = {};
+irc.info.names = {};
 
 irc.socket = new net.Socket();
 
@@ -40,14 +41,25 @@ irc.socket.on('connect', function()
 			irc.info.nick = info[2];
 		}
 	});
+	irc.on(/^:([^!]+)!([^@]+)@([^ ]+) (JOIN|PRIVMSG) (#[^ ]+)/, function(info)
+	{
+		irc.info.names[info[5]][info[1]] = {
+			nick: info[1],
+			user: info[2],
+			host: info[3]
+		}
+	});
 	setTimeout(function()
 	{
 		irc.raw('NICK ' + config.user.nick);
 		irc.raw('USER ' + config.user.user + ' 8 * :' + config.user.real);
-		for (var i = 0; i < config.chans.length; i++)
+		setTimeout(function()
 		{
-			irc.join(config.chans[i]);
-		}
+			for (var i = 0; i < config.chans.length; i++)
+			{
+				irc.join(config.chans[i]);
+			}
+		}, 2000);
 	}, 1000);
 });
 
@@ -107,6 +119,7 @@ irc.join = function(chan, callback)
 	{
 		irc.on_once(new RegExp('^:' + irc.info.nick + '![^@]+@[^ ]+ JOIN :' + chan), callback);
 	}
+	irc.info.names[chan] = {};
 	irc.raw('JOIN ' + chan);
 }
 
@@ -142,4 +155,37 @@ irc.msg = function(chan, msg)
 irc.nick = function(nick)
 {
 	irc.raw('NICK ' + nick);
+}
+
+irc.kick = function(nick, chan, msg, ban)
+{
+	if (ban !== undefined)
+	{
+		irc.ban(nick, chan, function()
+		{
+			irc.kick(nick, chan, msg);
+		});
+		return;
+	}
+	irc.raw('KICK ' + chan + ' ' + nick + ((msg !== undefined) ? ' :' + msg : ''));
+}
+
+irc.ban = function(nick, chan, callback)
+{
+	var host, regex;
+	if (irc.info.names[chan][nick] === undefined)
+	{
+		return false;
+	}
+	host = irc.info.names[chan][nick].host;
+	regex = '^:' + irc.info.nick + '![^@]+@[^ ]+ MODE ' + chan + ' \\+b \\*!\\*@' + host;
+	console.log(regex);
+	if (callback !== undefined)
+	{
+		irc.on_once(new RegExp(regex), function()
+		{
+			callback();
+		});
+	}
+	irc.raw('MODE ' + chan + ' +b *!*@' + host);
 }
