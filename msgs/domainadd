@@ -1,0 +1,2 @@
+It's really easy to add your domain name.  Log in to cPanel using your x10Hosting subdomain, and look for Addon- or Parked-Domain.
+cPanel has built in help here, but basically, if you want the domain name to point to your existing website, use Parked, otherwise use Addon.

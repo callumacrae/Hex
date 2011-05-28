@@ -1,0 +1,2 @@
+To access your cPanel account, simply append ":2082" to the end of your website URL.  For example, "http://example.x10.mx:2082/".
+For SSL, use https://<your domain>:2083/ .
