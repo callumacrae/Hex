@@ -1,13 +1,7 @@
 var net = require('net'),
-	irc = {}, options;
-
-options = {
-	nick: 'XB-2',
-	user: 'XB',
-	real: 'Callums bitch',
-	server: 'irc.x10hosting.com',
-	port: 6667
-}
+	config = require('./config'),
+	irc = {};
+irc.info = {};
 
 irc.socket = new net.Socket();
 
@@ -31,24 +25,35 @@ irc.socket.on('error', function(exception)
 irc.socket.on('connect', function()
 {
 	console.log('Established connection, registering and shit...');
-	irc.on(/^PING :(.+)$/i, function()
+	irc.on(/^PING :(.+)$/i, function(info)
 	{
-		irc.raw('PONG :$1');
+		irc.raw('PONG :' + info[1]);
+	});
+	irc.on(/^[^ ]+ 001 ([0-9a-zA-Z\[\]\\`_\^{|}\-]+) :/, function(info)
+	{
+		irc.info.nick = info[1];
+	});
+	irc.on(/^:([^!]+)![^@]+@[^ ]+ NICK :(.+)$/, function(info)
+	{
+		if (info[1] === irc.info.nick)
+		{
+			irc.info.nick = info[2];
+		}
 	});
 	setTimeout(function()
 	{
-		irc.raw('NICK ' + options.nick);
-		irc.raw('USER ' + options.user + ' 8 * :' + options.real);
-		irc.join('#cjasdklj', function()
+		irc.raw('NICK ' + config.user.nick);
+		irc.raw('USER ' + config.user.user + ' 8 * :' + config.user.real);
+		for (var i = 0; i < config.chans.length; i++)
 		{
-			irc.msg('#cjasdklj', 'Hello! I am XB, how can I help?');
-		});
+			irc.join(config.chans[i]);
+		}
 	}, 1000);
 });
 
 irc.socket.setEncoding('ascii');
 irc.socket.setNoDelay();
-irc.socket.connect(options.port, options.server);
+irc.socket.connect(config.server.port, config.server.addr);
 
 //handles incoming messages
 irc.handle = function(data)
@@ -98,7 +103,10 @@ irc.on_once = function(data, callback)
 
 irc.join = function(chan, callback)
 {
-	irc.on_once(new RegExp('^:' + options.nick + '![^@]+@[^ ]+ JOIN :' + chan), callback);
+	if (callback !== undefined)
+	{
+		irc.on_once(new RegExp('^:' + irc.info.nick + '![^@]+@[^ ]+ JOIN :' + chan), callback);
+	}
 	irc.raw('JOIN ' + chan);
 }
 
@@ -109,7 +117,7 @@ irc.part = function(chan, msg, callback)
 		callback = msg;
 		msg = undefined;
 	}
-	irc.on_once(new RegExp('^:' + options.nick + '![^@]+@[^ ]+ PART ' + chan), callback);
+	irc.on_once(new RegExp('^:' + irc.info.nick + '![^@]+@[^ ]+ PART ' + chan), callback);
 	irc.raw('PART ' + chan + ((msg !== undefined) ? ' :' + msg : ''));
 }
 
@@ -129,4 +137,9 @@ irc.msg = function(chan, msg)
 			clearInterval(interval);
 		}
 	}, 1000);
+}
+
+irc.nick = function(nick)
+{
+	irc.raw('NICK ' + nick);
 }
