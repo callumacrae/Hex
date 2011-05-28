@@ -3,13 +3,16 @@ var config = {
 		nick: 'Hex',
 		user: 'Hex',
 		real: 'Callums bitch',
-		pass: 'triviumtitch'
+		pass: ''
 	},
 	server: {
 		addr: 'irc.x10hosting.com',
 		port: 6667
 	},
-	chans: ['#cjasdklj', '#test']
+	chans: ['#cjasdklj', '#test'],
+	su: {
+		callumacrae: 100
+	}
 }
 
 module.exports = config;
