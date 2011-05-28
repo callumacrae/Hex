@@ -1,0 +1,6 @@
+Here are the main details for setting up a MySQL database connection.  You should have created the database in cPanel first.
+Host = [ localhost ]
+Port = [ 3306 ]
+User = [ Your cPanel username + underscore + MySQL username you configured in cPanel (eg., jdoe_mysql) ]
+Pass = [ The password you set up in cPanel ]
+Database = [ Your cPanel username + underscore + database name you set up from cPanel ]

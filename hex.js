@@ -10,6 +10,7 @@ function handler(info)
 	admin = (admins[info[1]] === undefined) ? 0 : admins[info[1]].level;
 	if (admin && info[2] !== admins[info[1]].host)
 	{
+		console.log([admin, info[2], admins[info[1]].host]);
 		console.log('Unauthorised access attempt by ' + info[2] + ' as ' + info[1]);
 		return false;
 	}
@@ -17,10 +18,10 @@ function handler(info)
 	handle(info, hex, admin);
 }
 
-hex.on(/^:([^!]+)![^@]+@([^ ]+) PRIVMSG (#[^ ]+) :hex: (.+)/i, handler);
+hex.on(/^:([^!]+)![^@]+@([^ ]+) PRIVMSG (#[^ ]+) :hex:? (.+)/i, handler);
 hex.on(/^:([^!]+)![^@]+@([^ ]+) PRIVMSG ([^# ]+) :(.+)/i, handler);
 
-hex.on(/^:([^!]+)![^@]+@([^ ])+ (JOIN|QUIT)/, function(info)
+hex.on(/^:([^!]+)![^@]+@([^ ]+) (JOIN|QUIT)/, function(info)
 {
 	var nick, regex;
 	nick = info[1];
@@ -37,6 +38,7 @@ hex.on(/^:([^!]+)![^@]+@([^ ])+ (JOIN|QUIT)/, function(info)
 			{
 				if (status[1] === '3')
 				{
+					console.log(nick + ' added as admin.');
 					admins[nick] = {
 						host: info[2],
 						level: config.su[info[1]]
@@ -50,4 +52,20 @@ hex.on(/^:([^!]+)![^@]+@([^ ])+ (JOIN|QUIT)/, function(info)
 			delete admins[nick];
 			break;
 	}
+});
+
+hex.on(/^:([^!]+)![^@]+@[^ ]+ NICK :(.+)$/, function(info)
+{
+	console.log('I GOT IT');
+	var new_nick, nick;
+	nick = info[1];
+	new_nick = info[2];
+	if (admins[nick] === undefined)
+	{
+		console.log('NOT DEFINED K');
+		return false;
+	}
+
+	admins[new_nick] = admins[nick];
+	delete admins[nick];
 });

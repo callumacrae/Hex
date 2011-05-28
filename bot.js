@@ -96,7 +96,7 @@ function IRC(config)
 	{
 		__self.socket.write(data + '\n', 'ascii', function()
 		{
-			console.log('SENT -', data);
+			//console.log('SENT -', data);
 		});
 		return __self;
 	}
