@@ -1,12 +1,53 @@
 var IRC = require('./bot'),
 	config = require('./config'),
 	handle = require('./handler'),
-	hex = new IRC(config);
+	admin, hex, admins = {};
+
+hex = new IRC(config)
 
 function handler(info)
 {
-	handle(info, hex);
+	admin = (admins[info[1]] === undefined) ? 0 : admins[info[1]].level;
+	if (admin && info[2] !== admins[info[1]].host)
+	{
+		console.log('Unauthorised access attempt by ' + info[2] + ' as ' + info[1]);
+		return false;
+	}
+
+	handle(info, hex, admin);
 }
 
-hex.on(/^:([^!]+)![^@]+@[^ ]+ PRIVMSG (#[^ ]+) :hex: (.+)/i, handler);
-hex.on(/^:([^!]+)![^@]+@[^ ]+ PRIVMSG ([^# ]+) :(.+)/i, handler);
+hex.on(/^:([^!]+)![^@]+@([^ ]+) PRIVMSG (#[^ ]+) :hex: (.+)/i, handler);
+hex.on(/^:([^!]+)![^@]+@([^ ]+) PRIVMSG ([^# ]+) :(.+)/i, handler);
+
+hex.on(/^:([^!]+)![^@]+@([^ ])+ (JOIN|QUIT)/, function(info)
+{
+	var nick, regex;
+	nick = info[1];
+	if (config.su[nick] === undefined)
+	{
+		return false;
+	}
+
+	switch (info[3])
+	{
+		case 'JOIN':
+			regex = '^:NickServ![^@]+@[^ ]+ NOTICE [^ ]+ :STATUS ' + nick + ' ([0-3])';
+			hex.on_once(new RegExp(regex), function(status)
+			{
+				if (status[1] === '3')
+				{
+					admins[nick] = {
+						host: info[2],
+						level: config.su[info[1]]
+					}
+				}
+			});
+			hex.msg('NickServ', 'STATUS ' + nick);
+			break;
+
+		case 'QUIT':
+			delete admins[nick];
+			break;
+	}
+});

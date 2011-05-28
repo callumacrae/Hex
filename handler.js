@@ -1,19 +1,24 @@
-function handle(info, hex)
+function handle(info, hex, admin)
 {
 	var chan, cmd, cmd_end, index, nick, reply, pm;
 	nick = info[1];
-	chan = info[2];
+	chan = info[3];
 
 	pm =  !chan.search(/^#/);
 
-	index = info[3].indexOf(' ');
-	cmd = (index === -1) ? info[3] : info[3].slice(0, index);
-	cmd_end = (index === -1) ? null : info[3].slice(index + 1);
+	index = info[4].indexOf(' ');
+	cmd = (index === -1) ? info[4] : info[4].slice(0, index);
+	cmd_end = (index === -1) ? null : info[4].slice(index + 1);
 
 	switch (cmd.toLowerCase())
 	{
 		case 'a':
 		case 'admin':
+			if (!admin)
+			{
+				console.log(nick + ' tried to access admin without correct permissions.')
+				return false;
+			}
 			index = cmd_end.indexOf(' ');
 			cmd = (index === -1) ? cmd_end : cmd_end.slice(0, index);
 			cmd_end = (index === -1) ? null : cmd_end.slice(index + 1);
@@ -34,6 +39,19 @@ function handle(info, hex)
 						'Currently available admin commands: ',
 						'help'
 					];
+					break;
+
+				case 'join':
+					hex.join(cmd_end);
+					break;
+
+				case 'part':
+					hex.part(cmd_end, 'Requested');
+					break;
+
+				case 'quit':
+				case 'q':
+					hex.quit('Requested');
 					break;
 
 				default:
