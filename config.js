@@ -9,7 +9,7 @@ var config = {
 		addr: 'irc.x10hosting.com',
 		port: 6667
 	},
-	chans: ['#cjasdklj']
+	chans: ['#cjasdklj', '#test']
 }
 
 module.exports = config;
