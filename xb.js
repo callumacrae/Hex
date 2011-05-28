@@ -41,7 +41,7 @@ irc.socket.on('connect', function()
 		irc.raw('USER ' + options.user + ' 8 * :' + options.real);
 		irc.join('#cjasdklj', function()
 		{
-			irc.raw('PRIVMSG #cjasdklj :Hello! I am XB, how can I help?');
+			irc.msg('#cjasdklj', 'Hello! I am XB, how can I help?');
 		});
 	}, 1000);
 });
@@ -111,4 +111,22 @@ irc.part = function(chan, msg, callback)
 	}
 	irc.on_once(new RegExp('^:' + options.nick + '![^@]+@[^ ]+ PART ' + chan), callback);
 	irc.raw('PART ' + chan + ((msg !== undefined) ? ' :' + msg : ''));
+}
+
+irc.msg = function(chan, msg)
+{
+	var max_length, msgs, interval;
+	max_length = 500 - chan.length;
+
+	msgs =  msg.match(new RegExp('.{1,' + max_length + '}', 'g'));
+
+	interval = setInterval(function()
+	{
+		irc.raw('PRIVMSG ' + chan + ' :' + msgs[0]);
+		msgs.splice(0, 1);
+		if (msgs.length === 0)
+		{
+			clearInterval(interval);
+		}
+	}, 1000);
 }
