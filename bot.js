@@ -200,6 +200,12 @@ function IRC(config)
 		__self.raw('MODE ' + chan + ' +b *!*@' + host);
 		return __self;
 	}
+
+	this.quit = function(reason)
+	{
+		__self.raw('QUIT :' + reason);
+		__self.socket.end();
+	}
 }
 
 module.exports = IRC;
