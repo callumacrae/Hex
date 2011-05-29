@@ -255,14 +255,15 @@ function handle(info, hex, admin)
 		{
 			reply = [reply];
 		}
-		interval = setInterval(function()
+		var interval = setInterval(function()
 		{
-			hex.msg(chan, ((pm) ? '' : nick + ': ') + reply[0]);
-			reply.splice(0, 1);
-			if (reply.length === 0)
+			if (reply.length === 0 || reply[0] === undefined)
 			{
 				clearInterval(interval);
+				return;
 			}
+			hex.msg(chan, ((pm) ? '' : nick + ': ') + reply[0]);
+			reply.splice(0, 1);
 		}, 200);
 	}
 }
