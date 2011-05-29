@@ -174,7 +174,7 @@ function IRC(config)
 			{
 				__self.kick(nick, chan, msg);
 			});
-			return;
+			return __self;
 		}
 		__self.raw('KICK ' + chan + ' ' + nick + ((msg !== undefined) ? ' :' + msg : ''));
 		return __self;
