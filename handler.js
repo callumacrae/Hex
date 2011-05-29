@@ -45,8 +45,8 @@ function handle(info, hex, admin)
 						reply = [
 							'Full list of admin commands, followed by the required admin level in brackets:',
 							'help [all] - return a list of commands [and what they do]. (1)',
-							'ban <user> <channel> - bans a user from a channel. If channel is not specified, defaults to current. (4)',
-							'devoice <user> <channel> - devoice a user in a channel. If channel is not specified, defaults to current. (2)',
+							'ban <user> [<channel>] - bans a user from a channel. If channel is not specified, defaults to current. (4)',
+							'devoice <user> [<channel>] - devoice a user in a channel. If channel is not specified, defaults to current. (2)',
 							'gline <user> - glines the specified user. Feature not yet operational. (9)',
 							'join <channel> - join a specified channel. (7)',
 							'kick <user> [<channel>] - kick a user from a channel. If channel is not specified, defaults to current. (3)',
@@ -64,7 +64,7 @@ function handle(info, hex, admin)
 					}
 					reply = [
 						'Currently available admin commands:',
-						'help, ban, devoice, gline, join, kick, part, quit, raw, remove, restart, set, shun.',
+						'help, ban, devoice, gline, join, kick, part, quit, raw, remove, restart, set, shun, voice.',
 						'Please not that not all features may be operational, as the bot is still under development.'
 					];
 					break;

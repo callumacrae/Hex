@@ -34,8 +34,6 @@ hex.on(/^:([^!]+)![^@]+@[^ ]+ KICK (#[^ ]+) ([^ ]+) :/, function(info)
 	}
 });
 
-//:callumacrae!callumacra@lynxphp.com KICK #cjasdklj Hex :callumacrae
-
 hex.on(/^:([^!]+)![^@]+@([^ ]+) (JOIN|QUIT)/, function(info)
 {
 	var nick, regex;

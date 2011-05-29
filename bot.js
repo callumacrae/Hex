@@ -12,7 +12,7 @@ function IRC(config)
 		data = data.split('\n');
 		for (var i = 0; i < data.length; i++)
 		{
-			console.log('RECV -', data[i]);
+			//console.log('RECV -', data[i]);
 			if (data !== '')
 			{
 				__self.handle(data[i].slice(0, -1));
