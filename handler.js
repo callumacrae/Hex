@@ -49,14 +49,15 @@ function handle(info, hex, admin)
 							'devoice <user> <channel> - devoice a user in a channel. If channel is not specified, defaults to current. (2)',
 							'gline <user> - glines the specified user. Feature not yet operational. (9)',
 							'join <channel> - join a specified channel. (7)',
-							'kick <user> <channel> - kick a user from a channel. If channel is not specified, defaults to current. (3)',
-							'part <channel> - part a specified channel. (7)',
+							'kick <user> [<channel>] - kick a user from a channel. If channel is not specified, defaults to current. (3)',
+							'part [<channel>] - part a specified channel. If channel is not specified, defaults to current. (7)',
 							'quit - quits the bot. (10)',
 							'raw <command> - sends the command as raw IRC. (10)',
 							'remove <command> - deletes a command. Please bear in mind that some commands cannot be removed. (6)',
 							'restart - restarts the bot. (10)',
 							'set <command> <message> - sets a responce to a specified command (eg "set test hello world" will cause the bot to say "hello world" when the user says "hex: test"). (6)',
 							'shun <user> - tempshuns the specified user. Feature not yet operational. (9)',
+							'voice <user> [<chan>] - voice a user in a channel. If channel is not specified, defaults to current. (2)',
 							'End of help.'
 						];
 						break;
@@ -134,7 +135,11 @@ function handle(info, hex, admin)
 						reply = 'Admin level 7 required for this operation.';
 						break;
 					}
-					hex.part(cmd_end, 'Requested');
+					if (cmd_end)
+					{
+						chan = cmd_end;
+					}
+					hex.part(chan, 'Requested');
 					break;
 
 				case 'quit':
@@ -193,6 +198,20 @@ function handle(info, hex, admin)
 						break;
 					}
 					reply = 'Feature hasn\'t yet been developed.';
+					break;
+
+				case 'voice':
+					if (admin < 2)
+					{
+						reply = 'Admin level 2 required for this operation.';
+						break;
+					}
+					if (cmd_end.indexOf(' ') !== -1)
+					{
+						cmd_end = cmd_end.slice(0, cmd_end.indexOf(' '));
+						chan = cmd_end.slice(cmd_end.indexOf(' ') + 1);
+					}
+					irc.raw('MODE ' + chan + ' +v ' + cmd_end);
 					break;
 
 				default:
