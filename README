@@ -6,3 +6,5 @@ Please see the website for more information: http://irc.x10hosting.com/imadeabot
 An IRC bot for the x10hosting IRC. Uses the Jerk IRC bot.
 =======
 An IRC bot for the x10hosting IRC written completely in Node.js
+
+supervisor --watch README hex.js

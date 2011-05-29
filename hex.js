@@ -1,12 +1,13 @@
 var IRC = require('./bot'),
 	config = require('./config'),
 	handle = require('./handler'),
-	admin, hex, admins = {};
+	hex, admins = {};
 
 hex = new IRC(config)
 
-function handler(info)
+hex.on(/^:([^!]+)![^@]+@([^ ]+) PRIVMSG ([^ ]+) :(.+)/i, function(info)
 {
+	var admin, ad_info;
 	admin = (admins[info[1]] === undefined) ? 0 : admins[info[1]].level;
 	if (admin && info[2] !== admins[info[1]].host)
 	{
@@ -15,11 +16,26 @@ function handler(info)
 		return false;
 	}
 
-	handle(info, hex, admin);
-}
+	if (info[3].search('#') !== -1)
+	{
+		ad_info = /^hex:? (.+)$/.exec(info[4]);
+		if (ad_info)
+		{
+			info[4] = ad_info[1];
+			handle(info, hex, admin);
+		}
+	}
+	else
+	{
+		ad_info = /^hex:? (.+)$/.exec(info[4]);
+		if (ad_info)
+		{
+			info[4] = ad_info[1];
+		}
+		handle(info, hex, admin);
+	}
 
-hex.on(/^:([^!]+)![^@]+@([^ ]+) PRIVMSG (#[^ ]+) :hex:? (.+)/i, handler);
-hex.on(/^:([^!]+)![^@]+@([^ ]+) PRIVMSG ([^# ]+) :(.+)/i, handler);
+});
 
 hex.on(/^:([^!]+)![^@]+@[^ ]+ KICK (#[^ ]+) ([^ ]+) :/, function(info)
 {
