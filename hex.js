@@ -56,13 +56,11 @@ hex.on(/^:([^!]+)![^@]+@([^ ]+) (JOIN|QUIT)/, function(info)
 
 hex.on(/^:([^!]+)![^@]+@[^ ]+ NICK :(.+)$/, function(info)
 {
-	console.log('I GOT IT');
 	var new_nick, nick;
 	nick = info[1];
 	new_nick = info[2];
 	if (admins[nick] === undefined)
 	{
-		console.log('NOT DEFINED K');
 		return false;
 	}
 
