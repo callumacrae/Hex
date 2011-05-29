@@ -146,12 +146,14 @@ function handle(info, hex, admin)
 
 				case 'quit':
 				case 'q':
+				case 'restart':
 					if (admin < 10)
 					{
 						reply = 'Admin level 10 required for this operation.';
 						break;
 					}
 					hex.quit('Requested');
+					process.exit();
 					break;
 
 				case 'raw':
@@ -173,9 +175,6 @@ function handle(info, hex, admin)
 					var fs = require('fs');
 					fs.unlinkSync('./msgs/' + cmd_end);
 					reply = 'Successfully removed ' + cmd_end;
-					break;
-
-				case 'restart':
 					break;
 
 				case 'set':
