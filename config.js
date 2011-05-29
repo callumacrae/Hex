@@ -2,7 +2,7 @@ var config = {
 	user: {
 		nick: 'Hex',
 		user: 'Hex',
-		real: 'Callums bitch',
+		real: 'Hexidecimal',
 		pass: ''
 	},
 	server: {
@@ -11,7 +11,8 @@ var config = {
 	},
 	chans: ['#cjasdklj', '#test'],
 	su: {
-		callumacrae: 100
+		callumacrae: 100,
+		Sharky: 99
 	}
 }
 
