@@ -35,6 +35,8 @@ function handle(info, hex, admin)
 			cmd = (index === -1) ? cmd_end : cmd_end.slice(0, index);
 			cmd_end = (index === -1) ? null : cmd_end.slice(index + 1);
 
+			console.log('"admin ' + cmd + '" called by ' + nick);
+
 			switch (cmd.toLowerCase())
 			{
 				case 'help':
@@ -44,20 +46,20 @@ function handle(info, hex, admin)
 					{
 						reply = [
 							'Full list of admin commands, followed by the required admin level in brackets:',
-							'help [all] - return a list of commands [and what they do]. (1)',
-							'ban <user> [<channel>] - bans a user from a channel. If channel is not specified, defaults to current. (4)',
-							'devoice <user> [<channel>] - devoice a user in a channel. If channel is not specified, defaults to current. (2)',
-							'gline <user> - glines the specified user. Feature not yet operational. (9)',
-							'join <channel> - join a specified channel. (7)',
-							'kick <user> [<channel>] - kick a user from a channel. If channel is not specified, defaults to current. (3)',
-							'part [<channel>] - part a specified channel. If channel is not specified, defaults to current. (7)',
-							'quit - quits the bot. (10)',
-							'raw <command> - sends the command as raw IRC. (10)',
-							'remove <command> - deletes a command. Please bear in mind that some commands cannot be removed. (6)',
-							'restart - restarts the bot. (10)',
-							'set <command> <message> - sets a responce to a specified command (eg "set test hello world" will cause the bot to say "hello world" when the user says "hex: test"). (6)',
-							'shun <user> - tempshuns the specified user. Feature not yet operational. (9)',
-							'voice <user> [<chan>] - voice a user in a channel. If channel is not specified, defaults to current. (2)',
+							'help [all]                  - return a list of commands [and what they do]. (1)',
+							'ban <user> [<channel>]      - bans a user from a channel. If channel is not specified, defaults to current. (4)',
+							'devoice <user> [<channel>]  - devoice a user in a channel. If channel is not specified, defaults to current. (2)',
+							'gline <user>                - glines the specified user. Feature not yet operational. (9)',
+							'join <channel>              - join a specified channel. (7)',
+							'kick <user> [<channel>]     - kick a user from a channel. If channel is not specified, defaults to current. (3)',
+							'part [<channel>]            - part a specified channel. If channel is not specified, defaults to current. (7)',
+							'quit                        - quits the bot. (10)',
+							'raw <command>               - sends the command as raw IRC. (10)',
+							'remove <command>            - deletes a command. Please bear in mind that some commands cannot be removed. (6)',
+							'restart                     - restarts the bot. (10)',
+							'set <command> <message>     - sets a responce to a specified command (eg "set test hello world" will cause the bot to say "hello world" when the user says "hex: test"). (6)',
+							'shun <user>                 - tempshuns the specified user. Feature not yet operational. (9)',
+							'voice <user> [<chan>]       - voice a user in a channel. If channel is not specified, defaults to current. (2)',
 							'End of help.'
 						];
 						break;
