@@ -21,6 +21,21 @@ function handler(info)
 hex.on(/^:([^!]+)![^@]+@([^ ]+) PRIVMSG (#[^ ]+) :hex:? (.+)/i, handler);
 hex.on(/^:([^!]+)![^@]+@([^ ]+) PRIVMSG ([^# ]+) :(.+)/i, handler);
 
+hex.on(/^:([^!]+)![^@]+@[^ ]+ KICK (#[^ ]+) ([^ ]+) :/, function(info)
+{
+	if (info[3] === hex.info.nick)
+	{
+		console.log('Kicked from ' + info[2] + ' by ' + info[1] + '. Rejoining.');
+		hex.join(info[2], function()
+		{
+			console.log('Successfully rejoined ' + info[2]);
+			hex.msg(info[2], info[1] + ': If you want me to go away, please ask a bot admin to remove me using "admin part".');
+		});
+	}
+});
+
+//:callumacrae!callumacra@lynxphp.com KICK #cjasdklj Hex :callumacrae
+
 hex.on(/^:([^!]+)![^@]+@([^ ]+) (JOIN|QUIT)/, function(info)
 {
 	var nick, regex;
