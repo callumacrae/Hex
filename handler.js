@@ -374,8 +374,54 @@ handler = function(info, hex, admin, config, admins)
 			console.log('"admin ' + ((log === undefined) ? cmd : log) + '" called by ' + nick);
 			break;
 
+		case 'g':
+		case 'google':
+			reply = 'http://google.com/search?q=' + encodeURIComponent(cmd_end);
+			break;
+
 		case 'help':
 			reply = 'Under construction.';
+			break;
+
+		case 'lmgtfy':
+			reply = 'http://lmgtfy.com/?q=' + encodeURIComponent(cmd_end);
+			break;
+
+		case 'w':
+		case 'wiki':
+			var http = require('http');
+			var options = {
+				host: 'x10hosting.com',
+				port: 80,
+				path: '/wiki/index.php?title=Special%3ASearch&search=' + encodeURIComponent(cmd_end),
+				method: 'GET'
+			};
+
+			var req = http.request(options, function(res)
+			{
+				if (res.statusCode === 302 || res.statusCode === 301)
+				{
+					var url = res.headers.location
+				}
+				else
+				{
+					var url = 'http://x10hosting.com/wiki/index.php?title=Special%3ASearch&search=' + encodeURIComponent(cmd_end);
+				}
+				hex.msg(chan, nick + ': ' + url);
+				res.setEncoding('utf8');
+			});
+			req.on('error', function(e)
+			{
+				console.log('Problem with request: ' + e.message);
+			});
+			req.end();
+
+			break;
+
+		case 'wa':
+		case 'wolfram':
+		case 'wolframalpha':
+			reply = 'http://www.wolframalpha.com/input/?i=' + encodeURIComponent(cmd_end);
 			break;
 
 		case 'whoami':
@@ -391,7 +437,10 @@ handler = function(info, hex, admin, config, admins)
 			}
 			catch(err)
 			{
-				//command not found
+				if (pm)
+				{
+					reply = 'Command not found. Please try "help" for a list of commands.';
+				}
 				break;
 			}
 			reply = file.split('\n');
