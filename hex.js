@@ -22,7 +22,7 @@ hex.on(/^:([^!]+)![^@]+@([^ ]+) PRIVMSG ([^ ]+) :(.+)/i, function(info)
 		if (ad_info)
 		{
 			info[4] = ad_info[1];
-			handle(info, hex, admin);
+			handle(info, hex, admin, config, admins);
 		}
 	}
 	else
@@ -32,7 +32,7 @@ hex.on(/^:([^!]+)![^@]+@([^ ]+) PRIVMSG ([^ ]+) :(.+)/i, function(info)
 		{
 			info[4] = ad_info[1];
 		}
-		handle(info, hex, admin);
+		handle(info, hex, admin, config, admins);
 	}
 
 });
@@ -95,4 +95,26 @@ hex.on(/^:([^!]+)![^@]+@[^ ]+ NICK :(.+)$/, function(info)
 
 	admins[new_nick] = admins[nick];
 	delete admins[nick];
+});
+
+var Twitter = require('./twitter');
+var twit = new Twitter({
+	user: config.twitter.user,
+	pass: config.twitter.pass
+}, 'follow=43312221');
+
+twit.on('tweet', function(tweet)
+{
+	//remember to change this to #x10hosting -__-
+	hex.msg('#cjasdklj', 'New tweet from @x10hosting: ' + tweet)
+});
+
+twit.on('connected', function()
+{
+	console.log('Tweet streamer connected.');
+});
+
+twit.on('error', function(err)
+{
+	console.log('Tweet streamer error: ' + err);
 });

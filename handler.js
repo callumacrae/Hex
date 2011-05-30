@@ -1,4 +1,4 @@
-function handle(info, hex, admin)
+function handle(info, hex, admin, config, admins)
 {
 	var chan, cmd, cmd_end, index, nick, reply, pm;
 	nick = info[1];
@@ -205,6 +205,73 @@ function handle(info, hex, admin)
 					reply = 'Feature hasn\'t yet been developed.';
 					break;
 
+				case 'su':
+					//dont check whether admin is level 10 yet - level 3s can list admins
+					cmd = cmd_end.split(' ', 3);
+					switch (cmd[0].toLowerCase())
+					{
+						case 'add':
+						case 'set':
+							if (admin < 10)
+							{
+								reply = 'Admin level 10 required for this operation.';
+								break;
+							}
+							regex = '^:NickServ![^@]+@[^ ]+ NOTICE [^ ]+ :STATUS ' + cmd[1] + ' ([0-3])';
+							hex.on_once(new RegExp(regex), function(status)
+							{
+								if (status[1] === '3')
+								{
+									console.log(cmd[1] + ' added as admin.');
+									if (hex.info.names[chan][cmd[1]] !== undefined)
+									{
+										admins[cmd[1]] = {
+											host: hex.info.names[chan][cmd[1]].host,
+											level: cmd[2]
+										}
+									}
+								}
+							});
+							hex.msg('NickServ', 'STATUS ' + cmd[1]);
+							config.su[cmd[1]] = cmd[2];
+							console.log(cmd[1] + ' added as admin by ' + nick);
+							reply = 'Successfully added ' + cmd[1] + ' as level ' + cmd[2];
+							break;
+
+						case 'remove':
+						case 'rm':
+							if (admin < 10)
+							{
+								reply = 'Admin level 10 required for this operation.';
+								break;
+							}
+							delete config.su[cmd[1]];
+							delete admins[cmd[1]];
+							reply = 'Successfully removed ' + cmd[1] + ' as super user.';
+							break;
+
+						case 'list':
+							var su_nick;
+							if (admin < 3)
+							{
+								reply = 'Admin level 3 required for this operation.';
+								break;
+							}
+							chan = nick;
+							reply = ['List of admins, followed by their level and whether they are signed in or not:'];
+							for (su_nick in config.su)
+							{
+								reply.push(su_nick + ' is level ' + config.su[su_nick] + ' and is' + ((admins[su_nick] === undefined) ? ' not' : '') + ' currently signed in.');
+							}
+							reply.push('End of list.');
+							break;
+
+						case 'default':
+							reply = 'The only commands under "admin su" are "add" (or "set"), "remove" (or "rm"), and "list".';
+							break;
+					}
+					break;
+
 				case 'voice':
 					if (admin < 2)
 					{
@@ -216,7 +283,7 @@ function handle(info, hex, admin)
 						cmd_end = cmd_end.slice(0, cmd_end.indexOf(' '));
 						chan = cmd_end.slice(cmd_end.indexOf(' ') + 1);
 					}
-					irc.raw('MODE ' + chan + ' +v ' + cmd_end);
+					hex.raw('MODE ' + chan + ' +v ' + cmd_end);
 					break;
 
 				default:
