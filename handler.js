@@ -466,3 +466,61 @@ handler = function(info, hex, admin, config, admins)
 	}
 	return flush;
 }
+
+html_decode = function(s)
+{
+	var c, m, d = s;
+
+	arr = d.match(/&#[0-9]{1,5};/g);
+
+	// if no matches found in string then skip
+	if (arr !== null)
+	{
+		for (var x = 0; x < arr.length; x++)
+		{
+			m = arr[x];
+			c = m.substring(2, m.length - 1);
+			if (c >= -32768 && c <= 65535)
+			{
+				d = d.replace(m, String.fromCharCode(c));
+			}
+			else
+			{
+				d = d.replace(m, "");
+			}
+		}
+	}
+	return d;
+}
+
+//URL sent in chat
+url_handler = function(url, chan)
+{
+	var http = require('http');
+	var options = {
+		host: url[1],
+		port: 80,
+		path: url[2]
+	};
+
+	var req = http.get(options, function(res)
+	{
+		var title;
+		res.setEncoding('utf8');
+		if (res.statusCode === 200)
+		{
+			res.on('data', function (chunk)
+			{
+				title = /\<title\>([^<]+)\<\/title\>/i.exec(chunk);
+				if (title)
+				{
+					hex.msg(chan, 'Page title: "' + html_decode(title[1]) + '"');
+				}
+			});
+			return;
+		}
+	}).on('error', function(e)
+	{
+		console.log('Problem with HTTP request: ' + e.message);
+	});
+}
