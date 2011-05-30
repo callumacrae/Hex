@@ -1,6 +1,6 @@
 function handle(info, hex, admin, config, admins)
 {
-	var chan, cmd, cmd_end, index, nick, reply, pm;
+	var chan, cmd, cmd_end, index, nick, reply, pm, log;
 	nick = info[1];
 	chan = info[3];
 
@@ -38,8 +38,6 @@ function handle(info, hex, admin, config, admins)
 			index = cmd_end.indexOf(' ');
 			cmd = (index === -1) ? cmd_end : cmd_end.slice(0, index);
 			cmd_end = (index === -1) ? null : cmd_end.slice(index + 1);
-
-			console.log('"admin ' + cmd + '" called by ' + nick);
 
 			switch (cmd.toLowerCase())
 			{
@@ -87,6 +85,7 @@ function handle(info, hex, admin, config, admins)
 						chan = cmd_end.slice(cmd_end.indexOf(' ') + 1);
 					}
 					hex.kick(cmd_end, chan, 'Requested (' + nick + ')', true);
+					log = 'ban ' + cmd_end + ' (from ' + chan + ')';
 					break;
 
 				case 'devoice':
@@ -100,7 +99,8 @@ function handle(info, hex, admin, config, admins)
 						cmd_end = cmd_end.slice(0, cmd_end.indexOf(' '));
 						chan = cmd_end.slice(cmd_end.indexOf(' ') + 1);
 					}
-					irc.raw('MODE ' + chan + ' -v ' + cmd_end);
+					hex.raw('MODE ' + chan + ' -v ' + cmd_end);
+					log = 'devoice ' + cmd_end + ' (from ' + chan + ')';
 					break;
 
 				case 'gline':
@@ -119,6 +119,7 @@ function handle(info, hex, admin, config, admins)
 						break;
 					}
 					hex.join(cmd_end);
+					log = 'join ' + cmd_end;
 					break;
 
 				case 'kick':
@@ -133,6 +134,7 @@ function handle(info, hex, admin, config, admins)
 						chan = cmd_end.slice(cmd_end.indexOf(' ') + 1);
 					}
 					hex.kick(cmd_end, chan, 'Requested (' + nick + ')');
+					log = 'kick ' + cmd_end + ' (from ' + chan + ')';
 					break;
 
 				case 'part':
@@ -145,7 +147,7 @@ function handle(info, hex, admin, config, admins)
 					{
 						chan = cmd_end;
 					}
-					hex.part(chan, 'Requested');
+					hex.part(chan, 'Requested (' + nick + ')');
 					break;
 
 				case 'quit':
@@ -156,7 +158,8 @@ function handle(info, hex, admin, config, admins)
 						reply = 'Admin level 10 required for this operation.';
 						break;
 					}
-					hex.quit('Requested');
+					hex.quit('Requested (' + nick + ')');
+					console.log('Restart called by ' + nick);
 					process.exit();
 					break;
 
@@ -167,6 +170,7 @@ function handle(info, hex, admin, config, admins)
 						break;
 					}
 					hex.raw(cmd_end);
+					console.log(nick + ' sent RAW: ' + cmd_end);
 					break;
 
 				case 'remove':
@@ -179,6 +183,7 @@ function handle(info, hex, admin, config, admins)
 					var fs = require('fs');
 					fs.unlinkSync('./msgs/' + cmd_end);
 					reply = 'Successfully removed ' + cmd_end;
+					log = cmd + ' ' + cmd_end;
 					break;
 
 				case 'set':
@@ -190,6 +195,8 @@ function handle(info, hex, admin, config, admins)
 
 					cmd = cmd_end.slice(0, cmd_end.indexOf(' '));
 					cmd_end = cmd_end.slice(cmd_end.indexOf(' ') + 1);
+
+					log = 'set ' + cmd;
 
 					var fs = require('fs');
 					fs.writeFileSync('./msgs/' + cmd, cmd_end);
@@ -270,6 +277,7 @@ function handle(info, hex, admin, config, admins)
 							reply = 'The only commands under "admin su" are "add" (or "set"), "remove" (or "rm"), and "list".';
 							break;
 					}
+					log = 'su ' + cmd;
 					break;
 
 				case 'voice':
@@ -290,6 +298,7 @@ function handle(info, hex, admin, config, admins)
 					reply = 'Command not found. Try "hex: admin help" for a list of admin features.';
 					break;
 			}
+			console.log('"admin ' + ((log === undefined) ? cmd : log) + '" called by ' + nick);
 			break;
 
 		case 'help':

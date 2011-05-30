@@ -13,7 +13,7 @@ var config = {
 		user: 'callumacrae',
 		pass: ''
 	},
-	chans: ['#cjasdklj', '#test'],
+	chans: ['#cjasdklj'],
 	su: {
 		callumacrae: 100,
 		Sharky: 99
