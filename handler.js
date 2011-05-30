@@ -387,6 +387,36 @@ handler = function(info, hex, admin, config, admins)
 			reply = 'http://lmgtfy.com/?q=' + encodeURIComponent(cmd_end);
 			break;
 
+		case 'uptime':
+			var num, uptime = new Date().getTime() - start.getTime();
+			//86400000
+			reply = 'Uptime: ';
+			if (uptime > 86400000)
+			{
+				num = Math.floor(uptime / 86400000)
+				reply += num + ' day' + ((num === 1) ? '' : 's') + ', ';
+				uptime = uptime % 86400000;
+			}
+			if (uptime > 3600000)
+			{
+				num = Math.floor(uptime / 3600000);
+				reply += num + ' hour' + ((num === 1) ? '' : 's') + ', ';
+				uptime = uptime % 3600000;
+			}
+			if (uptime > 60000)
+			{
+				num = Math.floor(uptime / 60000);
+				reply += num + ' minute' + ((num === 1) ? '' : 's') + ' and ';
+				uptime = uptime % 60000;
+			}
+			if (uptime > 1000)
+			{
+				num = Math.round(uptime / 1000);
+				reply += num + ' second' + ((num === 1) ? '' : 's') + '.';
+			}
+			break;
+
+
 		case 'w':
 		case 'wiki':
 			var http = require('http');
