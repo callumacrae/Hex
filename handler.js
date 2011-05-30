@@ -1,6 +1,7 @@
 function handle(info, hex, admin, config, admins)
 {
-	var chan, cmd, cmd_end, index, nick, reply, pm, log;
+	var chan, cmd, cmd_end, index, flush, nick, reply, pm, log;
+	flush = false;
 	nick = info[1];
 	chan = info[3];
 
@@ -119,7 +120,9 @@ function handle(info, hex, admin, config, admins)
 						break;
 					}
 					hex.join(cmd_end);
+					config.chans.push(cmd_end);
 					log = 'join ' + cmd_end;
+					flush = true;
 					break;
 
 				case 'kick':
@@ -147,7 +150,9 @@ function handle(info, hex, admin, config, admins)
 					{
 						chan = cmd_end;
 					}
+					config.chans.splice(config.chans.indexOf(chan), 1);
 					hex.part(chan, 'Requested (' + nick + ')');
+					flush = true;
 					break;
 
 				case 'quit':
@@ -243,6 +248,7 @@ function handle(info, hex, admin, config, admins)
 							config.su[cmd[1]] = cmd[2];
 							console.log(cmd[1] + ' added as admin by ' + nick);
 							reply = 'Successfully added ' + cmd[1] + ' as level ' + cmd[2];
+							flush = true;
 							break;
 
 						case 'remove':
@@ -255,6 +261,7 @@ function handle(info, hex, admin, config, admins)
 							delete config.su[cmd[1]];
 							delete admins[cmd[1]];
 							reply = 'Successfully removed ' + cmd[1] + ' as super user.';
+							flush = true;
 							break;
 
 						case 'list':
@@ -403,6 +410,7 @@ function handle(info, hex, admin, config, admins)
 			reply.splice(0, 1);
 		}, 200);
 	}
+	return flush;
 }
 
 module.exports = handle;
