@@ -1,4 +1,4 @@
-function handle(info, hex, admin, config, admins)
+handler = function(info, hex, admin, config, admins)
 {
 	var chan, cmd, cmd_end, index, flush, nick, reply, pm, log;
 	flush = false;
@@ -102,6 +102,11 @@ function handle(info, hex, admin, config, admins)
 					}
 					hex.raw('MODE ' + chan + ' -v ' + cmd_end);
 					log = 'devoice ' + cmd_end + ' (from ' + chan + ')';
+					break;
+
+				case 'flush':
+					flush = true;
+					reply = 'Flushing...';
 					break;
 
 				case 'gline':
@@ -412,5 +417,3 @@ function handle(info, hex, admin, config, admins)
 	}
 	return flush;
 }
-
-module.exports = handle;
