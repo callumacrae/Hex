@@ -3,7 +3,9 @@ var IRC = require('./bot'),
 	fs = require('fs'),
 	cache, handler, hex, admins = {};
 
-cache = fs.readFileSync('./cache.json', 'utf8');
+var start = new Date();
+
+cache = fs.readFileSync('./config/cache.json', 'utf8');
 cache = JSON.parse(cache);
 
 config.chans = cache.chans;
