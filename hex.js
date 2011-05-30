@@ -1,14 +1,16 @@
 var IRC = require('./bot'),
 	config = require('./config'),
-	handle = require('./handler'),
 	fs = require('fs'),
-	cache, hex, admins = {};
+	cache, handler, hex, admins = {};
 
 cache = fs.readFileSync('./cache.json', 'utf8');
 cache = JSON.parse(cache);
 
 config.chans = cache.chans;
 config.su = cache.su;
+
+var data = fs.readFileSync('./handler.js', 'utf8');
+eval(data); //IM SORRY!
 
 hex = new IRC(config)
 
@@ -29,7 +31,7 @@ hex.on(/^:([^!]+)![^@]+@([^ ]+) PRIVMSG ([^ ]+) :(.+)/i, function(info)
 		if (ad_info)
 		{
 			info[4] = ad_info[1];
-			flush = handle(info, hex, admin, config, admins);
+			flush = handler(info, hex, admin, config, admins);
 		}
 	}
 	else
@@ -39,13 +41,22 @@ hex.on(/^:([^!]+)![^@]+@([^ ]+) PRIVMSG ([^ ]+) :(.+)/i, function(info)
 		{
 			info[4] = ad_info[1];
 		}
-		flush = handle(info, hex, admin, config, admins);
+		flush = handler(info, hex, admin, config, admins);
 	}
 
 	if (flush)
 	{
 		flush = JSON.stringify(cache);
-		fs.writeFileSync('cache.json', flush, 'utf8');
+		fs.writeFileSync('./config/cache.json', flush, 'utf8');
+		fs.readFile('./handler.js', 'utf8', function(err, data)
+		{
+			if (err)
+			{
+				console.log(err);
+				return;
+			}
+			eval(data);
+		});
 	}
 });
 
