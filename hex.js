@@ -62,33 +62,7 @@ hex.on(/^:([^!]+)![^@]+@([^ ]+) PRIVMSG ([^ ]+) :(.+)/i, function(info)
 	url = /https?:\/{2}([a-zA-Z0-9\-.]+\.[a-zA-Z]{2,5})(\/\S*)?/.exec(info[4])
 	if (url)
 	{
-		var http = require('http');
-		var options = {
-			host: url[1],
-			port: 80,
-			path: url[2]
-		};
-
-		var req = http.get(options, function(res)
-		{
-			var title;
-			res.setEncoding('utf8');
-			if (res.statusCode === 200)
-			{
-				res.on('data', function (chunk)
-				{
-					title = /\<title\>([^<]+)\<\/title\>/i.exec(chunk);
-					if (title)
-					{
-						hex.msg(info[3], 'Page title: "' + title[1] + '"');
-					}
-				});
-				return;
-			}
-		}).on('error', function(e)
-		{
-			console.log('Problem with HTTP request: ' + e.message);
-		});
+		url_handler(url, info[3]);
 	}
 });
 
