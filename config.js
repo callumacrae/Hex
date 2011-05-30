@@ -9,6 +9,10 @@ var config = {
 		addr: 'irc.x10hosting.com',
 		port: 6667
 	},
+	twitter: {
+		user: 'callumacrae',
+		pass: ''
+	},
 	chans: ['#cjasdklj', '#test'],
 	su: {
 		callumacrae: 100,
