@@ -1,13 +1,20 @@
 var IRC = require('./bot'),
 	config = require('./config'),
 	handle = require('./handler'),
-	hex, admins = {};
+	fs = require('fs'),
+	cache, hex, admins = {};
+
+cache = fs.readFileSync('./cache.json', 'utf8');
+cache = JSON.parse(cache);
+
+config.chans = cache.chans;
+config.su = cache.su;
 
 hex = new IRC(config)
 
 hex.on(/^:([^!]+)![^@]+@([^ ]+) PRIVMSG ([^ ]+) :(.+)/i, function(info)
 {
-	var admin, ad_info;
+	var admin, ad_info, flush;
 	admin = (admins[info[1]] === undefined) ? 0 : admins[info[1]].level;
 	if (admin && info[2] !== admins[info[1]].host)
 	{
@@ -22,7 +29,7 @@ hex.on(/^:([^!]+)![^@]+@([^ ]+) PRIVMSG ([^ ]+) :(.+)/i, function(info)
 		if (ad_info)
 		{
 			info[4] = ad_info[1];
-			handle(info, hex, admin, config, admins);
+			flush = handle(info, hex, admin, config, admins);
 		}
 	}
 	else
@@ -32,9 +39,14 @@ hex.on(/^:([^!]+)![^@]+@([^ ]+) PRIVMSG ([^ ]+) :(.+)/i, function(info)
 		{
 			info[4] = ad_info[1];
 		}
-		handle(info, hex, admin, config, admins);
+		flush = handle(info, hex, admin, config, admins);
 	}
 
+	if (flush)
+	{
+		flush = JSON.stringify(cache);
+		fs.writeFileSync('cache.json', flush, 'utf8');
+	}
 });
 
 hex.on(/^:([^!]+)![^@]+@[^ ]+ KICK (#[^ ]+) ([^ ]+) :/, function(info)

@@ -13,7 +13,6 @@ var config = {
 		user: 'callumacrae',
 		pass: ''
 	},
-	chans: ['#cjasdklj'],
 	topic: {
 		root: [
 			'Welcome! Bienvenue! \xE6\xAD\xA1\xE8\xBF\x8E! Willkommen! Benvenuto! \xEB\xB0\x98\xEA\xB0\x91\xEC\x8A\xB5\xEB\x8B\x88\xEB\x8B\xA4! Seja bem-vindo(a)! Bienvenido!',
@@ -23,11 +22,7 @@ var config = {
 		],
 		seperator: '\xE2\x96\xBA'
 	},
-	tmp: {},
-	su: {
-		callumacrae: 100,
-		Sharky: 99
-	}
+	tmp: {}
 }
 
 module.exports = config;
