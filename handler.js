@@ -280,6 +280,67 @@ function handle(info, hex, admin, config, admins)
 					log = 'su ' + cmd;
 					break;
 
+				case 'topic':
+					if (admin < 10)
+					{
+						reply = 'Admin level 10 required for this operation.';
+						break;
+					}
+					if (cmd_end === null)
+					{
+						reply = 'You need to specify a command, such as append / set / root.';
+						break;
+					}
+					var end, topic;
+					end = (cmd_end.indexOf(' ') === -1) ? undefined : cmd_end.indexOf(' ');
+					cmd = cmd_end.slice(0, end);
+					cmd_end = cmd_end.slice(end + 1);
+
+					if (cmd_end === cmd)
+					{
+						cmd_end = null;
+					}
+
+					if (config.tmp.topic === undefined)
+					{
+						config.tmp.topic = config.topic.root.join(' ' + config.topic.seperator + ' ');
+					}
+
+					switch (cmd.toLowerCase())
+					{
+						case 'append':
+							log = 'topic append';
+							topic = config.topic.root;
+							topic.push(cmd_end);
+							topic = topic.join(' ' + config.topic.seperator + ' ');
+							break;
+
+						case 'set':
+							log = 'topic set';
+							topic = config.topic.root;
+							topic[cmd_end.slice(0, 1) - 1] = cmd_end.slice(2);
+							topic = topic.join(' ' + config.topic.seperator + ' ');
+							break;
+
+						case 'root':
+							log = 'topic root';
+							topic = config.tmp.topic;
+							break;
+
+						default:
+							topic = cmd + (cmd_end ? ' ' + cmd_end : '');
+							topic = topic.split(' ' + config.topic.seperator + ' ');
+							config.topic.root = topic;
+							topic = config.topic.root.join(' ' + config.topic.seperator + ' ');
+							break;
+					}
+					if (topic)
+					{
+						topic = '\xE2\x96\xBA ' + topic + ' \xE2\x97\x84';
+						hex.raw('TOPIC ' + chan + ' :' + topic);
+					}
+					break;
+
 				case 'voice':
 					if (admin < 2)
 					{
