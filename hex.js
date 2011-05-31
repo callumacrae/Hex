@@ -22,7 +22,6 @@ hex.on(/^:([^!]+)![^@]+@([^ ]+) PRIVMSG ([^ ]+) :(.+)/i, function(info)
 	admin = (admins[info[1]] === undefined) ? 0 : admins[info[1]].level;
 	if (admin && info[2] !== admins[info[1]].host)
 	{
-		console.log([admin, info[2], admins[info[1]].host]);
 		console.log('Unauthorised access attempt by ' + info[2] + ' as ' + info[1]);
 		return false;
 	}
@@ -83,49 +82,40 @@ hex.on(/^:([^!]+)![^@]+@[^ ]+ KICK (#[^ ]+) ([^ ]+) :/, function(info)
 
 hex.on(/^:([^!]+)![^@]+@([^ ]+) (JOIN|QUIT)/, function(info)
 {
-	var nick, regex;
-	nick = info[1];
-	if (config.su[nick] === undefined)
+	if (config.su[info[1]] === undefined)
 	{
 		return false;
 	}
 
-	switch (info[3])
+	if (info[3] === 'JOIN')
 	{
-		case 'JOIN':
-			regex = '^:NickServ![^@]+@[^ ]+ NOTICE [^ ]+ :STATUS ' + nick + ' ([0-3])';
-			hex.on_once(new RegExp(regex), function(status)
+		var regex = '^:NickServ![^@]+@[^ ]+ NOTICE [^ ]+ :STATUS ' + info[1] + ' ([0-3])';
+		hex.on_once(new RegExp(regex), function(status)
+		{
+			if (status[1] === '3')
 			{
-				if (status[1] === '3')
-				{
-					console.log(nick + ' added as admin.');
-					admins[nick] = {
-						host: info[2],
-						level: config.su[info[1]]
-					}
+				console.log(info[1] + ' added as admin.');
+				admins[info[1]] = {
+					host: info[2],
+					level: config.su[info[1]]
 				}
-			});
-			hex.msg('NickServ', 'STATUS ' + nick);
-			break;
-
-		case 'QUIT':
-			delete admins[nick];
-			break;
+			}
+		});
+		hex.msg('NickServ', 'STATUS ' + info[1]);
+	}
+	else
+	{
+		delete admins[info[1]];
 	}
 });
 
 hex.on(/^:([^!]+)![^@]+@[^ ]+ NICK :(.+)$/, function(info)
 {
-	var new_nick, nick;
-	nick = info[1];
-	new_nick = info[2];
-	if (admins[nick] === undefined)
+	if (admins[info[1]] !== undefined)
 	{
-		return false;
+		admins[info[2]] = admins[info[1]];
+		delete admins[info[1]];
 	}
-
-	admins[new_nick] = admins[nick];
-	delete admins[nick];
 });
 
 var Twitter = require('./twitter');
@@ -133,19 +123,14 @@ var twit = new Twitter({
 	user: config.twitter.user,
 	pass: config.twitter.pass
 }, 'follow=43312221');
-
 twit.on('tweet', function(tweet)
 {
 	//remember to change this to #x10hosting -__-
 	hex.msg('#cjasdklj', 'New tweet from @x10hosting: ' + tweet)
-});
-
-twit.on('connected', function()
+}).on('connected', function()
 {
 	console.log('Tweet streamer connected.');
-});
-
-twit.on('error', function(err)
+}).on('error', function(err)
 {
 	console.log('Tweet streamer error: ' + err);
 });
