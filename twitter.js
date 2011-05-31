@@ -46,6 +46,7 @@ function Twitter(options, track)
 	{
 		callback = callback.bind(this);
 		emitter.addListener(event, callback);
+		return __self;
 	}
 
 	//start request
