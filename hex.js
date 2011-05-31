@@ -11,8 +11,11 @@ cache = JSON.parse(cache);
 config.chans = cache.chans;
 config.su = cache.su;
 
-var data = fs.readFileSync('./handler.js', 'utf8');
-eval(data); //IM SORRY!
+eval(fs.readFileSync('./handler.js', 'utf8'));
+fs.watchFile('/.handler.js', function()
+{
+	eval(fs.readFileSync('./handler.js', 'utf8'));
+});
 
 hex = new IRC(config)
 
