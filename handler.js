@@ -379,10 +379,6 @@ handler = function(info, admin)
 			reply = 'http://google.com/search?q=' + encodeURIComponent(cmd_end);
 			break;
 
-		case 'help':
-			reply = 'Under construction.';
-			break;
-
 		case 'lmgtfy':
 			reply = 'http://lmgtfy.com/?q=' + encodeURIComponent(cmd_end);
 			break;
@@ -413,6 +409,10 @@ handler = function(info, admin)
 			{
 				num = Math.round(uptime / 1000);
 				reply += num + ' second' + ((num === 1) ? '' : 's') + '.';
+			}
+			else
+			{
+				reply += 'zero seconds.'
 			}
 			break;
 
