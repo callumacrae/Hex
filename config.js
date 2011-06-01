@@ -22,6 +22,10 @@ var config = {
 		],
 		seperator: '\xE2\x96\xBA'
 	},
+	flood: {
+		second: 3,
+		twenty: 20
+	},
 	tmp: {}
 }
 

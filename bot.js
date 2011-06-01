@@ -12,9 +12,9 @@ function IRC(config)
 		data = data.split('\n');
 		for (var i = 0; i < data.length; i++)
 		{
-			//console.log('RECV -', data[i]);
 			if (data !== '')
 			{
+				console.log('RECV -', data[i]);
 				__self.handle(data[i].slice(0, -1));
 			}
 		}
@@ -44,10 +44,13 @@ function IRC(config)
 		});
 		__self.on(/^:([^!]+)!([^@]+)@([^ ]+) (JOIN|PRIVMSG) (#[^ ]+)/, function(info)
 		{
-			__self.info.names[info[5]][info[1]] = {
-				nick: info[1],
-				user: info[2],
-				host: info[3]
+			if (__self.info.names[info[5]][info[1]] === undefined)
+			{
+				__self.info.names[info[5]][info[1]] = {
+					nick: info[1],
+					user: info[2],
+					host: info[3]
+				}
 			}
 		});
 		setTimeout(function()

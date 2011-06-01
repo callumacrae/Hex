@@ -1,4 +1,4 @@
-handler = function(info, hex, admin, config, admins)
+handler = function(info, admin)
 {
 	var chan, cmd, cmd_end, index, flush, nick, reply, pm, log;
 	flush = false;
@@ -553,4 +553,90 @@ url_handler = function(url, chan)
 	{
 		console.log('Problem with HTTP request: ' + e.message);
 	});
+}
+
+antiflood = function(nick, chan)
+{
+	if (hex.info.names[chan][nick] === undefined)
+	{
+		return;
+	}
+	var user = hex.info.names[chan][nick];
+
+	console.log(user.second);
+	if (user.second === undefined)
+	{
+		user.second = 1;
+		user.twenty = 1;
+		user.warning = 0;
+		return;
+	}
+
+	if (++user.second > config.flood.second || ++user.twenty > config.flood.twenty)
+	{
+		user.second = 0;
+		user.twenty = 0;
+
+		switch (++user.warning)
+		{
+			case 1:
+				hex.raw('MODE ' + chan + ' -v ' + nick);
+				hex.msg(chan, nick + ': You have been devoiced for 10 seconds for flooding.');
+				setTimeout(function()
+				{
+					user.second = 0;
+					user.twenty = 0;
+					hex.raw('MODE ' + chan + ' +v ' + nick);
+				}, 10000);
+				break;
+
+			case 2:
+				hex.raw('MODE ' + chan + ' -v ' + nick);
+				hex.msg(chan, nick + ': You have been devoiced for a further 30 seconds for flooding.');
+				setTimeout(function()
+				{
+					user.second = 0;
+					user.twenty = 0;
+					hex.raw('MODE ' + chan + ' +v ' + nick);
+				}, 30000);
+				break;
+
+			case 3:
+				hex.raw('MODE ' + chan + ' -v ' + nick);
+				hex.msg(chan, nick + ': You have been devoiced for a further two minutes for flooding.');
+				setTimeout(function()
+				{
+					user.second = 0;
+					user.twenty = 0;
+					hex.raw('MODE ' + chan + ' +v ' + nick);
+				}, 120000);
+				break;
+
+			case 4:
+				hex.kick(nick, chan, 'Flooding.', true);
+				hex.msg(nick, 'You have been banned from ' + chan + ' for flooding.');
+				break;
+		}
+		setTimeout(function()
+		{
+			user.warning--;
+		}, 600000);
+	}
+	else
+	{
+		setTimeout(function()
+		{
+			if (user.second > 0)
+			{
+				user.second--;
+			}
+		}, 1000);
+		setTimeout(function()
+		{
+			if (user.twenty > 0)
+			{
+				user.twenty--;
+			}
+		}, 20000);
+	}
 }

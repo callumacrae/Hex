@@ -31,21 +31,21 @@ hex.on(/^:([^!]+)![^@]+@([^ ]+) PRIVMSG ([^ ]+) :(.+)/i, function(info)
 
 	if (info[3].search('#') !== -1)
 	{
-		ad_info = /^hex:? (.+)$/.exec(info[4]);
+		ad_info = /^hex:? (.+)$/i.exec(info[4]);
 		if (ad_info)
 		{
 			info[4] = ad_info[1];
-			flush = handler(info, hex, admin, config, admins);
+			flush = handler(info, admin);
 		}
 	}
 	else
 	{
-		ad_info = /^hex:? (.+)$/.exec(info[4]);
+		ad_info = /^hex:? (.+)$/i.exec(info[4]);
 		if (ad_info)
 		{
 			info[4] = ad_info[1];
 		}
-		flush = handler(info, hex, admin, config, admins);
+		flush = handler(info, admin);
 	}
 
 	if (flush)
@@ -67,6 +67,11 @@ hex.on(/^:([^!]+)![^@]+@([^ ]+) PRIVMSG ([^ ]+) :(.+)/i, function(info)
 	if (url)
 	{
 		url_handler(url, info[3]);
+	}
+
+	if (info[3].search('#') !== -1)
+	{
+		antiflood(info[1], info[3]);
 	}
 });
 
