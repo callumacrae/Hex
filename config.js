@@ -27,7 +27,15 @@ var config = {
 		twenty: 20
 	},
 	log: {
-		file: 'logs/%Y%M%D.log'
+		file: 'logs/%Y%M%D.log',
+		web: {
+			chans: [
+				'#x10hosting',
+				'#cjasdklj'
+			],
+			port: 9000,
+			addr: '192.168.2.102'
+		}
 	},
 	tmp: {}
 }

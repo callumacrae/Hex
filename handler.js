@@ -416,7 +416,6 @@ handler = function(info, admin)
 
 		case 'w':
 		case 'wiki':
-			var http = require('http');
 			var options = {
 				host: 'x10hosting.com',
 				port: 80,
@@ -603,4 +602,77 @@ antiflood = function(nick, chan)
 			}
 		}, 20000);
 	}
+}
+
+server = function(req, res)
+{
+	var date, file, output;
+
+	var info = /^\/(\d{4})\/(\d{2})\/(\d{2})\.js$/.exec(req.url);
+	if (info)
+	{
+		date = info[1] + info[2] + info[3];
+
+		try
+		{
+			file = fs.readFileSync('./logs/' + date + '.log', 'utf8');
+		}
+		catch (err)
+		{
+			res.writeHead(404, {'Content-Type': 'text/plain'});
+			res.end('404\n');
+			return false;
+		}
+
+		file = file.split('\n');
+		output = 'var log = [';
+
+		for (var i = 0; i < file.length; i++)
+		{
+			file[i] = "'" + file[i].replace(/'/g, '\\\'') + "'";
+		}
+
+		output += file.join(',\n') + '];';
+
+		res.writeHead(200, {'Content-Type': 'application/javascript'});
+		res.end(output + '\n');
+		return true;
+	}
+
+	var info = /^\/(\d{4})\/(\d{2})\/(\d{2})\/?$/.exec(req.url);
+	if (info || req.url === '/')
+	{
+		if (info)
+		{
+			delete info[0];
+		}
+		else
+		{
+			date = new Date();
+			info = [
+				date.getFullYear(),
+				(date.getMonth() > 8) ? date.getMonth() + 1 : '0' + (date.getMonth() + 1),
+				(date.getDate() > 9) ? date.getDate() : '0' + date.getDate()
+			];
+		}
+
+		file = fs.readFileSync('./html/index.html', 'utf8');
+
+		file = file.replace('YYYY/MM/DD', info.join('/'))
+		res.writeHead(200, {'Content-Type': 'text/html'});
+		res.end(file + '\n');
+		return true;
+	}
+
+	if (req.url === '/script.js')
+	{
+		file = fs.readFileSync('./html/script.js');
+		res.writeHead(200, {'Content-Type': 'application/javascript'});
+		res.end(file + '\n');
+		return true;
+	}
+
+	res.writeHead(404, {'Content-Type': 'text/plain'});
+	res.end('404\n');
+	return true;
 }
