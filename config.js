@@ -26,6 +26,9 @@ var config = {
 		second: 3,
 		twenty: 20
 	},
+	log: {
+		file: 'logs/%Y%M%D.log'
+	},
 	tmp: {}
 }
 
