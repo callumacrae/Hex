@@ -63,12 +63,6 @@ hex.on(/^:([^!]+)![^@]+@([^ ]+) PRIVMSG ([^ ]+) :(.+)$/i, function(info)
 		});
 	}
 
-	url = /https?:\/{2}([a-zA-Z0-9\-.]+\.[a-zA-Z]{2,5})(\/\S*)?/.exec(info[4])
-	if (url)
-	{
-		url_handler(url, info[3]);
-	}
-
 	if (info[3].search('#') !== -1)
 	{
 		antiflood(info[1], info[3]);

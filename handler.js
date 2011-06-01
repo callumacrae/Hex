@@ -520,38 +520,6 @@ html_decode = function(s)
 	return d;
 }
 
-//URL sent in chat
-url_handler = function(url, chan)
-{
-	var http = require('http');
-	var options = {
-		host: url[1],
-		port: 80,
-		path: url[2]
-	};
-
-	var req = http.get(options, function(res)
-	{
-		var title;
-		res.setEncoding('utf8');
-		if (res.statusCode === 200)
-		{
-			res.on('data', function (chunk)
-			{
-				title = /\<title\>([^<]+)\<\/title\>/i.exec(chunk);
-				if (title)
-				{
-					hex.msg(chan, 'Page title: "' + html_decode(title[1]) + '"');
-				}
-			});
-			return;
-		}
-	}).on('error', function(e)
-	{
-		console.log('Problem with HTTP request: ' + e.message);
-	});
-}
-
 antiflood = function(nick, chan)
 {
 	if (hex.info.names[chan][nick] === undefined)
