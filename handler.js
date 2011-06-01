@@ -563,7 +563,6 @@ antiflood = function(nick, chan)
 	}
 	var user = hex.info.names[chan][nick];
 
-	console.log(user.second);
 	if (user.second === undefined)
 	{
 		user.second = 1;

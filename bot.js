@@ -1,7 +1,9 @@
-var net = require('net');
+var net = require('net'),
+	Logger = require('logger');
 
 function IRC(config)
 {
+	Logger = new Logger(config.log);
 	var __self = this;
 	this.info = {};
 	this.info.names = {};
@@ -9,13 +11,13 @@ function IRC(config)
 
 	this.socket.on('data', function(data)
 	{
-		data = data.split('\n');
+		data = data.split('\r\n');
 		for (var i = 0; i < data.length; i++)
 		{
 			if (data !== '')
 			{
-				console.log('RECV -', data[i]);
-				__self.handle(data[i].slice(0, -1));
+				Logger.log(data[i]);
+				__self.handle(data[i]);
 			}
 		}
 	});
@@ -31,9 +33,11 @@ function IRC(config)
 		{
 			__self.raw('PONG :' + info[1]);
 		});
-		__self.on(/^[^ ]+ 001 ([0-9a-zA-Z\[\]\\`_\^{|}\-]+) :/, function(info)
+		__self.on(/^[^ ]+ 001 ([0-9a-zA-Z\[\]\\`_\^{|}\-]+) :.+ [^ !]+!([^ !@]+)@([^ @]+)$/, function(info)
 		{
 			__self.info.nick = info[1];
+			__self.info.user = info[2];
+			__self.info.host = info[3];
 		});
 		__self.on(/^:([^!]+)![^@]+@[^ ]+ NICK :(.+)$/, function(info)
 		{
@@ -99,7 +103,8 @@ function IRC(config)
 	{
 		__self.socket.write(data + '\n', 'ascii', function()
 		{
-			//console.log('SENT -', data);
+			var info = __self.info;
+			Logger.log(':' + info.nick + '!' + info.user + '@' + info.host + ' ' + data);
 		});
 		return __self;
 	}

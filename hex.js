@@ -19,7 +19,7 @@ fs.watchFile('/.handler.js', function()
 
 hex = new IRC(config)
 
-hex.on(/^:([^!]+)![^@]+@([^ ]+) PRIVMSG ([^ ]+) :(.+)/i, function(info)
+hex.on(/^:([^!]+)![^@]+@([^ ]+) PRIVMSG ([^ ]+) :(.+)$/i, function(info)
 {
 	var admin, ad_info, flush;
 	admin = (admins[info[1]] === undefined) ? 0 : admins[info[1]].level;
