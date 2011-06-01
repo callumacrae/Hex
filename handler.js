@@ -405,15 +405,12 @@ handler = function(info, admin)
 				reply += num + ' minute' + ((num === 1) ? '' : 's') + ' and ';
 				uptime = uptime % 60000;
 			}
-			if (uptime > 1000)
-			{
-				num = Math.round(uptime / 1000);
-				reply += num + ' second' + ((num === 1) ? '' : 's') + '.';
-			}
 			else
 			{
-				reply += 'zero seconds.'
+				reply += 'and ';
 			}
+			num = Math.round(uptime / 1000);
+			reply += num + ' second' + ((num === 1) ? '' : 's') + '.';
 			break;
 
 
