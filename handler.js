@@ -17,6 +17,7 @@ handler = function(info, admin)
 		info[4] = reply[1];
 		nick = reply[2];
 	}
+	reply = null;
 
 	index = info[4].indexOf(' ');
 	cmd = (index === -1) ? info[4] : info[4].slice(0, index);
@@ -441,7 +442,6 @@ handler = function(info, admin)
 				console.log('Problem with request: ' + e.message);
 			});
 			req.end();
-
 			break;
 
 		case 'wa':
