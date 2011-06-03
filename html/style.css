@@ -1,0 +1,14 @@
+body {
+	text-align: center;
+}
+ul {
+	text-align: left;
+}
+input[type=text] {
+	color: #AAAAAA;
+	font-size: 32pt;
+	width: 57px;
+}
+#year {
+	width: 110px;
+}

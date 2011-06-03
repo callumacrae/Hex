@@ -1,4 +1,7 @@
-var body = document.getElementsByTagName('body')[0];
+var form = document.getElementsByTagName('form')[0];
+var title = document.getElementsByTagName('h1')[0];
+var ul = document.getElementsByTagName('ul')[0];
+
 chan = window.location.hash;
 load_chan((chan == '') ? '#x10hosting' : chan);
 
@@ -8,11 +11,102 @@ $(window).bind('hashchange', function()
 	load_chan(chan);
 });
 
+var d = new Date();
+document.getElementById('year').value = d.getFullYear();
+document.getElementById('month').value = ((d.getMonth() < 9) ? '0' : '') + (d.getMonth() + 1);
+document.getElementById('day').value = ((d.getDate() < 10) ? '0' : '') + d.getDate();
+
+
+$('input[type=text]').bind('focus', function()
+{
+	this.value = '';
+});
+
+$('#year').bind('keyup', function()
+{
+	if (this.value.length === 4)
+	{
+		$('#month').focus();
+	}
+});
+
+$('#month').bind('keyup', function()
+{
+	if (this.value.length === 2)
+	{
+		$('#day').focus();
+	}
+});
+
+$('#day').bind('keyup', function()
+{
+	if (this.value.length === 2)
+	{
+		console.log('boom');
+		submit();
+	}
+});
+
+$('input[type=text]').bind('blur', function()
+{
+	if (this.value !== '')
+	{
+		return;
+	}
+	switch (this.id)
+	{
+		case 'year':
+			this.value = d.getFullYear();
+			return;
+
+		case 'month':
+			this.value = ((d.getMonth() < 9) ? '0' : '') + (d.getMonth() + 1);
+			return;
+
+		case 'day':
+			this.value = ((d.getDate() < 10) ? '0' : '') + d.getDate();
+			return;
+	}
+});
+
+function submit()
+{
+	var year, month, date;
+	year = parseInt(form[0].value);
+	month = parseInt(form[1].value);
+	day = parseInt(form[2].value);
+
+	if (year === NaN || month === NaN || day === NaN)
+	{
+		return false;
+	}
+
+	document.location = '/' + year + '/' + ((month < 10) ? '0' : '') + month + '/' + ((day < 10) ? '0' : '') + day + '/' + chan;
+	return false;
+}
+
+$(form).bind('submit', function(event)
+{
+	event.preventDefault();
+	submit();
+});
+
 function load_chan(chan)
 {
-	var data, i, html;
+	var data, i, html = '';
 	document.title = 'Hexadecimal IRC Logs \u2022 Logs for ' + chan;
-	html = '<h1>Logs for ' + chan + '</h1><ul>';
+	title.innerHTML = 'Logs for ' + chan;
+
+	try
+	{
+		var test = log;
+	}
+	catch (err)
+	{
+		ul.innerHTML = '<li>No logs for this day, please try another.</li>';
+		return false;
+	}
+
 	for (i = 0; i < log.length; i++)
 	{
 		try
@@ -36,7 +130,11 @@ function load_chan(chan)
 			html += '<li>' + data + '</li>';
 		}
 	}
-	body.innerHTML = html;
+	if (!html)
+	{
+		html = '<li>No log entries for ' + chan + ' on this date</li>';
+	}
+	ul.innerHTML = html;
 }
 
 function em(text)
