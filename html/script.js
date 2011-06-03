@@ -142,9 +142,24 @@ function em(text)
 	return '<strong>' + text + '</strong>';
 }
 
-function esc(text)
+function esc(text, format)
 {
-	return text.replace(/&/g, '&amp;').replace(/\</g, '&lt;').replace(/\>/g, '&gt;');
+	text = text.replace(/&/g, '&amp;').replace(/\</g, '&lt;').replace(/\>/g, '&gt;');
+	if (format)
+	{
+		var regex = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+		text = text.replace(regex, '<a href="$1" target="_blank">$1</a>');
+
+		regex = /(www\.[\S]+(\b|$))/ig;
+		text = text.replace(regex, '<a href="http://$1" target="_blank">$1</a>');
+
+		regex = /(\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,6})/ig;
+		text = text.replace(regex, '<a href="mailto:$1">$1</a>');
+
+		regex = /(#[^# ]+)/ig;
+		text = text.replace(regex, '<a href="$1">$1</a>');
+	}
+	return text;
 }
 
 function format(data)
@@ -156,7 +171,7 @@ function format(data)
 	switch (data.cmd.toUpperCase())
 	{
 		case 'ACTION':
-			msg += '&nbsp; ' + em('* ' + data.user.nick) + '</strong> ' + esc(data.msg);
+			msg += '&nbsp; ' + em('* ' + data.user.nick) + '</strong> ' + esc(data.msg, true);
 			break;
 
 		case 'JOIN':
@@ -168,7 +183,7 @@ function format(data)
 			msg += '-!- ' + em(data.user.nick) + ' has kicked ' + em(data.nick) + ' from the channel.';
 			if (data.msg)
 			{
-				msg += ' (' + esc(data.msg) + ')';
+				msg += ' (' + esc(data.msg, true) + ')';
 			}
 			break;
 
@@ -181,11 +196,11 @@ function format(data)
 			break;
 
 		case 'NOTICE':
-			msg += em('- ' + data.user.nick + ' - ') + esc(data.msg);
+			msg += em('- ' + data.user.nick + ' - ') + esc(data.msg, true);
 			break;
 
 		case 'PRIVMSG':
-			msg += em('&lt;' + data.user.nick + '&gt; ') + esc(data.msg);
+			msg += em('&lt;' + data.user.nick + '&gt; ') + esc(data.msg, true);
 			break;
 
 		case 'PART':
@@ -193,7 +208,7 @@ function format(data)
 			msg += '] has left the channel.';
 			if (data.msg)
 			{
-				msg += ' (' + esc(data.msg) + ')';
+				msg += ' (' + esc(data.msg, true) + ')';
 			}
 			break;
 
@@ -201,12 +216,12 @@ function format(data)
 			msg += '-!- ' + em(data.user.nick) + ' [' + data.user.user + '@' + data.user.host + '] has quit.';
 			if (data.msg)
 			{
-				msg += ' (' + esc(data.msg) + ')';
+				msg += ' (' + esc(data.msg, true) + ')';
 			}
 			break;
 
 		case 'TOPIC':
-			msg += '-!- ' + data.user.nick + ' has changed the topic to: ' + esc(data.msg);
+			msg += '-!- ' + data.user.nick + ' has changed the topic to: ' + esc(data.msg, true);
 			break;
 
 		default:
