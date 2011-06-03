@@ -650,6 +650,7 @@ server = function(req, res)
 		{
 			date = new Date();
 			info = [
+				'',
 				date.getFullYear(),
 				(date.getMonth() > 8) ? date.getMonth() + 1 : '0' + (date.getMonth() + 1),
 				(date.getDate() > 9) ? date.getDate() : '0' + date.getDate()
@@ -658,7 +659,7 @@ server = function(req, res)
 
 		file = fs.readFileSync('./html/index.html', 'utf8');
 
-		file = file.replace('YYYY/MM/DD', info.join('/'))
+		file = file.replace('YYYY/MM/DD', info.join('/').slice(1))
 		res.writeHead(200, {'Content-Type': 'text/html'});
 		res.end(file + '\n');
 		return true;
@@ -668,6 +669,14 @@ server = function(req, res)
 	{
 		file = fs.readFileSync('./html/script.js');
 		res.writeHead(200, {'Content-Type': 'application/javascript'});
+		res.end(file + '\n');
+		return true;
+	}
+
+	if (req.url === '/style.css')
+	{
+		file = fs.readFileSync('./html/style.css');
+		res.writeHead(200, {'Content-Type': 'text/css'});
 		res.end(file + '\n');
 		return true;
 	}
