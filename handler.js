@@ -380,6 +380,32 @@ handler = function(info, admin)
 			reply = 'http://google.com/search?q=' + encodeURIComponent(cmd_end);
 			break;
 
+		case 'js':
+		case 'javascript':
+			var exec = require('child_process').exec;
+			cmd_end = 'node js_run.js "' + cmd_end.replace(/"/g, '\\"') + '"';
+			exec(cmd_end, {timeout: 4000}, function(error, stdout, stderr)
+			{
+				stderr = stderr.trim();
+				if (stderr !== '')
+				{
+					stderr = stderr.split('\n')[3];
+					var output = stderr;
+				}
+				else
+				{
+					var output = stdout.trim();
+				}
+
+				if (error && error.signal === 'SIGTERM')
+				{
+					var output = 'Maximum execution time exceeded.';
+				}
+
+				hex.raw('PRIVMSG ' + chan + ' :' + nick + ': ' + output.slice(0, 100));
+			});
+			break;
+
 		case 'lmgtfy':
 			reply = 'http://lmgtfy.com/?q=' + encodeURIComponent(cmd_end);
 			break;
@@ -412,6 +438,31 @@ handler = function(info, admin)
 			}
 			num = Math.round(uptime / 1000);
 			reply += num + ' second' + ((num === 1) ? '' : 's') + '.';
+			break;
+
+		case 'regex':
+			try
+			{
+				cmd = cmd_end.slice(0, cmd_end.indexOf(' '));
+				cmd_end = cmd_end.slice(cmd_end.indexOf(' ') + 1);
+				cmd = new RegExp(cmd).exec(cmd_end);
+				if (cmd)
+				{
+					for (var i = 0; i < cmd.length; i++)
+					{
+						cmd[i] = "'" + cmd[i] + "'";
+					}
+					reply = cmd.join(', ');
+				}
+				else
+				{
+					reply = 'No match.';
+				}
+			}
+			catch (err)
+			{
+				reply = 'Error: ' + err;
+			}
 			break;
 
 
