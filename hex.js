@@ -18,7 +18,11 @@ fs.watchFile('/.handler.js', function()
 	eval(fs.readFileSync('./handler.js', 'utf8'));
 });
 
-hex = new IRC(config);
+Logger = new Logger(config.log);
+hex = new IRC(config, function(msg)
+{
+	Logger.log(msg);
+});
 
 hex.on(/^:([^!]+)![^@]+@([^ ]+) PRIVMSG ([^ ]+) :(.+)$/i, function(info)
 {
@@ -134,8 +138,10 @@ var twit = new Twitter({
 }, 'follow=43312221');
 twit.on('tweet', function(tweet)
 {
-	//remember to change this to #x10hosting -__-
-	hex.msg('#cjasdklj', 'New tweet from @x10hosting: ' + tweet)
+	if (!tweet.search('@'))
+	{
+		hex.msg('#x10hosting', 'New tweet from @x10hosting: ' + tweet)
+	}
 }).on('connected', function()
 {
 	console.log('Tweet streamer connected.');
