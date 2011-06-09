@@ -1,7 +1,8 @@
 handler = function(info, admin)
 {
-	if (info[3].search('flush') && admin)
+	if (info[3].search('flush') !== -1 && admin)
 	{
+		console.log('flushing');
 		return 'FLUSH';
 	}
 
@@ -110,6 +111,10 @@ handler = function(info, admin)
 					reply = 'Command not found.';
 				}
 				break;
+		}
+		if (reply)
+		{
+			hex.msg(info[1], reply);
 		}
 	}
 }
