@@ -1,9 +1,7 @@
-var net = require('net'),
-	Logger = require('logger');
+var net = require('net');
 
-function IRC(config)
+function IRC(config, on)
 {
-	Logger = new Logger(config.log);
 	var __self = this;
 	this.info = {};
 	this.info.names = {};
@@ -16,7 +14,10 @@ function IRC(config)
 		{
 			if (data !== '')
 			{
-				Logger.log(data[i]);
+				if (on !== undefined)
+				{
+					on(data[i])
+				}
 				__self.handle(data[i]);
 			}
 		}
@@ -104,7 +105,10 @@ function IRC(config)
 		__self.socket.write(data + '\n', 'ascii', function()
 		{
 			var info = __self.info;
-			Logger.log(':' + info.nick + '!' + info.user + '@' + info.host + ' ' + data);
+			if (on !== undefined)
+			{
+				on(':' + info.nick + '!' + info.user + '@' + info.host + ' ' + data)
+			}
 		});
 		return __self;
 	}

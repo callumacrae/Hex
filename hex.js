@@ -1,5 +1,6 @@
 var IRC = require('./bot'),
 	config = require('./config'),
+	Logger = require('logger'),
 	fs = require('fs'),
 	http = require('http'),
 	cache, handler, hex, admins = {};
