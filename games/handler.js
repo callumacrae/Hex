@@ -83,7 +83,7 @@ handler = function(info, admin)
 					}
 					if (playing)
 					{
-						game.answers.push([info[1], info[3]]);
+						game.answers.push([info[1], info[3], 0]);
 						reply = 'Successfully submitted.';
 					}
 					else
@@ -102,7 +102,7 @@ handler = function(info, admin)
 					}
 					else
 					{
-						game.votes[info[1]] = cmd[1];
+						game.votes[info[1]] = parseInt(cmd[1]);
 						reply = 'Successfully voted.'
 					}
 				}

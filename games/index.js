@@ -40,34 +40,75 @@ function submit()
 	hex.msg('#games', 'Let the game begin!');
 	hex.msg('#games', 'This round is: initials.');
 	hex.msg('#games', 'The initials are "DYSW".');
-	hex.msg('#games', 'PM me your answers now! You have twenty seconds.');
+	hex.msg('#games', 'PM me your answers now! You have thirty seconds.');
 	setTimeout(function()
 	{
 		vote();
-	}, 20000);
+	}, 30000);
 }
 
 function vote()
 {
 	game.game.status = 'vote';
-	hex.msg('#games', 'Tiems up. VOTE.');
+	var reply = ['Stop submitting answers! The answers submitted are as follows:'];
+	for (var i = 0; i < game.answers.length; i++)
+	{
+		reply.push(i + ': ' + game.answers[i][1]);
+	}
+	reply.push('Vote for your favourite by PMing "vote <number>" to me. You have 20 seconds to vote.');
+	var interval = setInterval(function()
+	{
+		if (reply.length === 0)
+		{
+			clearInterval(interval);
+			return false;
+		}
+
+		hex.msg('#games', reply[0]);
+		reply.splice(0, 1);
+		return false;
+	}, 1000);
+
 	setTimeout(function()
 	{
 		winner();
-	}, 10000);
+	}, 20000);
 }
 
 function winner()
 {
-	console.log(game);
-	hex.msg('#games', 'Dunno the winner. Just a dummy bot.');
-	pre();
+	var voter;
+	for (voter in game.votes)
+	{
+		game.answers[game.votes[voter]][2]++;
+	}
+
+	var ans, reply = ['Round over. The scores are as follows:'];
+	for (id in game.answers)
+	{
+		ans = game.answers[id];
+		reply.push(ans[0] + ' got ' + ans[2] + ' vote' + (ans[2] === 1 ? '' : 's') + '.');
+	}
+
+	var interval = setInterval(function()
+	{
+		if (reply.length === 0)
+		{
+			clearInterval(interval);
+			pre();
+			return false;
+		}
+
+		hex.msg('#games', reply[0]);
+		reply.splice(0, 1);
+		return false;
+	}, 1000);
 }
 
 setTimeout(function()
 {
 	pre();
-}, 5000);
+}, 10000);
 
 /*
 game = {
