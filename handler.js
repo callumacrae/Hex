@@ -446,6 +446,11 @@ handler = function(info, admin)
 			break;
 
 		case 'regex':
+			if (cmd_end === null)
+			{
+				reply = 'The correct syntax for this is "regex [pattern] [test]".';
+				break;
+			}
 			try
 			{
 				cmd = cmd_end.slice(0, cmd_end.indexOf(' '));
