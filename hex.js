@@ -150,3 +150,8 @@ twit.on('tweet', function(tweet)
 {
 	console.log('Tweet streamer error: ' + err);
 });
+
+process.on('uncaughtException', function(error)
+{
+	console.log('Uncaught Exception: ' + error);
+});
