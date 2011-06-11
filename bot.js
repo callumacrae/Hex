@@ -27,6 +27,11 @@ function IRC(config, on)
 		console.log('error:', exception);
 	});
 
+	this.socket.on('disconnect', function()
+	{
+		process.exit();
+	});
+
 	this.socket.on('connect', function()
 	{
 		console.log('Established connection, registering and shit...');
