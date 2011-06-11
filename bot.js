@@ -148,7 +148,11 @@ function IRC(config, on)
 			callback = msg;
 			msg = undefined;
 		}
-		__self.on_once(new RegExp('^:' + __self.info.nick + '![^@]+@[^ ]+ PART ' + chan), callback);
+		if (callback !== undefined)
+		{
+			__self.on_once(new RegExp('^:' + __self.info.nick + '![^@]+@[^ ]+ PART ' + chan), callback);
+		}
+		delete __self.info.names[chan];
 		__self.raw('PART ' + chan + ((msg !== undefined) ? ' :' + msg : ''));
 		return __self;
 	}
