@@ -383,6 +383,11 @@ handler = function(info, admin)
 		case 'js':
 		case 'javascript':
 			var exec = require('child_process').exec;
+			if (cmd_end === null)
+			{
+				reply = 'The correct syntax for this function is "hex js <code>".';
+				break;
+			}
 			cmd_end = 'node js_run.js "' + cmd_end.replace(/"/g, '\\"') + '"';
 			exec(cmd_end, {timeout: 4000}, function(error, stdout, stderr)
 			{
