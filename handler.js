@@ -399,7 +399,7 @@ handler = function(info, admin)
 				}
 				else
 				{
-					var output = stdout.trim().slice(0, 100).split('\n')[0];
+					var output = stdout.trim().slice(0, 100).split('\n')[0].split('\r')[0];
 				}
 
 				if (error && error.signal === 'SIGTERM')
