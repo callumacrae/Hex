@@ -399,7 +399,7 @@ handler = function(info, admin)
 				}
 				else
 				{
-					var output = stdout.trim();
+					var output = stdout.trim().slice(0, 100).split('\n')[0];
 				}
 
 				if (error && error.signal === 'SIGTERM')
@@ -407,7 +407,7 @@ handler = function(info, admin)
 					var output = 'Maximum execution time exceeded.';
 				}
 
-				hex.raw('PRIVMSG ' + chan + ' :' + nick + ': ' + output.slice(0, 100));
+				hex.raw('PRIVMSG ' + chan + ' :' + nick + ': ' + output);
 			});
 			break;
 
