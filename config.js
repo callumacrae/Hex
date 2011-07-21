@@ -29,7 +29,7 @@ var config = {
 		seperator: '\xE2\x96\xBA'
 	},
 	flood: {
-		second: 3,
+		second: 4,
 		twenty: 20
 	},
 	log: {
@@ -37,6 +37,7 @@ var config = {
 		web: {
 			chans: [
 				'#x10hosting',
+				'#x10gaming',
 				'#cjasdklj'
 			],
 			port: 9000,

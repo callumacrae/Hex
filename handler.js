@@ -1,4 +1,4 @@
-handler = function(info, admin)
+function handler(info, admin)
 {
 	var chan, cmd, cmd_end, index, flush, nick, reply, pm, log;
 	flush = false;
@@ -377,7 +377,11 @@ handler = function(info, admin)
 
 		case 'g':
 		case 'google':
-			reply = 'http://google.com/search?q=' + encodeURIComponent(cmd_end);
+			reply = 'http://google.com/';
+			if (cmd_end)
+			{
+				reply += 'search?q=' + encodeURIComponent(cmd_end);
+			}
 			break;
 
 		case 'js':
@@ -412,7 +416,11 @@ handler = function(info, admin)
 			break;
 
 		case 'lmgtfy':
-			reply = 'http://lmgtfy.com/?q=' + encodeURIComponent(cmd_end);
+			reply = 'http://lmgtfy.com/';
+			if (cmd_end)
+			{
+				reply += '?q=' + encodeURIComponent(cmd_end);
+			}
 			break;
 
 		case 'uptime':
@@ -508,10 +516,15 @@ handler = function(info, admin)
 		case 'wa':
 		case 'wolfram':
 		case 'wolframalpha':
-			reply = 'http://www.wolframalpha.com/input/?i=' + encodeURIComponent(cmd_end);
+			reply = 'http://www.wolframalpha.com/';
+			if (cmd_end)
+			{
+				reply += 'input/?i=' + encodeURIComponent(cmd_end);
+			}
 			break;
 
 		case 'whoami':
+			nick = info[1];
 			reply = 'Your nick is "' + info[1] + '". Your hostmask is "' + info[2] + '". ';
 			reply += (admin) ? 'You are admin level ' + admin + '.' : 'You are not an admin.';
 			break;
@@ -554,7 +567,7 @@ handler = function(info, admin)
 	return flush;
 }
 
-html_decode = function(s)
+function html_decode(s)
 {
 	var c, m, d = s;
 
@@ -580,7 +593,7 @@ html_decode = function(s)
 	return d;
 }
 
-antiflood = function(nick, chan)
+function antiflood(nick, chan)
 {
 	if (hex.info.names[chan][nick] === undefined)
 	{
@@ -665,7 +678,7 @@ antiflood = function(nick, chan)
 	}
 }
 
-server = function(req, res)
+function server(req, res)
 {
 	var date, file, output;
 
