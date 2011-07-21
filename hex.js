@@ -25,6 +25,8 @@ hex = new IRC(config, function(msg)
 	Logger.log(msg);
 });
 
+global.mute = [];
+
 hex.on(/^:([^!]+)![^@]+@([^ ]+) PRIVMSG ([^ ]+) :(.+)$/i, function(info)
 {
 	var admin, ad_info, flush;
@@ -41,7 +43,7 @@ hex.on(/^:([^!]+)![^@]+@([^ ]+) PRIVMSG ([^ ]+) :(.+)$/i, function(info)
 		if (ad_info)
 		{
 			info[4] = ad_info[1];
-			flush = handler(info, admin);
+			flush = handler(info, admin, mute.indexOf(info[3]) !== -1);
 		}
 	}
 	else
@@ -69,7 +71,7 @@ hex.on(/^:([^!]+)![^@]+@([^ ]+) PRIVMSG ([^ ]+) :(.+)$/i, function(info)
 		});
 	}
 
-	if (info[3].search('#') !== -1 && !admin)
+	if (info[3].search('#') !== -1 && !admin && mute.indexOf(info[3]) === -1)
 	{
 		antiflood(info[1], info[3]);
 	}

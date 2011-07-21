@@ -1,4 +1,4 @@
-function handler(info, admin)
+function handler(info, admin, noreply)
 {
 	var chan, cmd, cmd_end, index, flush, nick, reply, pm, log;
 	flush = false;
@@ -144,6 +144,18 @@ function handler(info, admin)
 					}
 					hex.kick(cmd_end, chan, 'Requested (' + nick + ')');
 					log = 'kick ' + cmd_end + ' (from ' + chan + ')';
+					break;
+				
+				case 'mute':
+					if (admin < 6)
+					{
+						reply = 'Admin level 6 required for this operation.';
+					}
+					if (mute.indexOf(chan) === -1)
+					{
+						mute.push(chan);
+					}
+					reply = 'Muted.';
 					break;
 
 				case 'part':
@@ -292,6 +304,28 @@ function handler(info, admin)
 					}
 					log = 'su ' + cmd;
 					break;
+				
+				case 'tmpmute':
+					if (admin < 4)
+					{
+						reply = 'Admin level 4 required for this operation.';
+					}
+					if (mute.indexOf(chan) === -1)
+					{
+						mute.push(chan);
+					}
+					
+					setTimeout(function()
+					{
+						var i = mute.indexOf(chan);
+						if (i !== -1)
+						{
+							mute.splice(i, 1);
+							hex.raw('PRIVMSG ' + chan + ' :Unmuted. (mute set by ' + info[1] + ')');
+						}
+					}, 1800000);
+					reply = 'Muted for half an hour.';
+					break;
 
 				case 'topic':
 					if (admin < 10)
@@ -351,6 +385,21 @@ function handler(info, admin)
 					{
 						topic = '\xE2\x96\xBA ' + topic + ' \xE2\x97\x84';
 						hex.raw('TOPIC ' + chan + ' :' + topic);
+					}
+					break;
+				
+				case 'unmute':
+					if (admin < 4)
+					{
+						reply = 'Admin level 4 required for this operation.';
+						break;
+					}
+					var i = mute.indexOf(chan);
+					if (i !== -1)
+					{
+						mute.splice(i, 1);
+						reply = 'Unmuted.';
+						noreply = undefined;
 					}
 					break;
 
@@ -547,7 +596,7 @@ function handler(info, admin)
 			break;
 	}
 
-	if (reply)
+	if (reply && !noreply)
 	{
 		if (typeof reply === 'string')
 		{
