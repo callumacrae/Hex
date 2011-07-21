@@ -69,7 +69,7 @@ hex.on(/^:([^!]+)![^@]+@([^ ]+) PRIVMSG ([^ ]+) :(.+)$/i, function(info)
 		});
 	}
 
-	if (info[3].search('#') !== -1)
+	if (info[3].search('#') !== -1 && !admin)
 	{
 		antiflood(info[1], info[3]);
 	}
