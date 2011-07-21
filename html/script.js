@@ -119,7 +119,7 @@ function load_chan(chan)
 			continue;
 		}
 
-		if (data.chan !== chan && data.cmd !== 'QUIT')
+		if (data.chan !== chan)
 		{
 			continue;
 		}
@@ -147,16 +147,16 @@ function esc(text, format)
 	text = text.replace(/&/g, '&amp;').replace(/\</g, '&lt;').replace(/\>/g, '&gt;');
 	if (format)
 	{
-		var regex = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
-		text = text.replace(regex, '<a href="$1" target="_blank">$1</a>');
+		var regex = /\b(https?|ftp|file):\/\/(?:www\.)?([\-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+		text = text.replace(regex, '<a href="$1://$2" target="_blank">$1://$2</a>');
 
-		regex = /(www\.[\S]+(\b|$))/ig;
+		regex = /\b(www\.[\S]+(\b|$))/ig;
 		text = text.replace(regex, '<a href="http://$1" target="_blank">$1</a>');
 
-		regex = /(\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,6})/ig;
+		regex = /\b(\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,6})/ig;
 		text = text.replace(regex, '<a href="mailto:$1">$1</a>');
 
-		regex = /(#[^# ]+)/ig;
+		regex = /\b(#[^# ]+)/ig;
 		text = text.replace(regex, '<a href="$1">$1</a>');
 	}
 	return text;
@@ -206,14 +206,6 @@ function format(data)
 		case 'PART':
 			msg += '-!- ' + em(data.user.nick) + ' [' + data.user.user + '@' + data.user.host;
 			msg += '] has left the channel.';
-			if (data.msg)
-			{
-				msg += ' (' + esc(data.msg, true) + ')';
-			}
-			break;
-
-		case 'QUIT':
-			msg += '-!- ' + em(data.user.nick) + ' [' + data.user.user + '@' + data.user.host + '] has quit.';
 			if (data.msg)
 			{
 				msg += ' (' + esc(data.msg, true) + ')';
