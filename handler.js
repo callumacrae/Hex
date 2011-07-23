@@ -150,6 +150,7 @@ function handler(info, admin, noreply)
 					if (admin < 6)
 					{
 						reply = 'Admin level 6 required for this operation.';
+						break;
 					}
 					if (mute.indexOf(chan) === -1)
 					{
@@ -309,6 +310,7 @@ function handler(info, admin, noreply)
 					if (admin < 4)
 					{
 						reply = 'Admin level 4 required for this operation.';
+						break;
 					}
 					if (mute.indexOf(chan) === -1)
 					{
