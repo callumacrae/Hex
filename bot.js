@@ -18,7 +18,6 @@ function IRC(config, on)
 				{
 					on(data[i])
 				}
-				console.log(data[i]);
 				__self.handle(data[i]);
 			}
 		}
