@@ -99,7 +99,7 @@ hex.on(/^:([^!]+)![^@]+@([^ ]+) (JOIN|QUIT)/, function(info)
 
 	if (info[3] === 'JOIN')
 	{
-		var regex = '^:NickServ![^@]+@[^ ]+ NOTICE [^ ]+ :STATUS ' + info[1] + ' ([0-3])';
+		var regex = '^:NickServ![^@]+@[^ ]+ NOTICE [^ ]+ :ACC ' + info[1] + ' ACC ([0-3])';
 		hex.on_once(new RegExp(regex), function(status)
 		{
 			if (status[1] === '3')
@@ -111,7 +111,7 @@ hex.on(/^:([^!]+)![^@]+@([^ ]+) (JOIN|QUIT)/, function(info)
 				}
 			}
 		});
-		hex.msg('NickServ', 'STATUS ' + info[1]);
+		hex.msg('NickServ', 'ACC ' + info[1]);
 	}
 	else
 	{

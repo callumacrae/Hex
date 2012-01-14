@@ -247,7 +247,7 @@ function handler(info, admin, noreply)
 								reply = 'Admin level 10 required for this operation.';
 								break;
 							}
-							regex = '^:NickServ![^@]+@[^ ]+ NOTICE [^ ]+ :STATUS ' + cmd[1] + ' ([0-3])';
+							regex = '^:NickServ![^@]+@[^ ]+ NOTICE [^ ]+ :ACC ' + cmd[1] + ' ACC ([0-3])';
 							hex.on_once(new RegExp(regex), function(status)
 							{
 								if (status[1] === '3')
@@ -262,7 +262,7 @@ function handler(info, admin, noreply)
 									}
 								}
 							});
-							hex.msg('NickServ', 'STATUS ' + cmd[1]);
+							hex.msg('NickServ', 'ACC ' + cmd[1]);
 							config.su[cmd[1]] = cmd[2];
 							console.log(cmd[1] + ' added as admin by ' + nick);
 							reply = 'Successfully added ' + cmd[1] + ' as level ' + cmd[2];
