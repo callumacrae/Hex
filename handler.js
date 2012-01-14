@@ -248,7 +248,7 @@ function handler(info, admin, noreply)
 								reply = 'Admin level 10 required for this operation.';
 								break;
 							}
-							regex = '^:NickServ![^@]+@[^ ]+ NOTICE [^ ]+ :ACC ' + cmd[1] + ' ACC ([0-3])';
+							regex = '^:NickServ![^@]+@[^ ]+ NOTICE [^ ]+ :' + cmd[1] + ' ACC ([0-3])';
 							hex.on_once(new RegExp(regex), function(status)
 							{
 								if (status[1] === '3')
