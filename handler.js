@@ -1,19 +1,16 @@
-function handler(info, admin, noreply)
-{
+function handler(info, admin, noreply) {
 	var chan, cmd, cmd_end, index, flush, nick, reply, pm, log;
 	flush = false;
 	nick = info[1];
 	chan = info[3];
 
-	pm =  chan.search(/^[^#]/) !== -1;
-	if (pm)
-	{
+	pm = chan.search(/^[^#]/) !== -1;
+	if (pm) {
 		chan = nick;
 	}
 
 	reply = /^(.+) @ ?(.+)/.exec(info[4]);
-	if (reply)
-	{
+	if (reply) {
 		info[4] = reply[1];
 		nick = reply[2];
 	}
@@ -23,17 +20,14 @@ function handler(info, admin, noreply)
 	cmd = (index === -1) ? info[4] : info[4].slice(0, index);
 	cmd_end = (index === -1) ? null : info[4].slice(index + 1);
 
-	if (cmd.search(/(\.|\/)/) !== -1)
-	{
+	if (cmd.search(/(\.|\/)/) !== -1) {
 		return false;
 	}
 
-	switch (cmd.toLowerCase())
-	{
+	switch (cmd.toLowerCase()) {
 		case 'a':
 		case 'admin':
-			if (!admin)
-			{
+			if (!admin) {
 				console.log(nick + ' tried to access admin without correct permissions.')
 				return false;
 			}
@@ -41,13 +35,11 @@ function handler(info, admin, noreply)
 			cmd = (index === -1) ? cmd_end : cmd_end.slice(0, index);
 			cmd_end = (index === -1) ? null : cmd_end.slice(index + 1);
 
-			switch (cmd.toLowerCase())
-			{
+			switch (cmd.toLowerCase()) {
 				case 'help':
 				case 'h':
 					chan = nick;
-					if (cmd_end !== null && cmd_end.toLowerCase() === 'all')
-					{
+					if (cmd_end !== null && cmd_end.toLowerCase() === 'all') {
 						reply = [
 							'Full list of admin commands, followed by the required admin level in brackets:',
 							'help [all]                  - return a list of commands [and what they do]. (1)',
@@ -76,13 +68,11 @@ function handler(info, admin, noreply)
 					break;
 
 				case 'ban':
-					if (admin < 4)
-					{
+					if (admin < 4) {
 						reply = 'Admin level 4 required for this operation.';
 						break;
 					}
-					if (cmd_end.indexOf(' ') !== -1)
-					{
+					if (cmd_end.indexOf(' ') !== -1) {
 						cmd_end = cmd_end.slice(0, cmd_end.indexOf(' '));
 						chan = cmd_end.slice(cmd_end.indexOf(' ') + 1);
 					}
@@ -91,13 +81,11 @@ function handler(info, admin, noreply)
 					break;
 
 				case 'devoice':
-					if (admin < 2)
-					{
+					if (admin < 2) {
 						reply = 'Admin level 2 required for this operation.';
 						break;
 					}
-					if (cmd_end.indexOf(' ') !== -1)
-					{
+					if (cmd_end.indexOf(' ') !== -1) {
 						cmd_end = cmd_end.slice(0, cmd_end.indexOf(' '));
 						chan = cmd_end.slice(cmd_end.indexOf(' ') + 1);
 					}
@@ -111,8 +99,7 @@ function handler(info, admin, noreply)
 					break;
 
 				case 'gline':
-					if (admin < 9)
-					{
+					if (admin < 9) {
 						reply = 'Admin level 9 required for this operation.';
 						break;
 					}
@@ -120,8 +107,7 @@ function handler(info, admin, noreply)
 					break;
 
 				case 'join':
-					if (admin < 7)
-					{
+					if (admin < 7) {
 						reply = 'Admin level 7 required for this operation.';
 						break;
 					}
@@ -132,41 +118,35 @@ function handler(info, admin, noreply)
 					break;
 
 				case 'kick':
-					if (admin < 3)
-					{
+					if (admin < 3) {
 						reply = 'Admin level 3 required for this operation.';
 						break;
 					}
-					if (cmd_end.indexOf(' ') !== -1)
-					{
+					if (cmd_end.indexOf(' ') !== -1) {
 						cmd_end = cmd_end.slice(0, cmd_end.indexOf(' '));
 						chan = cmd_end.slice(cmd_end.indexOf(' ') + 1);
 					}
 					hex.kick(cmd_end, chan, 'Requested (' + nick + ')');
 					log = 'kick ' + cmd_end + ' (from ' + chan + ')';
 					break;
-				
+
 				case 'mute':
-					if (admin < 6)
-					{
+					if (admin < 6) {
 						reply = 'Admin level 6 required for this operation.';
 						break;
 					}
-					if (mute.indexOf(chan) === -1)
-					{
+					if (mute.indexOf(chan) === -1) {
 						mute.push(chan);
 					}
 					reply = 'Muted.';
 					break;
 
 				case 'part':
-					if (admin < 7)
-					{
+					if (admin < 7) {
 						reply = 'Admin level 7 required for this operation.';
 						break;
 					}
-					if (cmd_end)
-					{
+					if (cmd_end) {
 						chan = cmd_end;
 					}
 					config.chans.splice(config.chans.indexOf(chan), 1);
@@ -177,8 +157,7 @@ function handler(info, admin, noreply)
 				case 'quit':
 				case 'q':
 				case 'restart':
-					if (admin < 10)
-					{
+					if (admin < 10) {
 						reply = 'Admin level 10 required for this operation.';
 						break;
 					}
@@ -188,8 +167,7 @@ function handler(info, admin, noreply)
 					break;
 
 				case 'raw':
-					if (admin < 10)
-					{
+					if (admin < 10) {
 						reply = 'Admin level 10 required for this operation.';
 						break;
 					}
@@ -199,8 +177,7 @@ function handler(info, admin, noreply)
 
 				case 'remove':
 				case 'rm':
-					if (admin < 6)
-					{
+					if (admin < 6) {
 						reply = 'Admin level 6 required for this operation.';
 						break;
 					}
@@ -211,8 +188,7 @@ function handler(info, admin, noreply)
 					break;
 
 				case 'set':
-					if (admin < 6)
-					{
+					if (admin < 6) {
 						reply = 'Admin level 6 required for this operation.';
 						break;
 					}
@@ -228,8 +204,7 @@ function handler(info, admin, noreply)
 					break;
 
 				case 'shun':
-					if (admin < 9)
-					{
+					if (admin < 9) {
 						reply = 'Admin level 9 required for this operation.';
 						break;
 					}
@@ -239,23 +214,18 @@ function handler(info, admin, noreply)
 				case 'su':
 					//dont check whether admin is level 10 yet - level 3s can list admins
 					cmd = cmd_end.split(' ', 3);
-					switch (cmd[0].toLowerCase())
-					{
+					switch (cmd[0].toLowerCase()) {
 						case 'add':
 						case 'set':
-							if (admin < 10)
-							{
+							if (admin < 10) {
 								reply = 'Admin level 10 required for this operation.';
 								break;
 							}
 							regex = '^:NickServ![^@]+@[^ ]+ NOTICE [^ ]+ :' + cmd[1] + ' ACC ([0-3])';
-							hex.on_once(new RegExp(regex), function(status)
-							{
-								if (status[1] === '3')
-								{
+							hex.on_once(new RegExp(regex), function (status) {
+								if (status[1] === '3') {
 									console.log(cmd[1] + ' added as admin.');
-									if (hex.info.names[chan][cmd[1]] !== undefined)
-									{
+									if (hex.info.names[chan][cmd[1]] !== undefined) {
 										admins[cmd[1]] = {
 											host: hex.info.names[chan][cmd[1]].host,
 											level: cmd[2]
@@ -272,8 +242,7 @@ function handler(info, admin, noreply)
 
 						case 'remove':
 						case 'rm':
-							if (admin < 10)
-							{
+							if (admin < 10) {
 								reply = 'Admin level 10 required for this operation.';
 								break;
 							}
@@ -285,15 +254,13 @@ function handler(info, admin, noreply)
 
 						case 'list':
 							var su_nick;
-							if (admin < 3)
-							{
+							if (admin < 3) {
 								reply = 'Admin level 3 required for this operation.';
 								break;
 							}
 							chan = nick;
 							reply = ['List of admins, followed by their level and whether they are signed in or not:'];
-							for (su_nick in config.su)
-							{
+							for (su_nick in config.su) {
 								reply.push(su_nick + ' is level ' + config.su[su_nick] + ' and is' + ((admins[su_nick] === undefined) ? ' not' : '') + ' currently signed in.');
 							}
 							reply.push('End of list.');
@@ -305,23 +272,19 @@ function handler(info, admin, noreply)
 					}
 					log = 'su ' + cmd;
 					break;
-				
+
 				case 'tmpmute':
-					if (admin < 4)
-					{
+					if (admin < 4) {
 						reply = 'Admin level 4 required for this operation.';
 						break;
 					}
-					if (mute.indexOf(chan) === -1)
-					{
+					if (mute.indexOf(chan) === -1) {
 						mute.push(chan);
 					}
-					
-					setTimeout(function()
-					{
+
+					setTimeout(function () {
 						var i = mute.indexOf(chan);
-						if (i !== -1)
-						{
+						if (i !== -1) {
 							mute.splice(i, 1);
 							hex.raw('PRIVMSG ' + chan + ' :Unmuted. (mute set by ' + info[1] + ')');
 						}
@@ -330,13 +293,11 @@ function handler(info, admin, noreply)
 					break;
 
 				case 'topic':
-					if (admin < 10)
-					{
+					if (admin < 10) {
 						reply = 'Admin level 10 required for this operation.';
 						break;
 					}
-					if (cmd_end === null)
-					{
+					if (cmd_end === null) {
 						reply = 'You need to specify a command, such as append / set / root.';
 						break;
 					}
@@ -345,18 +306,15 @@ function handler(info, admin, noreply)
 					cmd = cmd_end.slice(0, end);
 					cmd_end = cmd_end.slice(end + 1);
 
-					if (cmd_end === cmd)
-					{
+					if (cmd_end === cmd) {
 						cmd_end = null;
 					}
 
-					if (config.tmp.topic === undefined)
-					{
+					if (config.tmp.topic === undefined) {
 						config.tmp.topic = config.topic.root.join(' ' + config.topic.seperator + ' ');
 					}
 
-					switch (cmd.toLowerCase())
-					{
+					switch (cmd.toLowerCase()) {
 						case 'append':
 							log = 'topic append';
 							topic = config.topic.root;
@@ -383,22 +341,19 @@ function handler(info, admin, noreply)
 							topic = config.topic.root.join(' ' + config.topic.seperator + ' ');
 							break;
 					}
-					if (topic)
-					{
+					if (topic) {
 						topic = '\xE2\x96\xBA ' + topic + ' \xE2\x97\x84';
 						hex.raw('TOPIC ' + chan + ' :' + topic);
 					}
 					break;
-				
+
 				case 'unmute':
-					if (admin < 4)
-					{
+					if (admin < 4) {
 						reply = 'Admin level 4 required for this operation.';
 						break;
 					}
 					var i = mute.indexOf(chan);
-					if (i !== -1)
-					{
+					if (i !== -1) {
 						mute.splice(i, 1);
 						reply = 'Unmuted.';
 						noreply = undefined;
@@ -406,13 +361,11 @@ function handler(info, admin, noreply)
 					break;
 
 				case 'voice':
-					if (admin < 2)
-					{
+					if (admin < 2) {
 						reply = 'Admin level 2 required for this operation.';
 						break;
 					}
-					if (cmd_end.indexOf(' ') !== -1)
-					{
+					if (cmd_end.indexOf(' ') !== -1) {
 						cmd_end = cmd_end.slice(0, cmd_end.indexOf(' '));
 						chan = cmd_end.slice(cmd_end.indexOf(' ') + 1);
 					}
@@ -429,8 +382,7 @@ function handler(info, admin, noreply)
 		case 'g':
 		case 'google':
 			reply = 'http://google.com/';
-			if (cmd_end)
-			{
+			if (cmd_end) {
 				reply += 'search?q=' + encodeURIComponent(cmd_end);
 			}
 			break;
@@ -438,27 +390,21 @@ function handler(info, admin, noreply)
 		case 'js':
 		case 'javascript':
 			var exec = require('child_process').exec;
-			if (cmd_end === null)
-			{
+			if (cmd_end === null) {
 				reply = 'The correct syntax for this function is "hex js <code>".';
 				break;
 			}
 			cmd_end = 'node js_run.js "' + cmd_end.replace(/"/g, '\\"') + '"';
-			exec(cmd_end, {timeout: 4000}, function(error, stdout, stderr)
-			{
+			exec(cmd_end, {timeout: 4000}, function (error, stdout, stderr) {
 				stderr = stderr.trim();
-				if (stderr !== '')
-				{
+				if (stderr !== '') {
 					stderr = stderr.split('\n')[3];
 					var output = stderr;
-				}
-				else
-				{
+				} else {
 					var output = stdout.trim().slice(0, 100).split('\n')[0].split('\r')[0];
 				}
 
-				if (error && error.signal === 'SIGTERM')
-				{
+				if (error && error.signal === 'SIGTERM') {
 					var output = 'Maximum execution time exceeded.';
 				}
 
@@ -468,8 +414,7 @@ function handler(info, admin, noreply)
 
 		case 'lmgtfy':
 			reply = 'http://lmgtfy.com/';
-			if (cmd_end)
-			{
+			if (cmd_end) {
 				reply += '?q=' + encodeURIComponent(cmd_end);
 			}
 			break;
@@ -478,26 +423,21 @@ function handler(info, admin, noreply)
 			var num, uptime = new Date().getTime() - start.getTime();
 			//86400000
 			reply = 'Uptime: ';
-			if (uptime > 86400000)
-			{
+			if (uptime > 86400000) {
 				num = Math.floor(uptime / 86400000)
 				reply += num + ' day' + ((num === 1) ? '' : 's') + ', ';
 				uptime = uptime % 86400000;
 			}
-			if (uptime > 3600000)
-			{
+			if (uptime > 3600000) {
 				num = Math.floor(uptime / 3600000);
 				reply += num + ' hour' + ((num === 1) ? '' : 's') + ', ';
 				uptime = uptime % 3600000;
 			}
-			if (uptime > 60000)
-			{
+			if (uptime > 60000) {
 				num = Math.floor(uptime / 60000);
 				reply += num + ' minute' + ((num === 1) ? '' : 's') + ' and ';
 				uptime = uptime % 60000;
-			}
-			else
-			{
+			} else {
 				reply += 'and ';
 			}
 			num = Math.round(uptime / 1000);
@@ -505,31 +445,23 @@ function handler(info, admin, noreply)
 			break;
 
 		case 'regex':
-			if (cmd_end === null)
-			{
+			if (cmd_end === null) {
 				reply = 'The correct syntax for this is "regex [pattern] [test]".';
 				break;
 			}
-			try
-			{
+			try {
 				cmd = cmd_end.slice(0, cmd_end.indexOf(' '));
 				cmd_end = cmd_end.slice(cmd_end.indexOf(' ') + 1);
 				cmd = new RegExp(cmd).exec(cmd_end);
-				if (cmd)
-				{
-					for (var i = 0; i < cmd.length; i++)
-					{
+				if (cmd) {
+					for (var i = 0; i < cmd.length; i++) {
 						cmd[i] = "'" + cmd[i] + "'";
 					}
 					reply = cmd.join(', ');
-				}
-				else
-				{
+				} else {
 					reply = 'No match.';
 				}
-			}
-			catch (err)
-			{
+			} catch (err) {
 				reply = 'Error: ' + err;
 			}
 			break;
@@ -544,21 +476,16 @@ function handler(info, admin, noreply)
 				method: 'GET'
 			};
 
-			var req = http.request(options, function(res)
-			{
-				if (res.statusCode === 302 || res.statusCode === 301)
-				{
+			var req = http.request(options, function (res) {
+				if (res.statusCode === 302 || res.statusCode === 301) {
 					var url = res.headers.location
-				}
-				else
-				{
+				} else {
 					var url = 'http://x10hosting.com/wiki/index.php?title=Special%3ASearch&search=' + encodeURIComponent(cmd_end);
 				}
 				hex.msg(chan, nick + ': ' + url);
 				res.setEncoding('utf8');
 			});
-			req.on('error', function(e)
-			{
+			req.on('error', function (e) {
 				console.log('Problem with request: ' + e.message);
 			});
 			req.end();
@@ -568,8 +495,7 @@ function handler(info, admin, noreply)
 		case 'wolfram':
 		case 'wolframalpha':
 			reply = 'http://www.wolframalpha.com/';
-			if (cmd_end)
-			{
+			if (cmd_end) {
 				reply += 'input/?i=' + encodeURIComponent(cmd_end);
 			}
 			break;
@@ -582,14 +508,10 @@ function handler(info, admin, noreply)
 
 		default:
 			var file, fs = require('fs');
-			try
-			{
+			try {
 				file = fs.readFileSync('./msgs/' + cmd, 'utf8');
-			}
-			catch(err)
-			{
-				if (pm)
-				{
+			} catch(err) {
+				if (pm) {
 					reply = 'Command not found. Please try "help" for a list of commands.';
 				}
 				break;
@@ -598,16 +520,12 @@ function handler(info, admin, noreply)
 			break;
 	}
 
-	if (reply && !noreply)
-	{
-		if (typeof reply === 'string')
-		{
+	if (reply && !noreply) {
+		if (typeof reply === 'string') {
 			reply = [reply];
 		}
-		var interval = setInterval(function()
-		{
-			if (reply.length === 0 || reply[0] === undefined)
-			{
+		var interval = setInterval(function () {
+			if (reply.length === 0 || reply[0] === undefined) {
 				clearInterval(interval);
 				return;
 			}
@@ -618,25 +536,19 @@ function handler(info, admin, noreply)
 	return flush;
 }
 
-function html_decode(s)
-{
+function html_decode(s) {
 	var c, m, d = s;
 
 	arr = d.match(/&#[0-9]{1,5};/g);
 
 	// if no matches found in string then skip
-	if (arr !== null)
-	{
-		for (var x = 0; x < arr.length; x++)
-		{
+	if (arr !== null) {
+		for (var x = 0; x < arr.length; x++) {
 			m = arr[x];
 			c = m.substring(2, m.length - 1);
-			if (c >= -32768 && c <= 65535)
-			{
+			if (c >= -32768 && c <= 65535) {
 				d = d.replace(m, String.fromCharCode(c));
-			}
-			else
-			{
+			} else {
 				d = d.replace(m, "");
 			}
 		}
@@ -644,34 +556,28 @@ function html_decode(s)
 	return d;
 }
 
-function antiflood(nick, chan)
-{
-	if (hex.info.names[chan][nick] === undefined)
-	{
+function antiflood(nick, chan) {
+	if (hex.info.names[chan][nick] === undefined) {
 		return;
 	}
 	var user = hex.info.names[chan][nick];
 
-	if (user.second === undefined)
-	{
+	if (user.second === undefined) {
 		user.second = 1;
 		user.twenty = 1;
 		user.warning = 0;
 		return;
 	}
 
-	if (++user.second > config.flood.second || ++user.twenty > config.flood.twenty)
-	{
+	if (++user.second > config.flood.second || ++user.twenty > config.flood.twenty) {
 		user.second = 0;
 		user.twenty = 0;
 
-		switch (++user.warning)
-		{
+		switch (++user.warning) {
 			case 1:
 				hex.raw('MODE ' + chan + ' -v ' + nick);
 				hex.msg(chan, nick + ': You have been devoiced for 10 seconds for flooding.');
-				setTimeout(function()
-				{
+				setTimeout(function () {
 					user.second = 0;
 					user.twenty = 0;
 					hex.raw('MODE ' + chan + ' +v ' + nick);
@@ -681,8 +587,7 @@ function antiflood(nick, chan)
 			case 2:
 				hex.raw('MODE ' + chan + ' -v ' + nick);
 				hex.msg(chan, nick + ': You have been devoiced for a further 30 seconds for flooding.');
-				setTimeout(function()
-				{
+				setTimeout(function () {
 					user.second = 0;
 					user.twenty = 0;
 					hex.raw('MODE ' + chan + ' +v ' + nick);
@@ -692,8 +597,7 @@ function antiflood(nick, chan)
 			case 3:
 				hex.raw('MODE ' + chan + ' -v ' + nick);
 				hex.msg(chan, nick + ': You have been devoiced for a further two minutes for flooding.');
-				setTimeout(function()
-				{
+				setTimeout(function () {
 					user.second = 0;
 					user.twenty = 0;
 					hex.raw('MODE ' + chan + ' +v ' + nick);
@@ -705,45 +609,33 @@ function antiflood(nick, chan)
 				hex.msg(nick, 'You have been banned from ' + chan + ' for flooding.');
 				break;
 		}
-		setTimeout(function()
-		{
+		setTimeout(function () {
 			user.warning--;
 		}, 600000);
-	}
-	else
-	{
-		setTimeout(function()
-		{
-			if (user.second > 0)
-			{
+	} else {
+		setTimeout(function () {
+			if (user.second > 0) {
 				user.second--;
 			}
 		}, 1000);
-		setTimeout(function()
-		{
-			if (user.twenty > 0)
-			{
+		setTimeout(function () {
+			if (user.twenty > 0) {
 				user.twenty--;
 			}
 		}, 20000);
 	}
 }
 
-function server(req, res)
-{
+function server(req, res) {
 	var date, file, output;
 
 	var info = /^\/(\d{4})\/(\d{2})\/(\d{2})\.js$/.exec(req.url);
-	if (info)
-	{
+	if (info) {
 		date = info[1] + info[2] + info[3];
 
-		try
-		{
+		try {
 			file = fs.readFileSync('./logs/' + date + '.log', 'utf8');
-		}
-		catch (err)
-		{
+		} catch (err) {
 			res.writeHead(404, {'Content-Type': 'text/plain'});
 			res.end('404\n');
 			return false;
@@ -752,8 +644,7 @@ function server(req, res)
 		file = file.split('\n');
 		output = 'var log = [';
 
-		for (var i = 0; i < file.length; i++)
-		{
+		for (var i = 0; i < file.length; i++) {
 			file[i] = "'" + file[i].replace(/'/g, '\\\'') + "'";
 		}
 
@@ -765,14 +656,10 @@ function server(req, res)
 	}
 
 	var info = /^\/(\d{4})\/(\d{2})\/(\d{2})\/?$/.exec(req.url);
-	if (info || req.url === '/')
-	{
-		if (info)
-		{
+	if (info || req.url === '/') {
+		if (info) {
 			delete info[0];
-		}
-		else
-		{
+		} else {
 			date = new Date();
 			info = [
 				'',
@@ -790,16 +677,14 @@ function server(req, res)
 		return true;
 	}
 
-	if (req.url === '/script.js')
-	{
+	if (req.url === '/script.js') {
 		file = fs.readFileSync('./html/script.js');
 		res.writeHead(200, {'Content-Type': 'application/javascript'});
 		res.end(file + '\n');
 		return true;
 	}
 
-	if (req.url === '/style.css')
-	{
+	if (req.url === '/style.css') {
 		file = fs.readFileSync('./html/style.css');
 		res.writeHead(200, {'Content-Type': 'text/css'});
 		res.end(file + '\n');

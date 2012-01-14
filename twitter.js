@@ -1,7 +1,6 @@
 var http = require('http');
 
-function Twitter(options, track)
-{
+function Twitter(options, track) {
 	var user, pass, authstring,
 		__self, req, emitter, tweet;
 	__self = this;
@@ -20,10 +19,8 @@ function Twitter(options, track)
 		}
 	};
 
-	req = http.request(options, function(res)
-	{
-		if (res.statusCode === 200)
-		{
+	req = http.request(options, function (res) {
+		if (res.statusCode === 200) {
 			emitter.emit('connected');
 			res.setEncoding('utf8');
 			res.on('data', function(chunk)
@@ -35,19 +32,16 @@ function Twitter(options, track)
 					emitter.emit('tweet', tweet);
 				}
 			});
-		}
-		else
-		{
+		} else {
 			emitter.emit('error', res.statusCode);
 		}
 	});
 
-	this.on = function(event, callback)
-	{
+	this.on = function (event, callback) {
 		callback = callback.bind(this);
 		emitter.addListener(event, callback);
 		return __self;
-	}
+	};
 
 	//start request
 	req.end(track, 'ascii');
