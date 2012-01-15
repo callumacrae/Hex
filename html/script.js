@@ -34,27 +34,25 @@ $('#month').bind('keyup', function () {
 
 $('#day').bind('keyup', function () {
 	if (this.value.length === 2) {
-		console.log('boom');
 		submit();
 	}
 });
 
 $('input[type=text]').bind('blur', function () {
-	if (this.value !== '') {
-		return;
-	}
-	switch (this.id) {
-		case 'year':
-			this.value = d.getFullYear();
-			return;
+	if (this.value === '') {
+		switch(this.id) {
+			case 'year':
+				this.value = d.getFullYear();
+				return;
 
-		case 'month':
-			this.value = ((d.getMonth() < 9) ? '0' : '') + (d.getMonth() + 1);
-			return;
+			case 'month':
+				this.value = ((d.getMonth() < 9) ? '0' : '') + (d.getMonth() + 1);
+				return;
 
-		case 'day':
-			this.value = ((d.getDate() < 10) ? '0' : '') + d.getDate();
-			return;
+			case 'day':
+				this.value = ((d.getDate() < 10) ? '0' : '') + d.getDate();
+				return;
+		}
 	}
 });
 
@@ -93,7 +91,6 @@ function load_chan(chan) {
 		try {
 			data = JSON.parse(log[i]);
 		} catch (err) {
-			//console.log(err, log[i]);
 			continue;
 		}
 
