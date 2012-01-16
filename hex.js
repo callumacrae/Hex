@@ -75,24 +75,22 @@ hex.on(/^:([^!]+)![^@]+@[^ ]+ KICK (#[^ ]+) ([^ ]+) :/, function(info) {
 });
 
 hex.on(/^:([^!]+)![^@]+@([^ ]+) (JOIN|QUIT)/, function (info) {
-	if (config.su[info[1]] === undefined) {
-		return false;
-	}
-
-	if (info[3] === 'JOIN') {
-		var regex = '^:NickServ![^@]+@[^ ]+ NOTICE [^ ]+ :' + info[1] + ' ACC ([0-3])';
-		hex.on_once(new RegExp(regex), function (status) {
-			if (status[1] === '3') {
-				console.log(info[1] + ' added as admin.');
-				admins[info[1]] = {
-					host: info[2],
-					level: config.su[info[1]]
+	if (config.su[info[1]] !== undefined) {
+		if (info[3] === 'JOIN') {
+			var regex = '^:NickServ![^@]+@[^ ]+ NOTICE [^ ]+ :' + info[1] + ' ACC ([0-3])';
+			hex.on_once(new RegExp(regex), function (status) {
+				if (status[1] === '3') {
+					console.log(info[1] + ' added as admin.');
+					admins[info[1]] = {
+						host: info[2],
+						level: config.su[info[1]]
+					}
 				}
-			}
-		});
-		hex.msg('NickServ', 'ACC ' + info[1]);
-	} else {
-		delete admins[info[1]];
+			});
+			hex.msg('NickServ', 'ACC ' + info[1]);
+		} else {
+			delete admins[info[1]];
+		}
 	}
 });
 
