@@ -402,16 +402,6 @@ handler = function (info, admin, noreply) {
 					var output = stderr;
 				} else {
 					var output = stdout.trim().slice(0, 100).split('\n')[0].split('\r')[0];
-
-					if (!isNaN(Number(output))) {
-						output = Number(output);
-					}
-
-					if (typeof output === 'object' && !(output instanceof Array)) {
-						output = JSON.stringify(output);
-					} else if (typeof output === 'string') {
-						output = '"' + output + '"';
-					}
 				}
 
 				if (error && error.signal === 'SIGTERM') {
