@@ -408,7 +408,9 @@ function handler(info, admin, noreply) {
 					var output = 'Maximum execution time exceeded.';
 				}
 
-				hex.raw('PRIVMSG ' + chan + ' :' + nick + ': ' + output);
+				if (!noreply) {
+					hex.msg(chan, nick + ': ' + output);
+				}
 			});
 			break;
 
@@ -482,7 +484,9 @@ function handler(info, admin, noreply) {
 				} else {
 					var url = 'http://x10hosting.com/wiki/index.php?title=Special%3ASearch&search=' + encodeURIComponent(cmd_end);
 				}
-				hex.msg(chan, nick + ': ' + url);
+				if (!noreply) {
+					hex.msg(chan, nick + ': ' + url);
+				}
 				res.setEncoding('utf8');
 			});
 			req.on('error', function (e) {
