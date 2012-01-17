@@ -402,16 +402,18 @@ handler = function (info, admin, noreply) {
 					var output = stderr;
 				} else {
 					var output = stdout.trim().slice(0, 100).split('\n')[0].split('\r')[0];
+
+					if (typeof output === 'object' && !(output instanceof Array)) {
+						console.log('debug');
+						output = JSON.stringify(output);
+					} else if (typeof output === 'string') {
+						console.log('debug 2');
+						output = '"' + output + '"';
+					}
 				}
 
 				if (error && error.signal === 'SIGTERM') {
 					var output = 'Maximum execution time exceeded.';
-				}
-
-				if (typeof output === 'object' && !(output instanceof Array)) {
-					output = JSON.stringify(output);
-				} else if (typeof output === 'string') {
-					output = '"' + output + '"';
 				}
 
 				if (!noreply) {
