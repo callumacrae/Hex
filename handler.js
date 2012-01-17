@@ -1,4 +1,4 @@
-function handler(info, admin, noreply) {
+handler = function (info, admin, noreply) {
 	var chan, cmd, cmd_end, index, flush, nick, reply, pm, log;
 	flush = false;
 	nick = info[1];
@@ -538,9 +538,9 @@ function handler(info, admin, noreply) {
 		}, 200);
 	}
 	return flush;
-}
+};
 
-function html_decode(s) {
+html_decode = function (s) {
 	var c, m, d = s;
 
 	arr = d.match(/&#[0-9]{1,5};/g);
@@ -558,9 +558,9 @@ function html_decode(s) {
 		}
 	}
 	return d;
-}
+};
 
-function antiflood(nick, chan) {
+antiflood = function (nick, chan) {
 	if (hex.info.names[chan][nick] === undefined) {
 		return;
 	}
@@ -628,9 +628,9 @@ function antiflood(nick, chan) {
 			}
 		}, 20000);
 	}
-}
+};
 
-function server(req, res) {
+server = function (req, res) {
 	var date, file, output;
 
 	var info = /^\/(\d{4})\/(\d{2})\/(\d{2})\.js$/.exec(req.url);
@@ -698,4 +698,4 @@ function server(req, res) {
 	res.writeHead(404, {'Content-Type': 'text/plain'});
 	res.end('404\n');
 	return true;
-}
+};

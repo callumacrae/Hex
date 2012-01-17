@@ -3,7 +3,7 @@ var IRC = require('./bot'),
 	Logger = require('logger'),
 	fs = require('fs'),
 	http = require('http'),
-	cache, handler, hex, admins = {};
+	antiflood, cache, handler, hex, html_decode, server, admins = {};
 
 var start = new Date();
 
