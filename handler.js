@@ -403,11 +403,10 @@ handler = function (info, admin, noreply) {
 				} else {
 					var output = stdout.trim().slice(0, 100).split('\n')[0].split('\r')[0];
 
+					console.log('debuggg', typeof output === 'object' && !(output instanceof Array), typeof output);
 					if (typeof output === 'object' && !(output instanceof Array)) {
-						console.log('debug');
 						output = JSON.stringify(output);
 					} else if (typeof output === 'string') {
-						console.log('debug 2');
 						output = '"' + output + '"';
 					}
 				}
