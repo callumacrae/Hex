@@ -403,7 +403,10 @@ handler = function (info, admin, noreply) {
 				} else {
 					var output = stdout.trim().slice(0, 100).split('\n')[0].split('\r')[0];
 
-					console.log('debuggg', typeof output === 'object' && !(output instanceof Array), typeof output);
+					if (!isNaN(Number(output))) {
+						output = Number(output);
+					}
+
 					if (typeof output === 'object' && !(output instanceof Array)) {
 						output = JSON.stringify(output);
 					} else if (typeof output === 'string') {
