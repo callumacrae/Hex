@@ -2,7 +2,7 @@ var vm = require('vm'), sandbox = {};
 
 var output = vm.runInNewContext(process.argv[2], sandbox);
 
-if (typeof output === 'object' && !(output instanceof Array)) {
+if (typeof output === 'object') {
 	output = JSON.stringify(output);
 } else if (typeof output === 'string') {
 	output = '"' + output + '"';
