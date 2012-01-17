@@ -408,6 +408,12 @@ handler = function (info, admin, noreply) {
 					var output = 'Maximum execution time exceeded.';
 				}
 
+				if (typeof output === 'object' && !(output instanceof Array)) {
+					output = JSON.stringify(output);
+				} else if (typeof output === 'string') {
+					output = '"' + output + '"';
+				}
+
 				if (!noreply) {
 					hex.msg(chan, nick + ': ' + output);
 				}
