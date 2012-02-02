@@ -1,9 +1,12 @@
 <?php
-$config = array(
+$config['core'] = array(
 	"server" => "irc.x10hosting.com:6667",
 	"channels" => "#x10bot,#x10bot-backend",
 	"nickserv" => "",
 	"serverpass" => "",
+	"date" => "Europe/London",
+	"debug" => true,
+	"debugchan" => "#x10bot-backend",
 );
 $config['irclog'] = array(
 	"file_location" => "./irc.log",
