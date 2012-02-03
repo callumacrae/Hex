@@ -6,12 +6,12 @@
 			include("config.php");
 			$this->config = $config;
 			unset($config);
-			$serverdetails = explode(":",$this->config['server']);
+			$serverdetails = explode(":",$this->config['core']['server']);
 			if(!$this->sock = fsockopen($serverdetails[0],$serverdetails[1])){
 				die($this->error("Failed to gain a connection"));
 			}
-			$this->raw("NICK {$this->config['nick']}");
-			$this->raw("USER {$this->config['nick']} {$this->config['nick']} {$this->config['nick']} :{$this->config['nick']}");
+			$this->raw("NICK {$this->config['core']['nick']}");
+			$this->raw("USER {$this->config['core']['nick']} {$this->config['core']['nick']} {$this->config['core']['nick']} :{$this->config['core']['nick']}");
 			$this->main();
 		}
 		function main(){
@@ -21,8 +21,8 @@
 			}
 			$ex = explode(" ",$data);
 			if($ex[1] == "001"){ //Checks for code sent by IRC saying that a connection has been made
-				$this->msg("NickServ","IDENTIFY {$this->config['nickserv']}");
-				$this->raw("JOIN {$this->config['chans']}");
+				$this->msg("NickServ","IDENTIFY {$this->config['core']['nickserv']}");
+				$this->raw("JOIN {$this->config['core']['chans']}");
 			}
 			if($ex[0] == "PING"){
 				$this->raw("PONG {$ex[1]}");
