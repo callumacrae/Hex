@@ -23,10 +23,12 @@ $config['botlog'] = array(
 	'memo_format' => '[%2$s] %3$s#%4$s - %5$s', // order of parameters: time, level, module, location, text, trace
 	'email_body_format' => 'At %1$s \n\n There was a #%2$s level message logged. %3$s raised the message at the %4$s location.\nHere are the details: \t%5$s \n\n Trace: %6$s', // order of parameters: time, level, module, location, text, trace
 	'email_subject_format' => 'x10bot - %2$1 - %3$s', // order of parameters: time, level, module, location, text, trace
+	'stdout_format' => '(%1$s) [%2$s] %3$s#%4$s - %5$s', // order of parameters: time, level, module, location, text, trace
 	'file_level' => 1,
 	'channel_level' => 1,
 	'memo_level' => 4,
 	'email_level' => 4,
+	'stdout_level' => 2,
 );
 $config['email'] = array(
 );

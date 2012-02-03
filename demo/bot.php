@@ -1,6 +1,7 @@
 <?php
 
 require_once 'config.php';
+require_once 'log.php';
 
 class IRCBot{
 		var $config = array();
@@ -8,6 +9,7 @@ class IRCBot{
 		function __construct(){
 			global $config;
 			$this->config = $config;
+			$this->log = IRCBot_Log::getInstance($this);
 			$serverdetails = explode(":",$this->config['core']['server']);
 			if(!$this->sock = fsockopen($serverdetails[0],$serverdetails[1])){
 				die($this->error("Failed to gain a connection"));
@@ -67,4 +69,4 @@ class IRCBot{
 			$this->raw("PRIVMSG $chan $msg");
 		}
 	}
-?>
+
