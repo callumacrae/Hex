@@ -100,23 +100,23 @@ class IRCBot_Log {
 		}
 	}
 
-	public function debug ($text, $module, $location, $trace, $options=null) {
+	public function debug ($text, $module, $location, $trace=null, $options=null) {
 		return $this->bot_log(self::DEBUG, $text, $module, $location, $trace, $options);
 	}
 
-	public function info ($text, $module, $location, $trace, $options=null) {
+	public function info ($text, $module, $location, $trace=null, $options=null) {
 		return $this->bot_log(self::INFO, $text, $module, $location, $trace, $options);
 	}
 
-	public function warn ($text, $module, $location, $trace, $options=null) {
+	public function warn ($text, $module, $location, $trace=null, $options=null) {
 		return $this->bot_log(self::WARN, $text, $module, $location, $trace, $options);
 	}
 
-	public function error ($text, $module, $location, $trace, $options=null) {
+	public function error ($text, $module, $location, $trace=null, $options=null) {
 		return $this->bot_log(self::ERROR, $text, $module, $location, $trace, $options);
 	}
 
-	public function bot_log ($level, $text, $module, $location, $trace, $options=null) {
+	public function bot_log ($level, $text, $module, $location, $trace=null, $options=null) {
 		global $config;
 
 		$time = date(DATE_COOKIE);
@@ -184,7 +184,7 @@ class IRCBot_Log {
 		}
 
 		//debug
-		var_dump($results);
+		var_dump($results, $options);
 
 		//generate exception
 		return false;
@@ -252,6 +252,7 @@ class IRCBot_Log {
 
 	private function _log_channel($channel, $data) {
 		//using core, send message to the channel
+		return $this->bot->
 	}
 
 	private function _log_memo($user, $data) {
