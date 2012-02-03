@@ -68,4 +68,4 @@ class IRCBot{
 			$this->raw("PRIVMSG $chan $msg");
 		}
 	}
-
+}
