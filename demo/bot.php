@@ -21,7 +21,7 @@ class IRCBot{
 		function main(){
 			$data = trim(fgets($this->sock));
 			if($data != ""){
-				$this->log($msg);
+				$this->log($data);
 			}
 			$ex = explode(" ",$data);
 			if($ex[1] == "001"){ //Checks for code sent by IRC saying that a connection has been made
