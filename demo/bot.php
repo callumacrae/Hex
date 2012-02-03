@@ -30,6 +30,11 @@ class IRCBot{
 		if($ex[0] == "PING"){
 			$this->raw("PONG {$ex[1]}");
 		}
+		if(!feof($this->sock)){
+			$this->main();
+		}else{
+			die($this->log->error("No longer connected.","core","IRCBot",null));
+		}
 	}
 	
 	function raw($msg){
