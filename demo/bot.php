@@ -32,6 +32,10 @@ class IRCBot{
 		if($ex[0] == "PING"){
 			$this->raw("PONG {$ex[1]}");
 		}
+		$modules = glob("./modules/*.php");
+		foreach($modules as $module){
+			include($module);
+		}
 		if(!feof($this->sock)){
 			$this->main();
 		}else{
