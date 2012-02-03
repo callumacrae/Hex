@@ -57,7 +57,7 @@ class IRCBot{
 					break;
 			}
 			if ($send == true) {
-				log("[{$type}] {$msg}");
+				$this->log("[{$type}] {$msg}");
 			}
 		}
 		
