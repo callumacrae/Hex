@@ -26,7 +26,7 @@
 			}
 			if($ex[0] == "PING"){
 				$this->raw("PONG {$ex[1]}");
-			}s
+			}
 		}
 		function raw($msg){
 			
