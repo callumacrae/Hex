@@ -1,22 +1,12 @@
 <?php
 $config['core'] = array(
-<<<<<<< HEAD
 	"server" => "irc.x10hosting.com:6667",
 	"channels" => "#x10bot,#x10bot-backend",
 	"nickserv" => "",
 	"serverpass" => "",
 	"date" => "Europe/London",
 	"debug" => true,
-	"debugchan" => "#x10bot-backend",
-=======
-	'server' => 'irc.x10hosting.com:6667',
-	'channels' => '#x10bot,#x10bot-backend',
-	'nickserv' => '',
-	'serverpass' => '',
-	'date' => 'Europe/London',
-	'debug' => true,
-	'debugchan' => '#x10bot-backend1',
->>>>>>> cd941d7f9d534e5679f319bf8790659f97ad8a79
+	"debugchan" => "#x10bot-backend", //For core debugging
 );
 $config['irclog'] = array(
 	'file_location' => './irc.log',
