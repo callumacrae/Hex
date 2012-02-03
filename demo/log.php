@@ -2,13 +2,45 @@
 
 require_once 'config.php';
 
+/**
+ * The IRCBot_Log class handles all logging of the bot. EVERYTHING!
+ *
+ * The class is singleton, because having many instances is overkill.
+ * <code>$logger = IRCBot_Log::getInstance();</code>
+ *
+ * There are currently 2 categories of logging behavior:
+ * - IRC Chatter logging
+ * - BOT-specific logging
+ *
+ * IRC Chatter logging is achieved through the use of the irc_log() function.
+ *
+ * BOT-specific logging is achieved thorugh the use of the following functions:
+ * - debug()
+ * - info()
+ * - warn()
+ * - error()
+ * - bot_log()
+ *
+ * The first four are aliases for the fifth, but explicitely set the level of 
+ * the message.
+ *
+ * The BOT-specific functions accept an options parameter. The options 
+ * parameter can modify on the fly the responce to a particular level. They can
+ * be combined with the OR bitwise operation. The options are:
+ * - TO_FILE
+ * - TO_CHANNEL
+ * - TO_MEMO
+ * - TO_EMAIL
+ */
 class IRCBot_Log {
 
+	// bit flags for the errors
 	const TO_FILE = 1;
 	const TO_CHANNEL = 2;
 	const TO_MEMO = 4;
 	const TO_EMAIL = 8;
 
+	// log level for the botlog
 	const DEBUG = 1;
 	const INFO = 2;
 	const WARN = 3;
@@ -19,6 +51,9 @@ class IRCBot_Log {
 	private function __construct() { 
 	}
 
+	/**
+	 * @return IRCBot_Log
+	 */
 	public static function getInstance() {
 		if (!isset(self::$instance)) {
 			$className = __CLASS__;
@@ -27,6 +62,12 @@ class IRCBot_Log {
 		return self::$instance;
 	}
 
+	/**
+	 * logs IRC chatter to a file/table
+	 * 
+	 * @param array $line
+	 * @return boolean
+	 */
 	public function irc_log($line) {
 		global $config;
 
@@ -47,6 +88,7 @@ class IRCBot_Log {
 			break;
 		default:
 			//generate an exception
+			trigger_error('Unknown format', E_USER_ERROR);
 			break;
 		}
 	}
@@ -68,10 +110,12 @@ class IRCBot_Log {
 	}
 
 	public function bot_log ($level, $text, $module, $location, $trace, $options=null) {
+		global $config;
+
 		$time = date(DATE_COOKIE);
 		$name = $this->_level_name($level);
 
-		$result = 0;
+		$results = 0;
 
 		if ($options === null) {
 			$options = $this->_default_options($level);
@@ -99,7 +143,7 @@ class IRCBot_Log {
 			}
 		}
 
-		if (($options & self::TO_MEMOL) == self::TO_MEMO) {
+		if (($options & self::TO_MEMO) == self::TO_MEMO) {
 			$user = array();
 			//create an array of admin's IRC handle.
 
@@ -124,6 +168,9 @@ class IRCBot_Log {
 		if ($results == $options) {
 			return true;
 		}
+
+		//debug
+		var_dump($results);
 
 		//generate exception
 		return false;
@@ -167,11 +214,17 @@ class IRCBot_Log {
 	}
 
 	private function _log_file($file, $data) {
+		if (!file_exists($file)) {
+			if (!touch($file)) {
+				//generate exception
+				return false;
+			}
+		}
 		if (!is_writable($file)) {
 			//generate exception
 			return false;
 		}
-		return file_put_contents($file, $data . "\n", FILE_APPEND);
+		return (file_put_contents($file, $data . "\n", FILE_APPEND | LOCK_EX) !== false) ? true : false ;
 	}
 
 	private function _log_sqlite($table, $data) {
