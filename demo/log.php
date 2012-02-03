@@ -173,7 +173,7 @@ class IRCBot_Log {
 
 		if (($options & self::TO_STDOUT) == self::TO_STDOUT) {
 			$data = sprintf($config['botlog']['stdout_format'], $time, $name, $module, $location, $text, $trace);
-			if ($this->_log_email("/dev/null",$data)) { //NOTE: this needs fixing ASAP please
+			if ($this->_log_stdout($data)) {
 				$results |= self::TO_STDOUT;
 			}
 		}
