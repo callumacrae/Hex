@@ -2,8 +2,8 @@
 $config['core'] = array(
 	"server" => "irc.x10hosting.com:6667",
 	"channels" => "#x10bot,#x10bot-backend",
-	"nick" => "x10BotDemo",
-	"nickserv" => "",
+	"nick" => "x10Bot[demo]",
+	"nickserv" => "leetx10",
 	"serverpass" => "",
 	"date" => "Europe/London",
 	"debug" => true,
