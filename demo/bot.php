@@ -28,15 +28,39 @@
 				$this->raw("PONG {$ex[1]}");
 			}
 		}
+		
 		function raw($msg){
-			
+			fputs($this->sock, $msg."\r\n");
+			$this->error("sent", "Message was communicated to the server: {$msg}");
 		}
-		function error($msg){
-			
+		
+		function error($type, $msg){
+			switch ($type) {
+				case "fatal":
+					$send = true;
+					break;
+				
+				case "warning": case "notice":
+					if ($this->config['core']['debug'] == true || $this->config['core']['debug'] == "verbose") {
+						$send = true;
+					}
+					break;
+					
+				case "sent":
+					if ($this->config['core']['debug'] == 'verbose') {
+						$send = true;
+					}
+					break;
+			}
+			if ($send == true) {
+				log("[{$type}] {$msg}");
+			}
 		}
+		
 		function log($msg){
 			
 		}
+		
 		function msg($chan,$msg){
 			$this->raw("PRIVMSG $chan $msg");
 		}
