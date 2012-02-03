@@ -68,7 +68,7 @@ class IRCBot{
 	}
 	
 	function log($msg){
-		echo(date("[".$this->config['core']['time_format'],time())."] $msg");
+		echo(date("[".$this->config['core']['time_format'],time())."] $msg\r\n");
 	}
 	
 	function msg($chan,$msg){
