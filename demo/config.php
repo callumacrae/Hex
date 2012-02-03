@@ -6,7 +6,7 @@ $config['core'] = array(
 	"serverpass" => "",
 	"date" => "Europe/London",
 	"debug" => true,
-	"debugchan" => "#x10bot-backend1",
+	"debugchan" => "#x10bot-backend",
 );
 $config['irclog'] = array(
 	"file_location" => "./irc.log",
