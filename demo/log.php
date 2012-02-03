@@ -31,6 +31,7 @@ require_once 'config.php';
  * - TO_CHANNEL
  * - TO_MEMO
  * - TO_EMAIL
+ * - TO_STDOUT
  */
 class IRCBot_Log {
 
@@ -39,6 +40,7 @@ class IRCBot_Log {
 	const TO_CHANNEL = 2;
 	const TO_MEMO = 4;
 	const TO_EMAIL = 8;
+	const TO_STDOUT = 16;
 
 	// log level for the botlog
 	const DEBUG = 1;
@@ -46,18 +48,23 @@ class IRCBot_Log {
 	const WARN = 3;
 	const ERROR = 4;
 
+	private $bot;
+
 	private static $instance;
 
-	private function __construct() { 
+	private function __construct($bot) {
+	       $this->bot = $bot;	
 	}
 
 	/**
+	 * Singleton magic! Get the class here!
+	 *
 	 * @return IRCBot_Log
 	 */
-	public static function getInstance() {
+	public static function getInstance($bot) {
 		if (!isset(self::$instance)) {
 			$className = __CLASS__;
-			self::$instance = new $className;
+			self::$instance = new $className($bot);
 		}
 		return self::$instance;
 	}
@@ -88,7 +95,7 @@ class IRCBot_Log {
 			break;
 		default:
 			//generate an exception
-			trigger_error('Unknown format', E_USER_ERROR);
+			$this->error('Unknown irc log format', 'log', 'irc_log', null);
 			break;
 		}
 	}
@@ -164,6 +171,13 @@ class IRCBot_Log {
 			}
 		}
 
+		if (($options & self::TO_STDOUT) == self::TO_STDOUT) {
+			$data = sprintf($config['botlog']['stdout_format'], $time, $name, $module, $location, $text, $trace);
+			if ($this->_log_email($data)) {
+				$results |= self::TO_STDOUT;
+			}
+		}
+
 
 		if ($results == $options) {
 			return true;
@@ -192,6 +206,9 @@ class IRCBot_Log {
 		}
 		if ($config['botlog']['email_level'] <= $level) {
 			$options |= self::TO_EMAIL;
+		}
+		if ($config['botlog']['stdout_level'] <= $level) {
+			$options |= self::TO_STDOUT;
 		}
 
 		return $options;
@@ -245,6 +262,11 @@ class IRCBot_Log {
 	private function _log_email($email, $data) {
 		//if $email is an array, call _log_email for each member (recursive)
 		//using email, send email to $email
+	}
+
+	private function _log_stdout($data) {
+		echo $data;
+		return true;
 	}
 
 }
