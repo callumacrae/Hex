@@ -1,0 +1,3 @@
+syntax: glob
+*.swp
+demo/test/php_error.log
