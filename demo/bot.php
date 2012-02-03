@@ -34,7 +34,12 @@ class IRCBot{
 		}
 		$modules = glob("./modules/*.php");
 		foreach($modules as $module){
-			include($module);
+			if (!include_once($module)) {
+				$this->log->error("{$module} module could not be loaded", "core", "loader");
+			}
+			//TODO implement actual loader
+			//since we should implement all the modules as clases, they need to be loaded, and have hooks that can be registered. e.g: on_privmsg_receive(), on_user_join(), on_user_part(), on_message_receive(), etc.
+			//speak to me for my take on this - xav0989
 		}
 		if(!feof($this->sock)){
 			$this->main();
