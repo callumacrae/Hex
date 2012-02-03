@@ -25,7 +25,7 @@ class IRCBot{
 		$ex = explode(" ",$data);
 		if($ex[1] == "001"){ //Checks for code sent by IRC saying that a connection has been made
 			$this->msg("NickServ","IDENTIFY {$this->config['core']['nickserv']}");
-			$this->raw("JOIN {$this->config['core']['chans']}");
+			$this->raw("JOIN {$this->config['core']['channels']}");
 		}
 		if($ex[0] == "PING"){
 			$this->raw("PONG {$ex[1]}");
