@@ -6,8 +6,9 @@ $config['core'] = array(
 	"nickserv" => "leetx10",
 	"serverpass" => "",
 	"date" => "Europe/London",
-	"debug" => true,
+	"debug" => "verbose",
 	"debugchan" => "#x10bot-backend", //For core debugging
+	"time_format" => "c",
 );
 $config['irclog'] = array(
 	'file_location' => './irc.log',
