@@ -1,9 +1,12 @@
 <?php
-	class IRCBot{
+
+require_once 'config.php';
+
+class IRCBot{
 		var $config = array();
 		var $sock;
 		function __construct(){
-			require_once 'config.php';
+			global $config;
 			$this->config = $config;
 			$serverdetails = explode(":",$this->config['core']['server']);
 			if(!$this->sock = fsockopen($serverdetails[0],$serverdetails[1])){
