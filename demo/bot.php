@@ -24,7 +24,6 @@ class IRCBot{
 			$this->log->error("Failed to gain a connection", "core", 'connect', null, IRCBot_Log::TO_FILE | IRCBot_Log::TO_EMAIL | IRCBot_Log::TO_STDOUT);
 			die(1);
 		}
-
 		$this->raw("NICK {$this->config['core']['nick']}");
 		$this->raw("USER {$this->config['core']['nick']} {$this->config['core']['nick']} {$this->config['core']['nick']} :{$this->config['core']['nick']}");
 		
@@ -40,7 +39,7 @@ class IRCBot{
 				continue;
 			}
 			echo($data."\r\n");
-			$this->log->debug($data, "core", "received");
+			//$this->log->debug($data, "core", "received");
 			$ex = explode(" ",$data);
 			if ($ex[1] == "001") { //Checks for code sent by IRC saying that a connection has been made
 				$this->log->info("Identifying as {$this->config['core']['nick']}", 'core', 'identify');
