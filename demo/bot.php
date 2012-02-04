@@ -10,64 +10,91 @@ class IRCBot{
 
 	function __construct(){
 		global $config;
+
 		$this->config = $config;
 		$this->log = IRCBot_Log::getInstance($this);
-
 		$serverdetails = explode(":",$this->config['core']['server']);
-		if(!$this->sock = fsockopen($serverdetails[0],$serverdetails[1])){
-			$this->log->error("Failed to gain a connection", "core", 'construct', null, IRCBot_Log::TO_FILE | IRCBot_Log::TO_EMAIL | IRCBot_Log::TO_STDOUT);
+
+		//load the modules
+		//run pre_on_connect
+
+		$this->log->info("Connecting to server", "core", "connect");
+		$this->log->debug("server:$serverdetails[0], port:$serverdetails[1]", "core", "connect");
+		if (!$this->sock = fsockopen($serverdetails[0], $serverdetails[1])) {
+			$this->log->error("Failed to gain a connection", "core", 'connect', null, IRCBot_Log::TO_FILE | IRCBot_Log::TO_EMAIL | IRCBot_Log::TO_STDOUT);
 			die(1);
 		}
+
 		$this->raw("NICK {$this->config['core']['nick']}");
 		$this->raw("USER {$this->config['core']['nick']} {$this->config['core']['nick']} {$this->config['core']['nick']} :{$this->config['core']['nick']}");
+		
+		//run post_on_connect
+
 		$this->main();
 	}
 
 	function main(){
-		$data = trim(fgets($this->sock));
-		if($data != ""){
-			$this->log($data);
-		}
-		$ex = explode(" ",$data);
-		if(isset($ex[1])){
-			if($ex[1] == "001"){ //Checks for code sent by IRC saying that a connection has been made
+		while (!feof($this->sock)) {
+			$data = trim(fgets($this->sock));
+
+			if ($data == "") {
+				continue;
+			}
+			
+			$this->log->debug($data, "core", "received");
+
+			$ex = explode(" ",$data);
+
+			if (isset($ex[1]) && $ex[1] == "001") { //Checks for code sent by IRC saying that a connection has been made
+				//run pre_identify
 				$this->msg("NickServ","IDENTIFY {$this->config['core']['nickserv']}");
+				//run post_identify
+				//run pre_join
 				$this->raw("JOIN {$this->config['core']['channels']}");
+				//run post_join
+				continue;
 			}
-		}
-		if($ex[0] == "PING"){
-			$this->raw("PONG {$ex[1]}", true);
-		}
-		if(isset($ex[2])){
-			$chan = $ex[2];
-			$chanl = strtolower($chan);
-		}
-		$cmd = substr($ex[3],1); //Trim : from the begining
-		$cmdl = strtolower($cmd);
-		$subcmd = $ex[4];
-		$subcmdl = strtolower($subcmd);
-		$modules = glob("./modules/*.php");
-		foreach($modules as $module){
-			if (!include($module)) { //This should not be include_once to allow dynamic module editing.
-				if($this->modulewarning[$module] != true){
-					$this->log->error("{$module} module could not be loaded", "core", "loader");
-					$this->modulewarning[$module] = true;
+
+			if ($ex[0] == "PING") {
+				//run pre_ping
+				$this->raw("PONG {$ex[1]}", true);
+				//run post_ping
+				continue;
+			}
+
+			if (isset($ex[2])) {
+				$chan = $ex[2];
+				$chanl = strtolower($chan);
+			}
+
+			$cmd = substr($ex[3],1); //Trim : from the begining
+			$cmdl = strtolower($cmd);
+			$subcmd = $ex[4];
+			$subcmdl = strtolower($subcmd);
+
+			//run on_message_received
+
+			//while this is technically okay, it will make the ram usage rocket!
+			//also it limits the possibilities for complex modules
+			$modules = glob("./modules/*.mod");
+			foreach($modules as $module){
+				if (!include($module)) { //This should not be include_once to allow dynamic module editing.
+					if($this->modulewarning[$module] != true){
+						$this->log->error("{$module} module could not be loaded", "core", "loader");
+						$this->modulewarning[$module] = true;
+					}
+				}else{
+					$this->modulewarning[$module] = false;
 				}
-			}else{
-				$this->modulewarning[$module] = false;
+				//TODO implement as demo/README
 			}
-			//TODO implement actual loader
-			//since we should implement all the modules as clases, they need to be loaded, and have hooks that can be registered. e.g: on_privmsg_receive(), on_user_join(), on_user_part(), on_message_receive(), etc.
-			//speak to me for my take on this - xav0989
 		}
-		if(!feof($this->sock)){
-			$this->main();
-		}else{
-			$this->log->error("No longer connected.","core","IRCBot",null, IRCBot_Log::TO_FILE | IRCBot_Log::TO_STDOUT | IRCBot_Log::TO_EMAIL);
-			die(1);
-		}
+
+		$this->log->error("No longer connected.", "core", "IRCBot", null, IRCBot_Log::TO_FILE | IRCBot_Log::TO_STDOUT | IRCBot_Log::TO_EMAIL);
+		die(1);
 	}
-	
+
+	//this function must be removed, it's not really needed...
 	function reply($msg) {
 		$nick = explode("!", $this->ex[0]);
 		$nick = substr($nick[0], 1);
@@ -76,15 +103,13 @@ class IRCBot{
 	
 	function raw($msg, $skip=false){
 		if (!$skip) {
-			$this->log->info("Sending message to server", "core", "raw");
+			$this->log->debug("Sending message to server \"{$msg}\"", "core", "raw");
 		}
 
 		if (fputs($this->sock, $msg."\r\n") !== false) {
-			if (!$skip) {
-				$this->log->debug("Message was communicated to the server: {$msg}", 'core', 'raw');
-			}
 			return true;
 		}
+
 		if (!$skip) {
 			$this->log->error("There was a problem sending: \'$msg\'", 'core', 'raw');
 		}
@@ -94,7 +119,8 @@ class IRCBot{
 		}
 		return false;
 	}
-	
+
+	//everything must now be moved to use $this->log->{debug, info, warn, error}
 	function error($type, $msg){
 		switch ($type) {
 			case "fatal":
