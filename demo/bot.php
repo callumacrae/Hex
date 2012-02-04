@@ -62,6 +62,12 @@ class IRCBot{
 		}
 	}
 	
+	function reply($msg) {
+		$nick = explode("!", $this->ex[0]);
+		$nick = substr($nick[0], 1);
+		$this->msg($this->ex[2], "{$nick}: {$msg}");
+	}
+	
 	function raw($msg){
 		fputs($this->sock, $msg."\r\n");
 		$this->error("sent", "Message was communicated to the server: {$msg}");
