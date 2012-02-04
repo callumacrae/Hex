@@ -6,5 +6,5 @@
 
 if ($cmdl == 'x10bot:' && $subcmdl == 'reload') {
     exec("cd /home/admin/x10bot;git pull");
-    $this->reply("The bot has been made up-to-date with the GIT repository. Modules have been updated.");
+    $this->msg($ex[2], "{$usernick}: The bot has been made up-to-date with the GIT repository. Modules have been updated.");
 }
