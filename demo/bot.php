@@ -5,6 +5,7 @@ require_once 'log.php';
 class IRCBot{
 	var $config = array();
 	var $sock;
+	var $modulewarning = array();
 	function __construct(){
 		global $config;
 		$this->config = $config;
@@ -34,8 +35,13 @@ class IRCBot{
 		}
 		$modules = glob("./modules/*.php");
 		foreach($modules as $module){
-			if (!include_once($module)) {
-				$this->log->error("{$module} module could not be loaded", "core", "loader");
+			if (!include($module)) { //This should not be include_once to allow dynamic module editing.
+				if($this->modulewarning[$module] != true){
+					$this->log->error("{$module} module could not be loaded", "core", "loader");
+					$this->modulewarning[$module] = true;
+				}
+			}else{
+				$this->modulewarning[$module] = false;
 			}
 			//TODO implement actual loader
 			//since we should implement all the modules as clases, they need to be loaded, and have hooks that can be registered. e.g: on_privmsg_receive(), on_user_join(), on_user_part(), on_message_receive(), etc.
