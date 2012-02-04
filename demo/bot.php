@@ -3,21 +3,26 @@ require_once 'config.php';
 require_once 'log.php';
 
 class IRCBot{
-	var $config = array();
-	var $sock;
-	var $modulewarning = array();
+	private $config = array();
+	private $sock;
+	private $modulewarning = array();
+	private $log;
+
 	function __construct(){
 		global $config;
 		$this->config = $config;
 		$this->log = IRCBot_Log::getInstance($this);
+
 		$serverdetails = explode(":",$this->config['core']['server']);
 		if(!$this->sock = fsockopen($serverdetails[0],$serverdetails[1])){
-			die($this->error("Failed to gain a connection"));
+			$this->log->error("Failed to gain a connection", "core", 'construct', null, IRCBot_Log::TO_FILE | IRCBot_Log::TO_EMAIL | IRCBot_Log::TO_STDOUT);
+			die(1);
 		}
 		$this->raw("NICK {$this->config['core']['nick']}");
 		$this->raw("USER {$this->config['core']['nick']} {$this->config['core']['nick']} {$this->config['core']['nick']} :{$this->config['core']['nick']}");
 		$this->main();
 	}
+
 	function main(){
 		$data = trim(fgets($this->sock));
 		if($data != ""){
@@ -31,7 +36,7 @@ class IRCBot{
 			}
 		}
 		if($ex[0] == "PING"){
-			$this->raw("PONG {$ex[1]}");
+			$this->raw("PONG {$ex[1]}", true);
 		}
 		if(isset($ex[2])){
 			$chan = $ex[2];
@@ -68,9 +73,19 @@ class IRCBot{
 		$this->msg($this->ex[2], "{$nick}: {$msg}");
 	}
 	
-	function raw($msg){
-		fputs($this->sock, $msg."\r\n");
-		$this->error("sent", "Message was communicated to the server: {$msg}");
+	function raw($msg, $skip=false){
+		if (!$skip) {
+			$this->log->info("Sending message to server", "core", "raw");
+		}
+
+		if (fputs($this->sock, $msg."\r\n") !== false) {
+			if (!$skip) {
+				$this->log->debug("Message was communicated to the server: {$msg}", 'core', 'raw');
+			}
+			return true;
+		}
+		$this->log->error("There was a problem sending: \'$msg\'", 'core', 'raw');
+		return false;
 	}
 	
 	function error($type, $msg){
@@ -92,6 +107,7 @@ class IRCBot{
 				break;
 		}
 		if ($send == true) {
+		var_dump($msg);
 			$this->log("[{$type}] {$msg}");
 		}
 	}
@@ -100,7 +116,7 @@ class IRCBot{
 		echo(date("[".$this->config['core']['time_format'],time())."] $msg\r\n");
 	}
 	
-	function msg($chan,$msg){
-		$this->raw("PRIVMSG $chan $msg");
+	function msg($chan,$msg, $skip=false){
+		$this->raw("PRIVMSG $chan $msg", $skip);
 	}
 }

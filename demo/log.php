@@ -252,7 +252,7 @@ class IRCBot_Log {
 
 	private function _log_channel($channel, $data) {
 		//using core, send message to the channel
-		return $this->bot->log($msg);
+		return $this->bot->msg($channel, $data, true);
 	}
 
 	private function _log_memo($user, $data) {
