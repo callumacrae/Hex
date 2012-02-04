@@ -4,7 +4,7 @@
 // A very simple module which will respond with 'pong' if called.
 
 if ($cmdl == 'x10bot:' && $subcmdl == 'ping') {
-    $this->reply("Pong");
+    $this->msg($ex[2], "{$usernick}: Pong");
 }
 
 ?>
