@@ -15,6 +15,7 @@ if(getarg("debug") == true){
 }else{
 	error_reporting(E_ERROR);
 }
+
 require_once 'bot.php';
 
 $bot = new IRCBot();
