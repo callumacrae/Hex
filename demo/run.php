@@ -1,5 +1,6 @@
 <?php
 ini_set("display_errors","on");
+
 function getarg($arg){
 	global $argv;
 	foreach($argv as $argu){
