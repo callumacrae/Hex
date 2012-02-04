@@ -35,9 +35,12 @@ class IRCBot{
 		}
 		if(isset($ex[2])){
 			$chan = $ex[2];
+			$chanl = strtolower($chan);
 		}
 		$cmd = substr($ex[3],1); //Trim : from the begining
+		$cmdl = strtolower($cmd);
 		$subcmd = $ex[4];
+		$subcmdl = strtolower($subcmd);
 		$modules = glob("./modules/*.php");
 		foreach($modules as $module){
 			if (!include($module)) { //This should not be include_once to allow dynamic module editing.
