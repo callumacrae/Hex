@@ -18,8 +18,8 @@ class IRCBot{
 		//load the modules
 		//run pre_on_connect
 
-		$this->log->info("Connecting to server", "core", "connect");
-		$this->log->debug("server:$serverdetails[0], port:$serverdetails[1]", "core", "connect");
+		$this->log->info("Connecting to server", "core", "connect", null, IRCBot_Log::TO_FILE | IRCBot_Log::TO_STDOUT);
+		$this->log->debug("server:$serverdetails[0], port:$serverdetails[1]", "core", "connect", null, IRCBot_Log::TO_FILE);
 		if (!$this->sock = fsockopen($serverdetails[0], $serverdetails[1])) {
 			$this->log->error("Failed to gain a connection", "core", 'connect', null, IRCBot_Log::TO_FILE | IRCBot_Log::TO_EMAIL | IRCBot_Log::TO_STDOUT);
 			die(1);
@@ -46,9 +46,11 @@ class IRCBot{
 			$ex = explode(" ",$data);
 
 			if (isset($ex[1]) && $ex[1] == "001") { //Checks for code sent by IRC saying that a connection has been made
+				$this->log->info("Identifying as {$this->config['core']['nick']}", 'core', 'identify');
 				//run pre_identify
 				$this->msg("NickServ","IDENTIFY {$this->config['core']['nickserv']}");
 				//run post_identify
+				$this->log->info("Joining {$this->config['core']['channels']}", 'core', 'join');
 				//run pre_join
 				$this->raw("JOIN {$this->config['core']['channels']}");
 				//run post_join
@@ -56,6 +58,7 @@ class IRCBot{
 			}
 
 			if ($ex[0] == "PING") {
+				$this->log->debug("PONG", 'core', 'ping');
 				//run pre_ping
 				$this->raw("PONG {$ex[1]}", true);
 				//run post_ping
@@ -68,7 +71,9 @@ class IRCBot{
 			}
 
 			$cmd = strtolower(substr($ex[3], 1)); //Trim : from the begining
-			$subcmd = strtolower($ex[4]);
+			if (isset($ex[4])) {
+				$subcmd = strtolower($ex[4]);
+			}
 			$usernick = explode("!", $ex[0]);
 			$usernick = strtolower(substr($usernick[0], 1));
 
