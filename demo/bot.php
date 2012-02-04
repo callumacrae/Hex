@@ -64,7 +64,11 @@ class IRCBot{
 				$chanl = strtolower($chan);
 			}
 
-			$cmd = strtolower(substr($ex[3], 1)); //Trim : from the begining
+			// Fixing a PHP notice.
+			if (isset($ex[3])) {
+				$cmd = strtolower(substr($ex[3], 1)); //Trim : from the begining
+			}
+			
 			if (isset($ex[4])) {
 				$subcmd = strtolower($ex[4]);
 			}
