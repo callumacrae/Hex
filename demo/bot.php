@@ -71,6 +71,9 @@ class IRCBot{
 			$cmdl = strtolower($cmd);
 			$subcmd = $ex[4];
 			$subcmdl = strtolower($subcmd);
+			$usernick = explode("!", $ex[0]);
+			$usernick = substr($usernick[0], 1);
+			$usernickl = strtolower($usernickl);
 
 			//run on_message_received
 
@@ -92,13 +95,6 @@ class IRCBot{
 
 		$this->log->error("No longer connected.", "core", "IRCBot", null, IRCBot_Log::TO_FILE | IRCBot_Log::TO_STDOUT | IRCBot_Log::TO_EMAIL);
 		die(1);
-	}
-
-	//this function must be removed, it's not really needed...
-	function reply($msg) {
-		$nick = explode("!", $this->ex[0]);
-		$nick = substr($nick[0], 1);
-		$this->msg($this->ex[2], "{$nick}: {$msg}");
 	}
 	
 	function raw($msg, $skip=false){
