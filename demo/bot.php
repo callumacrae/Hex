@@ -36,11 +36,12 @@ class IRCBot{
 	function main(){
 		while (!feof($this->sock)) {
 			$data = trim(fgets($this->sock));
-			
+			if($data != ""){
+				continue;
+			}
 			$this->log->debug($data, "core", "received");
 			$ex = explode(" ",$data);
-			print_r($ex);
-			if (isset($ex[1]) && $ex[1] == "001") { //Checks for code sent by IRC saying that a connection has been made
+			if ($ex[1] == "001") { //Checks for code sent by IRC saying that a connection has been made
 				$this->log->info("Identifying as {$this->config['core']['nick']}", 'core', 'identify');
 				//run pre_identify
 				$this->msg("NickServ","IDENTIFY {$this->config['core']['nickserv']}");
