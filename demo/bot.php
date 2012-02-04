@@ -63,7 +63,8 @@ class IRCBot{
 		if(!feof($this->sock)){
 			$this->main();
 		}else{
-			die($this->log->error("No longer connected.","core","IRCBot",null));
+			$this->log->error("No longer connected.","core","IRCBot",null, IRCBot_Log::TO_FILE | IRCBot_Log::TO_STDOUT | IRCBot_Log::TO_EMAIL);
+			die(1);
 		}
 	}
 	
@@ -84,7 +85,13 @@ class IRCBot{
 			}
 			return true;
 		}
-		$this->log->error("There was a problem sending: \'$msg\'", 'core', 'raw');
+		if (!$skip) {
+			$this->log->error("There was a problem sending: \'$msg\'", 'core', 'raw');
+		}
+		if ($skip) {
+			//to prevent cyclical errors.
+			return true;
+		}
 		return false;
 	}
 	
@@ -117,6 +124,6 @@ class IRCBot{
 	}
 	
 	function msg($chan,$msg, $skip=false){
-		$this->raw("PRIVMSG $chan $msg", $skip);
+		return $this->raw("PRIVMSG $chan $msg", $skip);
 	}
 }

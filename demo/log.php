@@ -41,6 +41,7 @@ class IRCBot_Log {
 	const TO_MEMO = 4;
 	const TO_EMAIL = 8;
 	const TO_STDOUT = 16;
+	const TO_DEFAULT = 32;
 
 	// log level for the botlog
 	const DEBUG = 1;
@@ -128,6 +129,18 @@ class IRCBot_Log {
 			$options = $this->_default_options($level);
 		}
 
+		if (($options & self::TO_DEFAULT) == self::TO_DEFAULT) {
+			$defaultoptions = $this->_default_options($level);
+			$options = $defaultoptions | ($options & ~self::TO_DEFAULT);
+		}
+
+		if (($options & self::TO_STDOUT) == self::TO_STDOUT) {
+			$data = sprintf($config['botlog']['stdout_format'], $time, $name, $module, $location, $text, $trace);
+			if ($this->_log_stdout($data)) {
+				$results |= self::TO_STDOUT;
+			}
+		}
+
 		if (($options & self::TO_FILE) == self::TO_FILE) {
 			switch ($config['irclog']['format']) {
 			case 'plaintext':
@@ -171,20 +184,13 @@ class IRCBot_Log {
 			}
 		}
 
-		if (($options & self::TO_STDOUT) == self::TO_STDOUT) {
-			$data = sprintf($config['botlog']['stdout_format'], $time, $name, $module, $location, $text, $trace);
-			if ($this->_log_stdout($data)) {
-				$results |= self::TO_STDOUT;
-			}
-		}
-
 
 		if ($results == $options) {
 			return true;
 		}
 
 		//debug
-		var_dump($results, $options);
+		$this->_log_file('difference.log', "$module#$location#$text" . decbin($results) . "\t" .decbin($options) . "\n");
 
 		//generate exception
 		return false;
@@ -251,13 +257,22 @@ class IRCBot_Log {
 	}
 
 	private function _log_channel($channel, $data) {
-		//using core, send message to the channel
 		return $this->bot->msg($channel, $data, true);
 	}
 
 	private function _log_memo($user, $data) {
-		//if $user is an array, call _log_memo for each member (recursive)
-		//using core, send privmsg to memoserv "SEND $user $data"
+		if (is_array($user)) {
+			$results = true;
+			foreach ($user as $u) {
+				$temp = $this->_log_memo($u, $data);
+				if ($results && !$temp) {
+					$results = false;
+				}
+			}
+			return $results;
+		}
+
+		return $this->bot->msg('MemoServ', "SEND $user $data", true);
 	}
 
 	private function _log_email($email, $data) {
@@ -266,7 +281,7 @@ class IRCBot_Log {
 	}
 
 	private function _log_stdout($data) {
-		echo $data;
+		echo $data . "\n";
 		return true;
 	}
 
