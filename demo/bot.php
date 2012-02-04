@@ -35,7 +35,7 @@ class IRCBot{
 	function main(){
 		while (!feof($this->sock)) {
 			$data = trim(fgets($this->sock));
-			if($data != ""){
+			if($data == ""){
 				continue;
 			}
 			echo($data."\r\n");
