@@ -29,7 +29,7 @@ $config['botlog'] = array(
 	'channel_level' => 1,
 	'memo_level' => 4,
 	'email_level' => 4,
-	'stdout_level' => 1,
+	'stdout_level' => 2,
 );
 $config['email'] = array(
 );
