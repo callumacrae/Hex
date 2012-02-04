@@ -124,6 +124,6 @@ class IRCBot{
 	}
 	
 	function msg($chan,$msg, $skip=false){
-		return $this->raw("PRIVMSG $chan $msg", $skip);
+		return $this->raw("PRIVMSG $chan :$msg", $skip);
 	}
 }
