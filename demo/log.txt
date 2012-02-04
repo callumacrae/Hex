@@ -1,4 +1,4 @@
-(Saturday, 04-Feb-12 18:58:46 UTC) [INFO] core#connect - Connecting to server
+(Saturday, 04-Feb-12 19:07:47 UTC) [INFO] core#connect - Connecting to server
 Array
 (
     [0] => :irc.x10hosting.com
@@ -155,8 +155,8 @@ Array
     [8] => Network
     [9] => x10Bot[demo]!x10Bot[demo]@toxic-productions.com
 )
-(Saturday, 04-Feb-12 18:58:47 UTC) [INFO] core#identify - Identifying as x10Bot[demo]
-(Saturday, 04-Feb-12 18:58:47 UTC) [INFO] core#join - Joining #x10bot,#x10bot-backend
+(Saturday, 04-Feb-12 19:07:49 UTC) [INFO] core#identify - Identifying as x10Bot[demo]
+(Saturday, 04-Feb-12 19:07:49 UTC) [INFO] core#join - Joining #x10bot,#x10bot-backend
 Array
 (
     [0] => :irc.x10hosting.com
@@ -271,7 +271,7 @@ Array
     [0] => :irc.x10hosting.com
     [1] => 042
     [2] => x10Bot[demo]
-    [3] => 461AAAJQ5
+    [3] => 461AAAJQ9
     [4] => :your
     [5] => unique
     [6] => ID
@@ -2083,7 +2083,7 @@ Array
     [2] => x10Bot[demo]
     [3] => :There
     [4] => are
-    [5] => 29
+    [5] => 28
     [6] => users
     [7] => and
     [8] => 30
@@ -2101,6 +2101,8 @@ Array
     [4] => :operator(s)
     [5] => online
 )
+
+Notice: fputs(): send of 107 bytes failed with errno=32 Broken pipe in /home/admin/x10bot/demo/bot.php on line 101
 Array
 (
     [0] => :irc.x10hosting.com
@@ -2110,6 +2112,8 @@ Array
     [4] => :channels
     [5] => formed
 )
+
+Notice: fputs(): send of 120 bytes failed with errno=32 Broken pipe in /home/admin/x10bot/demo/bot.php on line 101
 Array
 (
     [0] => :irc.x10hosting.com
@@ -2117,12 +2121,14 @@ Array
     [2] => x10Bot[demo]
     [3] => :I
     [4] => have
-    [5] => 46
+    [5] => 45
     [6] => clients
     [7] => and
     [8] => 1
     [9] => servers
 )
+
+Notice: fputs(): send of 121 bytes failed with errno=32 Broken pipe in /home/admin/x10bot/demo/bot.php on line 101
 Array
 (
     [0] => :irc.x10hosting.com
@@ -2131,11 +2137,13 @@ Array
     [3] => :Current
     [4] => Local
     [5] => Users:
-    [6] => 46
+    [6] => 45
     [7] => 
     [8] => Max:
     [9] => 58
 )
+
+Notice: fputs(): send of 122 bytes failed with errno=32 Broken pipe in /home/admin/x10bot/demo/bot.php on line 101
 Array
 (
     [0] => :irc.x10hosting.com
@@ -2144,11 +2152,13 @@ Array
     [3] => :Current
     [4] => Global
     [5] => Users:
-    [6] => 59
+    [6] => 58
     [7] => 
     [8] => Max:
     [9] => 71
 )
+
+Notice: fputs(): send of 145 bytes failed with errno=32 Broken pipe in /home/admin/x10bot/demo/bot.php on line 101
 Array
 (
     [0] => :irc.x10hosting.com
@@ -2161,6 +2171,8 @@ Array
     [7] => displayed
     [8] => host
 )
+
+Notice: fputs(): send of 129 bytes failed with errno=32 Broken pipe in /home/admin/x10bot/demo/bot.php on line 101
 Array
 (
     [0] => :x10Bot[demo]!x10Bot[demo]@x10IRC\user-ba8.g5m.7u6lih.IP
@@ -2168,23 +2180,22 @@ Array
     [2] => x10Bot[demo]
     [3] => +xG
 )
+
+Notice: fputs(): send of 130 bytes failed with errno=32 Broken pipe in /home/admin/x10bot/demo/bot.php on line 101
 Array
 (
     [0] => :irc.x10hosting.com
     [1] => NOTICE
     [2] => x10Bot[demo]
-    [3] => :"heh
-    [4] => i
-    [5] => am
-    [6] => talkin
+    [3] => :System
+    [4] => Error:
+    [5] => press
+    [6] => F13
     [7] => to
-    [8] => someone...she's
-    [9] => not
-    [10] => dead...yet
-    [11] => anyways"
-    [12] => -
-    [13] => Stinky
+    [8] => continue...
 )
+
+Notice: fputs(): send of 232 bytes failed with errno=32 Broken pipe in /home/admin/x10bot/demo/bot.php on line 101
 Array
 (
     [0] => :NickServ!NickServ@services.x10hosting.com
@@ -2207,6 +2218,8 @@ Array
     [17] => identify
     [18] => <password>.
 )
+
+Notice: fputs(): send of 150 bytes failed with errno=32 Broken pipe in /home/admin/x10bot/demo/bot.php on line 101
 Array
 (
     [0] => :irc.x10hosting.com
@@ -2221,6 +2234,8 @@ Array
     [9] => external
     [10] => messages)
 )
+
+Notice: fputs(): send of 150 bytes failed with errno=32 Broken pipe in /home/admin/x10bot/demo/bot.php on line 101
 Array
 (
     [0] => :irc.x10hosting.com
@@ -2235,6 +2250,8 @@ Array
     [9] => external
     [10] => messages)
 )
+
+Notice: fputs(): send of 150 bytes failed with errno=32 Broken pipe in /home/admin/x10bot/demo/bot.php on line 101
 Array
 (
     [0] => :irc.x10hosting.com
@@ -2249,6 +2266,8 @@ Array
     [9] => external
     [10] => messages)
 )
+
+Notice: fputs(): send of 150 bytes failed with errno=32 Broken pipe in /home/admin/x10bot/demo/bot.php on line 101
 Array
 (
     [0] => :irc.x10hosting.com
@@ -2263,6 +2282,8 @@ Array
     [9] => external
     [10] => messages)
 )
+
+Notice: fputs(): send of 150 bytes failed with errno=32 Broken pipe in /home/admin/x10bot/demo/bot.php on line 101
 Array
 (
     [0] => :irc.x10hosting.com
@@ -2277,6 +2298,8 @@ Array
     [9] => external
     [10] => messages)
 )
+
+Notice: fputs(): send of 150 bytes failed with errno=32 Broken pipe in /home/admin/x10bot/demo/bot.php on line 101
 Array
 (
     [0] => :irc.x10hosting.com
@@ -2291,6 +2314,8 @@ Array
     [9] => external
     [10] => messages)
 )
+
+Notice: fputs(): send of 150 bytes failed with errno=32 Broken pipe in /home/admin/x10bot/demo/bot.php on line 101
 Array
 (
     [0] => :irc.x10hosting.com
@@ -2305,6 +2330,8 @@ Array
     [9] => external
     [10] => messages)
 )
+
+Notice: fputs(): send of 150 bytes failed with errno=32 Broken pipe in /home/admin/x10bot/demo/bot.php on line 101
 Array
 (
     [0] => :irc.x10hosting.com
@@ -2319,6 +2346,8 @@ Array
     [9] => external
     [10] => messages)
 )
+
+Notice: fputs(): send of 150 bytes failed with errno=32 Broken pipe in /home/admin/x10bot/demo/bot.php on line 101
 Array
 (
     [0] => :irc.x10hosting.com
@@ -2333,6 +2362,8 @@ Array
     [9] => external
     [10] => messages)
 )
+
+Notice: fputs(): send of 157 bytes failed with errno=32 Broken pipe in /home/admin/x10bot/demo/bot.php on line 101
 Array
 (
     [0] => :NickServ!NickServ@services.x10hosting.com
@@ -2345,6 +2376,8 @@ Array
     [7] => for
     [8] => x10Bot[demo].
 )
+
+Notice: fputs(): send of 195 bytes failed with errno=32 Broken pipe in /home/admin/x10bot/demo/bot.php on line 101
 Array
 (
     [0] => :irc.x10hosting.com
@@ -2360,6 +2393,8 @@ Array
     [10] => as
     [11] => x10Bot[demo]
 )
+
+Notice: fputs(): send of 135 bytes failed with errno=32 Broken pipe in /home/admin/x10bot/demo/bot.php on line 101
 Array
 (
     [0] => :MemoServ!MemoServ@services.x10hosting.com
@@ -2371,6 +2406,8 @@ Array
     [6] => new
     [7] => memo.
 )
+
+Notice: fputs(): send of 156 bytes failed with errno=32 Broken pipe in /home/admin/x10bot/demo/bot.php on line 101
 Array
 (
     [0] => :MemoServ!MemoServ@services.x10hosting.com
@@ -2385,6 +2422,8 @@ Array
     [9] => READ
     [10] => NEW
 )
+
+Notice: fputs(): send of 125 bytes failed with errno=32 Broken pipe in /home/admin/x10bot/demo/bot.php on line 101
 Array
 (
     [0] => ERROR
@@ -2394,4 +2433,4 @@ Array
     [4] => [RecvQ
     [5] => exceeded]
 )
-(Saturday, 04-Feb-12 18:58:47 UTC) [ERROR] core#IRCBot - No longer connected.
+(Saturday, 04-Feb-12 19:07:49 UTC) [ERROR] core#IRCBot - No longer connected.
