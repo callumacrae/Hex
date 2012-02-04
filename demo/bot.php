@@ -93,20 +93,15 @@ class IRCBot{
 		$this->log->error("No longer connected.", "core", "IRCBot", null, IRCBot_Log::TO_FILE | IRCBot_Log::TO_STDOUT | IRCBot_Log::TO_EMAIL);
 		die(1);
 	}
-
-	//this function must be removed, it's not really needed...
-	function reply($msg) {
-		$nick = explode("!", $this->ex[0]);
-		$nick = substr($nick[0], 1);
-		$this->msg($this->ex[2], "{$nick}: {$msg}");
-	}
 	
 	function raw($msg, $skip=false){
 		if (!$skip) {
 			$this->log->debug("Sending message to server \"{$msg}\"", "core", "raw");
+			//run pre_on_message_send
 		}
 
 		if (fputs($this->sock, $msg."\r\n") !== false) {
+			//run post_on_message_send
 			return true;
 		}
 
@@ -118,35 +113,6 @@ class IRCBot{
 			return true;
 		}
 		return false;
-	}
-
-	//everything must now be moved to use $this->log->{debug, info, warn, error}
-	function error($type, $msg){
-		switch ($type) {
-			case "fatal":
-				$send = true;
-				break;
-			
-			case "warning": case "notice":
-				if ($this->config['core']['debug'] == true || $this->config['core']['debug'] == "verbose") {
-					$send = true;
-				}
-				break;
-				
-			case "sent":
-				if ($this->config['core']['debug'] == 'verbose') {
-					$send = true;
-				}
-				break;
-		}
-		if ($send == true) {
-		var_dump($msg);
-			$this->log("[{$type}] {$msg}");
-		}
-	}
-	
-	function log($msg){
-		echo(date("[".$this->config['core']['time_format'],time())."] $msg\r\n");
 	}
 	
 	function msg($chan,$msg, $skip=false){
