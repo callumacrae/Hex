@@ -87,9 +87,6 @@ class IRCBot{
 				}
 				//TODO implement as demo/README
 			}
-			
-			//test
-			sleep(0.5);
 		}
 
 		$this->log->error("No longer connected.", "core", "IRCBot", null, IRCBot_Log::TO_FILE | IRCBot_Log::TO_STDOUT | IRCBot_Log::TO_EMAIL);
