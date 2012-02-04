@@ -18,10 +18,10 @@ class IRCBot{
 		//load the modules
 		//run pre_on_connect
 
-		//$this->log->info("Connecting to server {$serverdetails[0]}:{$serverdetails[1]}", "core", "connect", null, IRCBot_Log::TO_FILE | IRCBot_Log::TO_STDOUT);
-		//$this->log->debug("server:$serverdetails[0], port:$serverdetails[1]", "core", "connect", null, IRCBot_Log::TO_FILE);
+		$this->log->info("Connecting to server {$serverdetails[0]}:{$serverdetails[1]}", "core", "connect", null, IRCBot_Log::TO_FILE | IRCBot_Log::TO_STDOUT);
+		$this->log->debug("server:$serverdetails[0], port:$serverdetails[1]", "core", "connect", null, IRCBot_Log::TO_FILE);
 		if (!$this->sock = fsockopen($serverdetails[0], $serverdetails[1])) {
-			//$this->log->error("Failed to gain a connection", "core", 'connect', null, IRCBot_Log::TO_FILE | IRCBot_Log::TO_EMAIL | IRCBot_Log::TO_STDOUT);
+			$this->log->error("Failed to gain a connection", "core", 'connect', null, IRCBot_Log::TO_FILE | IRCBot_Log::TO_EMAIL | IRCBot_Log::TO_STDOUT);
 			die(1);
 		}
 		$this->raw("NICK {$this->config['core']['nick']}");
