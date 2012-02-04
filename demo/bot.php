@@ -40,7 +40,7 @@ class IRCBot{
 			if ($data == "") {
 				continue;
 			}
-			
+			echo($data."\r\n");
 			$this->log->debug($data, "core", "received");
 
 			$ex = explode(" ",$data);
