@@ -39,6 +39,7 @@ class IRCBot{
 			if($data != ""){
 				continue;
 			}
+			echo($data."\r\n");
 			$this->log->debug($data, "core", "received");
 			$ex = explode(" ",$data);
 			if ($ex[1] == "001") { //Checks for code sent by IRC saying that a connection has been made
