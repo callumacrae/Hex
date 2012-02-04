@@ -67,13 +67,10 @@ class IRCBot{
 				$chanl = strtolower($chan);
 			}
 
-			$cmd = substr($ex[3],1); //Trim : from the begining
-			$cmdl = strtolower($cmd);
-			$subcmd = $ex[4];
-			$subcmdl = strtolower($subcmd);
+			$cmd = strtolower(substr($ex[3], 1)); //Trim : from the begining
+			$subcmd = strtolower($ex[4]);
 			$usernick = explode("!", $ex[0]);
-			$usernick = substr($usernick[0], 1);
-			$usernickl = strtolower($usernickl);
+			$usernick = strtolower(substr($usernick[0], 1));
 
 			//run on_message_received
 
