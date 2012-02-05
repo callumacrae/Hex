@@ -8,7 +8,7 @@ class IRCBot{
 	private $modulewarning = array();
 	private $log;
 
-	function __construct(){
+	public function __construct () {
 		global $config;
 
 		$this->config = $config;
@@ -32,7 +32,7 @@ class IRCBot{
 		$this->main();
 	}
 
-	function main(){
+	public function main () {
 		while (!feof($this->sock)) {
 			$data = trim(fgets($this->sock));
 			if($data == ""){
@@ -46,6 +46,7 @@ class IRCBot{
 				//run pre_identify
 				$this->msg("NickServ","IDENTIFY {$this->config['core']['nickserv']}");
 				//run post_identify
+
 				$this->log->info("Joining {$this->config['core']['channels']}", 'core', 'join');
 				//run pre_join
 				$this->raw("JOIN {$this->config['core']['channels']}");
@@ -88,7 +89,7 @@ class IRCBot{
 				}else{
 					$this->modulewarning[$module] = false;
 				}
-				//TODO implement as demo/README
+				//TODO implement as demo/README sets out
 			}
 		}
 
@@ -96,7 +97,7 @@ class IRCBot{
 		die(1);
 	}
 	
-	function raw($msg, $skip=false){
+	public function raw ($msg, $skip=false) {
 		if (!$skip) {
 			$this->log->debug("Sending message to server \"{$msg}\"", "core", "raw");
 			//run pre_on_message_send
@@ -117,7 +118,7 @@ class IRCBot{
 		return false;
 	}
 	
-	function msg($chan,$msg, $skip=false){
+	public function msg ($chan, $msg, $skip=false) {
 		return $this->raw("PRIVMSG $chan :$msg", $skip);
 	}
 }
