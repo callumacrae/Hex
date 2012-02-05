@@ -79,7 +79,7 @@ class IRCBot{
 				$subcmd = strtolower($ex[4]);
 			}
 			$usernick = explode("!", $ex[0]);
-			$usernick = strtolower(substr($usernick[0], 1));
+			$usernickl = strtolower(substr($usernick[0], 1));
 
 			//run on_message_received
 
