@@ -180,6 +180,19 @@ class IRCBot{
 	public function msg ($chan, $msg, $skip=false) {
 		return $this->raw("PRIVMSG $chan :$msg", $skip);
 	}
+	
+        public function bitly($url) {
+		
+                // Bitly username and private API key
+                $username = "x10bot";
+		$apikey = "R_946683b01d6302a0bbcc7209cefad15e";
+                
+                // Retrieve the resulting XML document
+                $result = file_get_contents("http://api.bit.ly/shorten?version=2.0.1&longUrl=".urlencode($url)."&login={$username}&apiKey={$apikey}&format=json");
+                $result = json_decode($result);
+                return $result->results->$url->shortUrl;
+                
+        }
 
 	private function load_modules () {
 		$this->log->info('Loading modules', 'core', 'modules_load');

@@ -54,23 +54,9 @@ class news {
                             
                             // Use the final time data to find the latest one
                             if ($vbrssdate[3].$vbrssdate[2].$vbrssdate[1].$vbrssdate[4] <= $trrssdate[3].$trrssdate[2].$trrssdate[1].$trrssdate[4]) {
-                                $this->bot->msg($data['chan'], "{$data['nick']}: ".chr(2).$trrss[0]->title.chr(2)." - More: ".bitly($trrss[0]->link));
+                                $this->bot->msg($data['chan'], "{$data['nick']}: ".chr(2).$trrss[0]->title.chr(2)." - More: ".$this->bot->bitly($trrss[0]->link));
                             }else{
-                                $this->bot->msg($data['chan'], "{$data['nick']}: ".chr(2).$vbrss[0]->title.chr(2)." - More: ".bitly($vbrss[0]->link));
-                            }
-                            
-                            // Function to generate the bit.ly link
-                            function bitly($url) {
-                                
-                                // Bitly username and private API key
-                                $username = "x10bot";
-                                $apikey = "R_946683b01d6302a0bbcc7209cefad15e";
-                                
-                                // Retrieve the resulting XML document
-                                $result = file_get_contents("http://api.bit.ly/shorten?version=2.0.1&longUrl=".urlencode($url)."&login={$username}&apiKey={$apikey}&format=json");
-                                $result = json_decode($result);
-                                return $result->results->$url->shortUrl;
-                            
+                                $this->bot->msg($data['chan'], "{$data['nick']}: ".chr(2).$vbrss[0]->title.chr(2)." - More: ".$this->bot->bitly($vbrss[0]->link));
                             }
                             
                         }
