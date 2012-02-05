@@ -4,7 +4,8 @@
 // Pulls the latest version of the bot from the git repository. Any updates to
 // the modules will be instantly updated to the bot.
 
-if ($cmdl == 'x10bot:' && $subcmdl == 'reload') {
+if ($cmd == 'x10bot:' && $subcmd == 'reload') {
     exec("cd /home/admin/x10bot;git pull");
     $this->msg($ex[2], "{$usernick}: The bot has been made up-to-date with the GIT repository. Modules have been updated.");
 }
+

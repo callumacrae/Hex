@@ -35,11 +35,13 @@ class IRCBot{
 	public function main () {
 		while (!feof($this->sock)) {
 			$data = trim(fgets($this->sock));
-			if($data == ""){
+
+			if ($data == "") {
 				continue;
 			}
-			echo($data."\r\n");
-			//$this->log->debug($data, "core", "received");
+
+			$this->log->irc_log($data, IRCBot_Log::TO_FILE | IRCBot_LOG::TO_STDOUT);
+
 			$ex = explode(" ",$data);
 			if ($ex[1] == "001") { //Checks for code sent by IRC saying that a connection has been made
 				$this->log->info("Identifying as {$this->config['core']['nick']}", 'core', 'identify');
@@ -51,12 +53,16 @@ class IRCBot{
 				//run pre_join
 				$this->raw("JOIN {$this->config['core']['channels']}");
 				//run post_join
+
+				continue;
 			}
 
 			if ($ex[0] == "PING") {
 				//run pre_ping
 				$this->raw("PONG {$ex[1]}", true);
 				//run post_ping
+
+				continue;
 			}
 
 			if (isset($ex[2])) {
