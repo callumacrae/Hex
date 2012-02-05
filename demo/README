@@ -22,7 +22,7 @@ modules to modify the connection behaviour and many other aspects of the system.
 Each module file (saved with the **.mod** extension) would contain a class 
 (with the same name as the file, so the **reload.mod** module contains the 
 `reload` class). The class will need to define a static function named `info` 
-which returns an array. That array gives information on the module, such as its'
+which returns an array. That array gives information on the module, such as it's
 name, version, author, access level, and most importantly its defined hooks. The
 list of defined hooks is formatted as such:
 
