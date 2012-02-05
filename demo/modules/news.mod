@@ -1,6 +1,6 @@
 <?php
 
-class ping {
+class news {
 	private $bot;
 	private $log;
 
