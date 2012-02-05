@@ -59,7 +59,7 @@ class IRCBot{
 
 			if ($ex[0] == "PING") {
 				//run pre_ping
-				$this->raw("PONG {$ex[1]}", true);
+				$this->raw("PONG {$ex[1]}", false);
 				//run post_ping
 
 				continue;
