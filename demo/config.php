@@ -2,10 +2,11 @@
 $config['core'] = array(
 	"server" => "irc.x10hosting.com:6667",
 	"channels" => "#x10bot,#x10bot-backend",
-	"nick" => "x10Bot[demo]",
+	"nick" => "x10bot[demo]",
 	"nickserv" => "leetx10",
 	"serverpass" => "",
 	"date" => "Europe/London",
+	//the following are deprecated! will be removed.
 	"debug" => "verbose",
 	"debugchan" => "#x10bot-backend", //For core debugging
 	"time_format" => "c",
@@ -13,7 +14,7 @@ $config['core'] = array(
 $config['irclog'] = array(
 	'file_location' => './irc.log',
 	'format' => 'plaintext',
-	'line_format' => '[%1$s] #%2$s - %3$s - %4$s', // order of parameters: time, channel, user, text
+	'line_format' => '[%1$s] #%2$s', // order of parameters: time, text
 );
 $config['botlog'] = array(
 	'file_location' => './bot.log',

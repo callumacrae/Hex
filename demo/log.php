@@ -76,29 +76,52 @@ class IRCBot_Log {
 	 * @param array $line
 	 * @return boolean
 	 */
-	public function irc_log($line) {
+	public function irc_log ($text, $options=null) {
 		global $config;
 
-		$default_line = array(
-			'time' => '',
-			'channel' => '',
-			'user' => '',
-			'text' => '',
-		);
-
-		$line = array_merge($default_line, $line);
-
-		switch ($config['irclog']['format']) {
-		case 'plaintext':
-		case 'text':
-			$data = sprintf($config['irclog']['line_format'], $line['time'], $line['channel'], $line['user'], $line['text']);
-			return $this->_log_file($config['irclog']['file_location'], $data);
-			break;
-		default:
-			//generate an exception
-			$this->error('Unknown irc log format', 'log', 'irc_log', null);
-			break;
+		$time = date(DATE_COOKIE);
+		$results = 0;
+		
+		if ($options === null) {
+			$options = self::TO_STDOUT | self::TO_FILE;
 		}
+
+		if (($options & self::TO_DEFAULT) == self::TO_DEFAULT) {
+			$options = self::TO_STDOUT | self::TO_FILE | ($options & ~self::TO_DEFAULT);
+		}
+
+		if (($options & self::TO_STDOUT) == self::TO_STDOUT) {
+			$data = sprintf($config['irclog']['line_format'], $time, $text);
+			if ($this->_log_stdout($data)) {
+				$results |= self::TO_STDOUT;
+			}
+		}
+
+		if (($options & self::TO_FILE) == self::TO_FILE) {
+			switch ($config['irclog']['format']) {
+			case 'plaintext':
+			case 'text':
+				$data = sprintf($config['irclog']['line_format'], $time, $text);
+				if ($this->_log_file($config['irclog']['file_location'], $data)) {
+					$results |= self::TO_FILE;
+				}
+				break;
+			default:
+				//generate an exception
+				$this->error('Unknown irc log format', 'log', 'irc');
+				break;
+			}
+		}
+
+		if ($results == $options) {
+			return true;
+		}
+
+		//debug
+		$this->_log_file('difference.log', "log#irc#$text" . decbin($results) . "\t" .decbin($options) . "\n");
+
+		//generate exception
+		return false;
 	}
 
 	public function debug ($text, $module, $location, $trace=null, $options=null) {
@@ -183,7 +206,6 @@ class IRCBot_Log {
 				$results |= self::TO_EMAIL;
 			}
 		}
-
 
 		if ($results == $options) {
 			return true;
