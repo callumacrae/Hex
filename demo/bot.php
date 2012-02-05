@@ -26,7 +26,7 @@ class IRCBot{
 		}
 		$this->raw("NICK {$this->config['core']['nick']}");
 		$this->raw("USER {$this->config['core']['nick']} {$this->config['core']['nick']} {$this->config['core']['nick']} :{$this->config['core']['nick']}");
-		
+
 		//run post_on_connect
 
 		$this->main();
@@ -64,6 +64,8 @@ class IRCBot{
 
 				continue;
 			}
+
+			//FIXME DO we need both lowercase and whatever for the bot? I say only whatever case
 
 			if (isset($ex[2])) {
 				$chan = $ex[2];
