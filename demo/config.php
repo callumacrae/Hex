@@ -6,10 +6,6 @@ $config['core'] = array(
 	"nickserv" => "leetx10",
 	"serverpass" => "",
 	"date" => "Europe/London",
-	//the following are deprecated! will be removed.
-	"debug" => "verbose",
-	"debugchan" => "#x10bot-backend", //For core debugging
-	"time_format" => "c",
 );
 $config['irclog'] = array(
 	'file_location' => './irc.log',
