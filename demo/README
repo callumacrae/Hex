@@ -101,7 +101,7 @@ function that will call the various other functions as needed.
                 'access' => '', //lowest level of rights needed to use module. Implementation unsure
                 'hooks' => array(
                     'pre_on_connect' => 'do_this',
-                    'on_disconnet' => 'do_that',
+                    'on_disconnect' => 'do_that',
                 ),
             );
         }
