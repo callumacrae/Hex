@@ -33,7 +33,7 @@ class reload {
 	}
 
 	public function parse_message ($hook, $data) {
-		if ($data['cmd'] == 'x10bot:' && $data['subcmd'] == 'reload') {
+		if ($data['cmd'] == 'x10bot' && $data['subcmd'] == 'reload') {
 			$this->log->info("Received reload command from {$data['nick']}", 'reload', 'main');
  			exec("cd /home/admin/x10bot;git pull");
 			$this->bot->msg($data['chan'], "{$data['nick']}: The bot has been made up-to-date with the GIT repository. Modules have been updated.");

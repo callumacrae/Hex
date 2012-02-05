@@ -102,6 +102,7 @@ class IRCBot{
 
 			if (isset($ex[3])) {
 				$hook_data['cmd'] = strtolower(substr($ex[3], 1)); //Trim : from the begining
+				$hook_data['cmd'] = str_replace(array(':', ',', '.', '/', '<', '>', '?', ';', '\'', '\\', ':', '\"', '|', '[', '{', ']', '}', '!', '@', '£', '$', '%', '^', '&', '*', '\(', '\)', '-', '_', '=', '+'), '', $hook_data['cmd']);
 			}
 			if (isset($ex[4])) {
 				//the following would enable us to do multiple

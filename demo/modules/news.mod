@@ -23,7 +23,7 @@ class news {
 	}
 
 	public function parse_message ($hook, $data) {
-		if ($data['cmd'] == 'x10bot:' && $data['subcmd'] == 'news') {
+		if ($data['cmd'] == 'x10bot' && $data['subcmd'] == 'news') {
                 global $news;
 			$this->log->info("Received news command from {$data['nick']}", 'news', 'main');
                         if (isset($news) && !empty($news)) {
