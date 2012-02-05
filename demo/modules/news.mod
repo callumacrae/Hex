@@ -24,8 +24,9 @@ class ping {
 
 	public function parse_message ($hook, $data) {
 		if ($data['cmd'] == 'x10bot:' && $data['subcmd'] == 'news') {
+                global $news;
 			$this->log->info("Received news command from {$data['nick']}", 'news', 'main');
-                        if (isset($this->bot->news) && !empty($this->bot->news)) {
+                        if (isset($news) && !empty($news)) {
                             
                             $this->bot->msg($data['chan'], "{$data['nick']}: {$this->bot->news}");
                             
