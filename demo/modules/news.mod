@@ -65,7 +65,7 @@ class news {
                     global $news;
 		    $msgcontent = explode("{$data['ex'][0]} {$data['ex'][1]} {$data['ex'][2]} {$data['ex'][3]} {$data['ex'][4]}", $data['raw']);
                     $news = $msgcontent[1];
-                    $this->log->info("Received setnews command from {$data['nick']}", 'news', 'main');
+                    $this->log->info("News was set by {$data['nick']} to '{$news}'", 'news', 'main');
                     $this->bot->msg($data['chan'], "{$data['nick']}: News has been set. To unset, please use: x10bot unsetnews");
 		    return true;
 		}elseif ($data['cmd'] == 'x10bot' && $data['subcmd'] == 'unsetnews') {
