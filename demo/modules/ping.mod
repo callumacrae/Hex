@@ -1,10 +1,35 @@
 <?php
 
-// PING MODULE
-// A very simple module which will respond with 'pong' if called.
+class ping {
+	private $bot;
+	private $log;
 
-if ($cmd == 'x10bot:' && $subcmd == 'ping') {
-	$this->log->info("Received ping from {$usernick}", 'ping', 'main');
-	$this->msg($ex[2], "{$usernick}: pong");
+	public function __construct ($bot, $log) {
+		$this->bot = $bot;
+		$this->log = $log;
+	}
+
+	public static function info () {
+		return array(
+			'name' => 'Ping Module',
+			'desc' => 'Ping ... Pong.',
+			'author' => 'Dead-i & xav0989',
+			'version' => '1.0.0',
+			'access' => 2,
+			'hooks' => array(
+				'on_message_received' => 'parse_message',
+			),
+		);
+	}
+
+	public function parse_message ($hook, $data) {
+		if ($data['cmd'] == 'x10bot:' && $data['subcmd'] == 'ping') {
+			$this->log->info("Received ping from {$data['nick']}", 'ping', 'main');
+			$this->bot->msg($data['chan'], "{$data['nick']}: pong");
+			return true;
+		}
+	}
 }
+
+
 

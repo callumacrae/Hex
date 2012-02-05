@@ -19,4 +19,8 @@ if(getarg("debug") == true){
 require_once 'bot.php';
 
 $bot = new IRCBot();
-
+/*
+ob_start();
+var_dump($bot);
+file_put_contents("bot.dump", ob_get_clean());
+// */
