@@ -29,10 +29,13 @@ class reload {
 			exec("cd /home/admin/x10bot;git pull");
 			$this->bot->msg($data['chan'], "{$data['nick']}: The bot has been made up-to-date with the GIT repository. Reloading now.");
 			$this->bot->change_nick($config['core']['nick'] . '[R]');
-			//TODO start other bot asyncronously. 
+			exec("nohup php run.php > out.txt &");
+			//will add status check here
 			$this->bot->quit("Reload complete");
 			return true;
 		}
+
+
 	}
 }
 
