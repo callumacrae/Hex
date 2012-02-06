@@ -48,11 +48,11 @@ class IRCBot{
 			return;
 		}
 
-		$this->log->info("Connecting to server {$serverdetails[0]}:{$serverdetails[1]}", "core", "connect", null, IRCBot_Log::TO_FILE | IRCBot_Log::TO_STDOUT);
-		$this->log->debug("server:$serverdetails[0], port:$serverdetails[1]", "core", "connect", null, IRCBot_Log::TO_FILE);
+		$this->log->info("Connecting to server {$serverdetails[0]}:{$serverdetails[1]}", "core", "connect");
+		$this->log->debug("server:$serverdetails[0], port:$serverdetails[1]", "core", "connect");
 		if (!$this->sock = fsockopen($serverdetails[0], $serverdetails[1])) {
-			$this->log->error("Failed to gains a connection", "core", 'connect', null, IRCBot_Log::TO_FILE | IRCBot_Log::TO_EMAIL | IRCBot_Log::TO_STDOUT);
-			die(1);
+			$this->log->error("Failed to gains a connection", "core", 'connect');
+			return;
 		}
 		if (isset($this->config['core']['serverpass']) && !empty($this->config['core']['serverpass'])) {
 			$this->raw("PASS {$this->config['core']['serverpass']}", false, true);
@@ -95,24 +95,22 @@ class IRCBot{
 				$this->msg("NickServ","IDENTIFY {$this->config['core']['nickserv']}");
 				$this->run_hook('post_identify');
 
+				continue;
+			}
+
+			if ($ex[1] == "900") { //checks for code send by nickserv that we are identified
+				$this->log->info("Identified as {$this->nick}", 'core', 'identify');
 				$this->log->info("Joining initial channels", 'core', 'join');
 				if (!$this->run_hook('pre_join')) {
 					continue;
 				}
 				foreach (explode(',', $this->config['core']['channels']) as $channel) {
-					var_dump($channel);
 					$this->join($channel);
 				}
 				$this->run_hook('post_join');
 
-				continue;
-			}
-
-			if ($ex[1] = "900") { //checks for code send by nickserv that we are identified
 				$this->identified = true;
 			}
-
-			//FIXME DO we need both lowercase and whatever for the bot? I say only whatever case
 			
 			$hook_data = array(
 				'raw' => $data,
@@ -162,20 +160,22 @@ class IRCBot{
 		$this->log->error("No longer connected.", "core", "IRCBot", null, IRCBot_Log::TO_FILE | IRCBot_Log::TO_STDOUT | IRCBot_Log::TO_EMAIL);
 	}
 
-	public function identified () {
+	public function is_identified () {
 		return $this->identified;
 	}
 	
 	public function raw ($msg, $skip=false, $silence = false) {
-		if (!$skip || !$silence) {
-			$this->log->debug("Sending message to server \"{$msg}\"", "core", "raw");
-			//run pre_on_message_send
+		if ($skip) {
+			if (is_resource($this->sock)) {
+				fputs($this->sock, $msg."\r\n");
+			}
+			return true;
 		}
 
+		$this->log->debug("Sending message to server \"{$msg}\"", "core", "raw");
+		$this->run_hook('pre_on_message_send', $msg);
+		
 		if (!is_resource($this->sock)) {
-			if ($skip) {
-				return true;
-			}
 			if (!$silence) {
 				$this->log->error("No connection. Could not send message: \'$msg\'", 'core', 'raw');
 			}
@@ -183,17 +183,11 @@ class IRCBot{
 		}
 
 		if (fputs($this->sock, $msg."\r\n") !== false) {
-			//run post_on_message_send
+			$this->run_hook('post_on_message_send', $msg);
 			return true;
 		}
 
-		if (!$skip) {
-			$this->log->error("There was a problem sending: \'$msg\'", 'core', 'raw');
-		}
-		if ($skip) {
-			//to prevent cyclical errors.
-			return true;
-		}
+		$this->log->error("There was a problem sending: \'$msg\'", 'core', 'raw');
 		return false;
 	}
 	
