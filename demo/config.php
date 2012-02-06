@@ -6,6 +6,7 @@ $config['core'] = array(
 	"nickserv" => "leetx10",
 	"serverpass" => "",
 	"date" => "Europe/London",
+	'name' => 'x10hosting bot',
 );
 $config['irclog'] = array(
 	'file_location' => './irc.log',
@@ -28,6 +29,14 @@ $config['botlog'] = array(
 	'email_level' => 4,
 	'stdout_level' => 2,
 );
+$config['url'] = array(
+	'user' => 'x10bot',
+	'api_key' => 'R_946683b01d6302a0bbcc7209cefad15e',
+);
 $config['email'] = array(
 );
+
+if (is_readable('./config.custom.php')) {
+	include_once './config.custom.php';
+}
 
