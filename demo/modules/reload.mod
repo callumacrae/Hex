@@ -29,7 +29,7 @@ class reload {
 			exec("cd /home/admin/x10bot;git pull");
 			$this->bot->msg($data['chan'], "{$data['nick']}: The bot has been made up-to-date with the GIT repository. Reloading now.");
 			$this->bot->change_nick($config['core']['nick'] . '[R]');
-			exec('php ' . join(' ', $GLOBALS['argv']))
+			exec('php ' . join(' ', $GLOBALS['argv']));
 			$this->bot->quit("Reload complete");
 			return true;
 		}
