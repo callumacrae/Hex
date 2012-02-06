@@ -23,7 +23,7 @@ class ping {
 	}
 
 	public function parse_message ($hook, $data) {
-		if ($data['cmd'] == 'x10bot' && $data['subcmd'] == 'ping') {
+		if ($data['cmd'] == 'ping') {
 			$this->log->info("Received ping from {$data['nick']}", 'ping', 'main');
 			$this->bot->msg($data['chan'], "{$data['nick']}: pong");
 			return true;

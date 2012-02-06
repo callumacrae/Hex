@@ -8,6 +8,9 @@ class IRCBot{
 	private $modulewarning = array();
 	private $log;
 
+	private $channels = array();
+	private $nick;
+
 	private $hooks = array(
 		'pre_on_connect',
 		'post_on_connect',
@@ -20,6 +23,12 @@ class IRCBot{
 		'on_message_received',
 		'pre_on_message_send',
 		'post_on_message_send',
+		'pre_nick_change',
+		'post_nick_change',
+		'pre_channel_join',
+		'post_channel_join',
+		'pre_quit',
+		'post_quit',
 	);
 	private $modules;
 	private $modules_info;
@@ -34,7 +43,7 @@ class IRCBot{
 
 		//load the modules
 		$this->load_modules();
-		if (!$this->run_hooks('pre_on_connect')) {
+		if (!$this->run_hook('pre_on_connect')) {
 			return;
 		}
 
@@ -44,10 +53,13 @@ class IRCBot{
 			$this->log->error("Failed to gains a connection", "core", 'connect', null, IRCBot_Log::TO_FILE | IRCBot_Log::TO_EMAIL | IRCBot_Log::TO_STDOUT);
 			die(1);
 		}
-		$this->raw("NICK {$this->config['core']['nick']}");
-		$this->raw("USER {$this->config['core']['nick']} {$this->config['core']['nick']} {$this->config['core']['nick']} :{$this->config['core']['nick']}");
+		if (isset($this->config['core']['serverpass']) && !empty($this->config['core']['serverpass'])) {
+			$this->raw("PASS {$this->config['core']['serverpass']}");
+		}
+		$this->change_nick($this->config['core']['nick']);
+		$this->raw("USER {$this->config['core']['nick']} {$this->config['core']['nick']} {$this->config['core']['nick']} :{$this->config['core']['name']}");
 
-		$this->run_hooks('post_on_connect');
+		$this->run_hook('post_on_connect');
 
 		$this->main();
 	}
@@ -82,11 +94,14 @@ class IRCBot{
 				$this->msg("NickServ","IDENTIFY {$this->config['core']['nickserv']}");
 				$this->run_hook('post_identify');
 
-				$this->log->info("Joining {$this->config['core']['channels']}", 'core', 'join');
+				$this->log->info("Joining initial channels", 'core', 'join');
 				if (!$this->run_hook('pre_join')) {
 					continue;
 				}
-				$this->raw("JOIN {$this->config['core']['channels']}");
+				foreach (explode(',', $this->config['core']['channels']) as $channel) {
+					var_dump($channel);
+					$this->join($channel);
+				}
 				$this->run_hook('post_join');
 
 				continue;
@@ -100,6 +115,7 @@ class IRCBot{
 				'chan' => '',
 				'cmd' => '',
 				'subcmd' => '',
+				'params' => '',
 				'nick' => '',
 				'host' => '',
 			);
@@ -109,20 +125,25 @@ class IRCBot{
 			}
 
 			if (isset($ex[3])) {
-				$hook_data['cmd'] = str_replace(array(':', ',', '.', '/', '<', '>', '?', ';', '\'', '\\', ':', '\"', '|', '[', '{', ']', '}', '!', '@', '£', '$', '%', '^', '&', '*', '\(', '\)', '-', '_', '=', '+'), '', strtolower(substr($ex[3], 1)));
+				$target = str_replace(array(':', ',', '.', '/', '<', '>', '?', ';', '\'', '\\', ':', '\"', '|', '[', '{', ']', '}', '!', '@', '£', '$', '%', '^', '&', '*', '\(', '\)', '-', '_', '=', '+'), '', strtolower(substr($ex[3], 1)));
+				if ($target != 'x10bot') {
+					continue;
+				}
 			}
 			if (isset($ex[4])) {
+				$hook_data['cmd'] = trim(strtolower($ex[4]));
+			}
+			if (isset($ex[5])) {
+				$hook_data['subcmd'] = trim(strtolower($ex[5]));
+			}
+			if (isset($ex[6])) {
 				//the following would enable us to do commands with spaces and stuff, but it needs to be fixed
-				/*
-				$i = 4;
-				do {
-					var_dump($ex[$i]);
-					$hook_data['subcmd'] += strtolower($ex[$i]) . ' ';
-					$i++;
-				} while ($i < count($ex));
-				var_dump($hook_data['subcmd'], $ex);
-*/
-				$hook_data['subcmd'] = trim(strtolower($ex[4]));
+				
+				for ($i = 6; $i < count($ex); $i++) {
+					$hook_data['params'] .= strtolower($ex[$i]) . ' ';
+				}
+
+				$hook_data['params'] = trim($hook_data['params']);
 			}
 
 			$user = explode("!", $ex[0]);
@@ -188,19 +209,48 @@ class IRCBot{
 	public function msg ($chan, $msg, $skip=false) {
 		return $this->raw("PRIVMSG $chan :$msg", $skip);
 	}
-	
-        public function bitly($url) {
+
+	public function change_nick ($new) {
+		if (!$this->run_hook('pre_nick_change', $new)) {
+			return false;
+		}
+		$this->log->info("Changing nick", 'core', 'change_nick');
+		$this->log->debug("New nick: $new", 'core', 'change_nick');
+		$return = $this->raw("NICK $new");
+		$this->run_hook('post_nick_change', $new);
+		if ($return) {
+			$this->nick = $new;
+		}
+		return $return;
+	}
+
+	public function join ($channel) {
+		if (in_array($channel, $this->channels)) {
+			$this->log->info("Already in channel $channel", 'core', 'join');
+		}
 		
-                // Bitly username and private API key
-                $username = "x10bot";
-		$apikey = "R_946683b01d6302a0bbcc7209cefad15e";
-                
-                // Retrieve the resulting XML document
-                $result = file_get_contents("http://api.bit.ly/shorten?version=2.0.1&longUrl=".urlencode($url)."&login={$username}&apiKey={$apikey}&format=json");
-                $result = json_decode($result);
-                return $result->results->$url->shortUrl;
-                
-        }
+		if (!$this->run_hook('pre_channel_join', $channel)) {
+			return false;
+		}
+		$this->log->info("Joining channel $channel", 'core', 'join');
+		$return = $this->raw("JOIN $channel");
+		$this->run_hook('post_channel_join', $channel);
+		if ($return) {
+			$this->channel[] = $channel;
+		}
+		return $return;
+	}
+
+	public function quit ($msg = '') {
+		if (!$this->run_hook('pre_quit', $msg)) {
+			return false;
+		}
+		$this->log->info("Quitting", 'core', 'quit');
+		$this->log->debug("Quit message: $msg", 'core', 'quit');
+		$return = $this->raw("QUIT $msg");
+		$this->run_hook('post_quit', $msg);
+		return $return;
+	}
 
 	private function load_modules () {
 		$this->log->info('Loading modules', 'core', 'modules_load');
