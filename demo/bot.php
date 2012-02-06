@@ -34,18 +34,20 @@ class IRCBot{
 
 		//load the modules
 		$this->load_modules();
-		//run pre_on_connect
+		if (!$this->run_hooks('pre_on_connect')) {
+			return;
+		}
 
 		$this->log->info("Connecting to server {$serverdetails[0]}:{$serverdetails[1]}", "core", "connect", null, IRCBot_Log::TO_FILE | IRCBot_Log::TO_STDOUT);
 		$this->log->debug("server:$serverdetails[0], port:$serverdetails[1]", "core", "connect", null, IRCBot_Log::TO_FILE);
 		if (!$this->sock = fsockopen($serverdetails[0], $serverdetails[1])) {
-			$this->log->error("Failed to gain a connection", "core", 'connect', null, IRCBot_Log::TO_FILE | IRCBot_Log::TO_EMAIL | IRCBot_Log::TO_STDOUT);
+			$this->log->error("Failed to gains a connection", "core", 'connect', null, IRCBot_Log::TO_FILE | IRCBot_Log::TO_EMAIL | IRCBot_Log::TO_STDOUT);
 			die(1);
 		}
 		$this->raw("NICK {$this->config['core']['nick']}");
 		$this->raw("USER {$this->config['core']['nick']} {$this->config['core']['nick']} {$this->config['core']['nick']} :{$this->config['core']['nick']}");
 
-		//run post_on_connect
+		$this->run_hooks('post_on_connect');
 
 		$this->main();
 	}
@@ -61,25 +63,31 @@ class IRCBot{
 			$ex = explode(" ", $data);
 
 			if ($ex[0] == "PING") {
-				//run pre_ping
-				$this->raw("PONG {$ex[1]}", true);
-				//run post_ping
+				if (!$this->run_hook('pre_ping')) {
+					continue;
+				}
+					$this->raw("PONG {$ex[1]}", true);
+					$this->run_hook('post_ping');
 
-				continue;
+					continue;
 			}
 
 			$this->log->irc_log($data, IRCBot_Log::TO_FILE | IRCBot_LOG::TO_STDOUT);
 
 			if ($ex[1] == "001") { //Checks for code sent by IRC saying that a connection has been made
 				$this->log->info("Identifying as {$this->config['core']['nick']}", 'core', 'identify');
-				//run pre_identify
+				if (!$this->run_hook('pre_identify')) {
+					continue;
+				}
 				$this->msg("NickServ","IDENTIFY {$this->config['core']['nickserv']}");
-				//run post_identify
+				$this->run_hook('post_identify');
 
 				$this->log->info("Joining {$this->config['core']['channels']}", 'core', 'join');
-				//run pre_join
+				if (!$this->run_hook('pre_join')) {
+					continue;
+				}
 				$this->raw("JOIN {$this->config['core']['channels']}");
-				//run post_join
+				$this->run_hook('post_join');
 
 				continue;
 			}
@@ -101,11 +109,10 @@ class IRCBot{
 			}
 
 			if (isset($ex[3])) {
-				$hook_data['cmd'] = strtolower(substr($ex[3], 1)); //Trim : from the begining
-				$hook_data['cmd'] = str_replace(array(':', ',', '.', '/', '<', '>', '?', ';', '\'', '\\', ':', '\"', '|', '[', '{', ']', '}', '!', '@', '£', '$', '%', '^', '&', '*', '\(', '\)', '-', '_', '=', '+'), '', $hook_data['cmd']);
+				$hook_data['cmd'] = str_replace(array(':', ',', '.', '/', '<', '>', '?', ';', '\'', '\\', ':', '\"', '|', '[', '{', ']', '}', '!', '@', '£', '$', '%', '^', '&', '*', '\(', '\)', '-', '_', '=', '+'), '', strtolower(substr($ex[3], 1)));
 			}
 			if (isset($ex[4])) {
-				//the following would enable us to do multiple
+				//the following would enable us to do commands with spaces and stuff, but it needs to be fixed
 				/*
 				$i = 4;
 				do {
@@ -232,7 +239,7 @@ class IRCBot{
 		return true;
 	}
 
-	private function run_hook ($hook, $args) {
+	private function run_hook ($hook, $args = array()) {
 		if (!in_array($hook, $this->hooks)) {
 			$this->log->error("Unknown hook $hook", 'core', 'run_hook');
 			return false;
