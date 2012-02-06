@@ -23,7 +23,7 @@ class quit {
 	}
 
 	public function parse_message ($hook, $data) {
-		if ($data['cmd'] == 'quit') {
+		if ($data['cmd'] == 'quit' || $data['cmd'] == 'shutdown') {
 			$this->log->info("Received quit command from {$data['nick']}", 'quit', 'main');
 			$this->bot->quit($data['params']);
 			return true;
