@@ -10,6 +10,7 @@ class IRCBot{
 
 	private $channels = array();
 	private $nick;
+	private $identified = false;
 
 	private $hooks = array(
 		'pre_on_connect',
@@ -54,7 +55,7 @@ class IRCBot{
 			die(1);
 		}
 		if (isset($this->config['core']['serverpass']) && !empty($this->config['core']['serverpass'])) {
-			$this->raw("PASS {$this->config['core']['serverpass']}");
+			$this->raw("PASS {$this->config['core']['serverpass']}", false, true);
 		}
 		$this->change_nick($this->config['core']['nick']);
 		$this->raw("USER {$this->config['core']['nick']} {$this->config['core']['nick']} {$this->config['core']['nick']} :{$this->config['core']['name']}");
@@ -107,6 +108,10 @@ class IRCBot{
 				continue;
 			}
 
+			if ($ex[1] = "900") { //checks for code send by nickserv that we are identified
+				$this->identified = true;
+			}
+
 			//FIXME DO we need both lowercase and whatever for the bot? I say only whatever case
 			
 			$hook_data = array(
@@ -137,48 +142,32 @@ class IRCBot{
 				$hook_data['subcmd'] = trim(strtolower($ex[5]));
 			}
 			if (isset($ex[6])) {
-				//the following would enable us to do commands with spaces and stuff, but it needs to be fixed
-				
 				for ($i = 6; $i < count($ex); $i++) {
 					$hook_data['params'] .= strtolower($ex[$i]) . ' ';
 				}
-
 				$hook_data['params'] = trim($hook_data['params']);
 			}
 
 			$user = explode("!", $ex[0]);
 			if (isset($user[1])) {
 				$hook_data['nick'] = substr($user[0], 1);
-
 				$host = explode("@", $user[1]);
 				$hook_data['host'] = $host[1];
 			}
 
 			//run on_message_received
 			$this->run_hook('on_message_received', $hook_data);
-
-			//changing to the hook-type module/plugin system
-			//while this is technically okay, it will make the ram usage rocket!
-			//also it limits the possibilities for complex modules
-			/*$modules = glob("./modules/*.mod");
-			foreach($modules as $module){
-				if (!include($module)) { //This should not be include_once to allow dynamic module editing.
-					if($this->modulewarning[$module] != true){
-						$this->log->error("{$module} module could not be loaded", "core", "loader");
-						$this->modulewarning[$module] = true;
-					}
-				}else{
-					$this->modulewarning[$module] = false;
-				}
-				//TODO implement as demo/README sets out
-			}*/
 		}
 
 		$this->log->error("No longer connected.", "core", "IRCBot", null, IRCBot_Log::TO_FILE | IRCBot_Log::TO_STDOUT | IRCBot_Log::TO_EMAIL);
 	}
+
+	public function identified () {
+		return $this->identified;
+	}
 	
-	public function raw ($msg, $skip=false) {
-		if (!$skip) {
+	public function raw ($msg, $skip=false, $silence = false) {
+		if (!$skip || !$silence) {
 			$this->log->debug("Sending message to server \"{$msg}\"", "core", "raw");
 			//run pre_on_message_send
 		}
@@ -187,7 +176,9 @@ class IRCBot{
 			if ($skip) {
 				return true;
 			}
-			$this->log->error("No connection. Could not send message: \'$msg\'", 'core', 'raw');
+			if (!$silence) {
+				$this->log->error("No connection. Could not send message: \'$msg\'", 'core', 'raw');
+			}
 			return false;
 		}
 
