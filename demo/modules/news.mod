@@ -62,6 +62,7 @@ class news {
                     }
 		    return true;
 		}elseif ($data['cmd'] == 'x10bot' && $data['subcmd'] == 'setnews') {
+			//this will be unset whenever the bot is reloaded...
                     global $news;
 		    $msgcontent = explode("{$data['ex'][0]} {$data['ex'][1]} {$data['ex'][2]} {$data['ex'][3]} {$data['ex'][4]} ", $data['raw']);
                     $news = $msgcontent[1];
