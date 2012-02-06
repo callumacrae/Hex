@@ -180,7 +180,7 @@ class IRCBot_Log {
 		}
 
 		if (($options & self::TO_CHANNEL) == self::TO_CHANNEL) {
-			if ($this->bot->identified()) {
+			if ($this->bot->is_identified()) {
 				$data = sprintf($config['botlog']['channel_format'], $time, $name, $module, $location, $text, $trace);
 				if ($this->_log_channel($config['botlog']['channel_location'], $data)) {
 					$results |= self::TO_CHANNEL;
@@ -194,7 +194,7 @@ class IRCBot_Log {
 			$user = array();
 			//create an array of admin's IRC handle.
 
-			if ($this->bot->identified()) {
+			if ($this->bot->is_identified()) {
 				$data = sprintf($config['botlog']['memo_format'], $time, $name, $module, $location, $text, $trace);
 				if ($this->_log_memo($user, $data)) {
 					$results |= self::TO_MEMO;
