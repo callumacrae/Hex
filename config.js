@@ -5,12 +5,6 @@ var config = {
 		real: 'Hexidecimal',
 		pass: ''
 	},
-	user_game: {
-		nick: 'Hex-game',
-		user: 'Hex',
-		real: 'The Hexidecimal game bot',
-		pass: ''
-	},
 	server: {
 		addr: 'irc.x10hosting.com',
 		port: 6667
