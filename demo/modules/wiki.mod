@@ -40,8 +40,7 @@ var url = res.headers.location
 var url = 'http://x10hosting.com/wiki/index.php?title=Special%3ASearch&search=' + encodeURIComponent(cmd_end);
 }
 });			
-			 */
-			$data['params'] = trim($data['subcmd'] . ' ' . $data['params']);
+			 */;
 			if (empty($data['params'])) {
 				$this->log->warn('Calling wiki without a query', 'wiki', 'parse');
 			}

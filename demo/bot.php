@@ -117,7 +117,6 @@ class IRCBot{
 				'ex' => $ex,
 				'chan' => '',
 				'cmd' => '',
-				'subcmd' => '', //deprecated
 				'params' => '',
 				'nick' => '',
 				'host' => '',
@@ -135,10 +134,6 @@ class IRCBot{
 			}
 			if (isset($ex[4])) {
 				$hook_data['cmd'] = trim(strtolower($ex[4]));
-			}
-			//deprecated
-			if (isset($ex[5])) {
-				$hook_data['subcmd'] = trim(strtolower($ex[5]));
 			}
 			if (isset($ex[5])) {
 				for ($i = 5; $i < count($ex); $i++) {
