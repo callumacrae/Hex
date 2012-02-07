@@ -24,12 +24,16 @@ class info {
 
 	public function parse_message ($hook, $data) {
 		if ($data['cmd'] == 'info' || $data['cmd'] == 'about') {
-			$this->log->info("Received info from {$data['nick']}", 'info', 'main');
-			$info = $this->bot->info();
-			$this->bot->msg($data['chan'], "{$data['nick']}: This is who I am:");
-			$this->bot->msg($data['chan'], "Core version {$info['core']['version']}");
-			foreach ($info['modules'] as $mod) {
-				$this->bot->msg($data['chan'], "{$mod['name']} module version {$mod['version']}");
+			if (empty($data['params']) {
+				$this->log->info("Received info from {$data['nick']}", 'info', 'main');
+				$info = $this->bot->info();
+				$this->bot->msg($data['chan'], "{$data['nick']}: This is who I am:");
+				$this->bot->msg($data['chan'], "Core version {$info['core']['version']}");
+				foreach ($info['modules'] as $mod) {
+					$mods .= "{$mod['name']}, ";
+				}
+				$this->bot->msg($data['chan'], "The following modules are loaded: $mods");
+			} else {
 			}
 			return true;
 		}
