@@ -163,6 +163,15 @@ class IRCBot{
 	public function is_identified () {
 		return $this->identified;
 	}
+
+	public function info() {
+		return array(
+			'core' => array(
+				'version' => $this->config['core']['version'],
+			),
+			'modules' => $this->modules_info,
+		);
+	}
 	
 	public function raw ($msg, $skip=false, $silence = false) {
 		if ($skip) {
