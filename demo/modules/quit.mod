@@ -11,7 +11,7 @@ class quit {
 
 	public static function info () {
 		return array(
-			'name' => 'Quit Module',
+			'name' => 'Quit',
 			'desc' => 'Disconnects and quit.',
 			'author' => 'xav0989',
 			'version' => '1.0.0',

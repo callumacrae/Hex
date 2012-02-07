@@ -11,7 +11,7 @@ class info {
 
 	public static function info () {
 		return array(
-			'name' => 'Info Module',
+			'name' => 'Info',
 			'desc' => 'Gives out information on the bot and the loaded modules.',
 			'author' => 'xav0989',
 			'version' => '1.0.0',
@@ -29,7 +29,7 @@ class info {
 			$this->bot->msg($data['chan'], "{$data['nick']}: This is who I am:");
 			$this->bot->msg($data['chan'], "Core version {$info['core']['version']}");
 			foreach ($info['modules'] as $mod) {
-				$this->bot->msg($data['chan'], "{$mod['name']} version {$mod['version']}");
+				$this->bot->msg($data['chan'], "{$mod['name']} module version {$mod['version']}");
 			}
 			return true;
 		}

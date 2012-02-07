@@ -11,7 +11,7 @@ class ping {
 
 	public static function info () {
 		return array(
-			'name' => 'Ping Module',
+			'name' => 'Ping',
 			'desc' => 'Ping ... Pong.',
 			'author' => 'Dead-i & xav0989',
 			'version' => '1.0.0',

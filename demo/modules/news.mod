@@ -11,7 +11,7 @@ class news {
 
 	public static function info () {
 		return array(
-			'name' => 'News Module',
+			'name' => 'News',
 			'desc' => 'Displays the latest x10Hosting news from a staff member, vBulletin or Tumblr',
 			'author' => 'Dead-i',
 			'version' => '1.0.0',
