@@ -24,17 +24,23 @@ class info {
 
 	public function parse_message ($hook, $data) {
 		if ($data['cmd'] == 'info' || $data['cmd'] == 'about') {
+			$this->log->info("Received info from {$data['nick']}", 'info', 'main');
+			$info = $this->bot->info();
 			if (empty($data['params'])) {
-				$this->log->info("Received info from {$data['nick']}", 'info', 'main');
-				$info = $this->bot->info();
 				$this->bot->msg($data['chan'], "{$data['nick']}: This is who I am:");
 				$this->bot->msg($data['chan'], "Core version {$info['core']['version']}");
-				foreach ($info['modules'] as $mod) {
-					$mods .= "{$mod['name']}, ";
+				foreach ($info['modules'] as $id => $mod) {
+					$mods .= "{$mod['name']}($id), ";
 				}
-				$this->bot->msg($data['chan'], "The following modules are loaded: $mods");
+				$this->bot->msg($data['chan'], "The following modules are loaded: {trim(trim($mods), ',')}");
 			} else {
-				//
+				$mods = explode(' ', $data['params']);
+				foreach ($mods as $mod) {
+					if (!array_key_exists($mod, $info['modules'])) {
+						$this->log->warn("Unknown module named $mod", 'info', 'specifics');
+						continue;
+					}
+					$this->bot->msg($data['chan'], "{$data['nick']}: Module {$info['modules'][$mod]['name']} by {$info['modules'][$mod]['author']} version {$info['modules'][$mod]['version']}. Description: {$info['modules'][$mod]['desc']}");
 			}
 			return true;
 		}
