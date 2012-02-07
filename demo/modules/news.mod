@@ -61,8 +61,7 @@ class news {
                         
                     }
 		    return true;
-		} elseif ($data['cmd'] == 'set' && $data['subcmd'] == 'news') { //this will be unset whenever the bot is reloaded... we should send it to a database or something
-		   // $msgcontent = explode("{$data['ex'][0]} {$data['ex'][1]} {$data['ex'][2]} {$data['ex'][3]} {$data['ex'][4]} {$data['ex'][5]}", $data['raw']);
+		} elseif ($data['cmd'] == 'set' && $data['subcmd'] == 'news') { //this will be unset whenever the bot is reloaded... we should send it to a database or something;
                     $news = $data['params'];
                     $this->log->info("News was set by {$data['nick']} to '{$news}'", 'news', 'set');
                     $this->bot->msg($data['chan'], "{$data['nick']}: News has been set. To unset, please use: x10bot unset news");
