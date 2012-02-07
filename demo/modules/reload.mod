@@ -11,7 +11,7 @@ class reload {
 
 	public static function info () {
 		return array(
-			'name' => 'Reload Module',
+			'name' => 'Reload',
 			'desc' => 'Pulls the latest version of the bot from the git repository. Any updates to the modules will be instantly updated to the bot.',
 			'author' => 'Dead-i & xav0989',
 			'version' => '1.0.0',

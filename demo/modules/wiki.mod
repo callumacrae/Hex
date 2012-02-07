@@ -11,7 +11,7 @@ class wiki {
 
 	public static function info () {
 		return array(
-			'name' => 'WIKI Module',
+			'name' => 'Wiki',
 			'desc' => 'Searches on the wiki.',
 			'author' => 'xav0989',
 			'version' => '1.0.0',
