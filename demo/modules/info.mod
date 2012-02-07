@@ -24,7 +24,7 @@ class info {
 
 	public function parse_message ($hook, $data) {
 		if ($data['cmd'] == 'info' || $data['cmd'] == 'about') {
-			if (empty($data['params']) {
+			if (empty($data['params'])) {
 				$this->log->info("Received info from {$data['nick']}", 'info', 'main');
 				$info = $this->bot->info();
 				$this->bot->msg($data['chan'], "{$data['nick']}: This is who I am:");
@@ -34,6 +34,7 @@ class info {
 				}
 				$this->bot->msg($data['chan'], "The following modules are loaded: $mods");
 			} else {
+				//
 			}
 			return true;
 		}
