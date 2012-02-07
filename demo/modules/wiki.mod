@@ -42,7 +42,7 @@ var url = 'http://x10hosting.com/wiki/index.php?title=Special%3ASearch&search=' 
 });			
 			 */
 			$data['params'] = trim($data['subcmd'] . ' ' . $data['params']);
-			if (($data['params'])) {
+			if (empty($data['params'])) {
 				$this->log->warn('Calling wiki without a query', 'wiki', 'parse');
 			}
 			return true;
