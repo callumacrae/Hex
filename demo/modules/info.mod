@@ -36,7 +36,7 @@ class info {
 						$mods .= "{$mod['name']}($id), ";
 					}
 					$mods = trim(trim($mods), ',');
-					$this->bot->msg($data['chan'], "The following modules are loaded: $mods");
+					$this->bot->msg($data['chan'], "The following module(s) (is|are) loaded: $mods.");
 				}
 			} else {
 				$mods = explode(' ', $data['params']);
