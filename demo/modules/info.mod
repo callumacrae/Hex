@@ -41,6 +41,7 @@ class info {
 						continue;
 					}
 					$this->bot->msg($data['chan'], "{$data['nick']}: Module {$info['modules'][$mod]['name']} by {$info['modules'][$mod]['author']} version {$info['modules'][$mod]['version']}. Description: {$info['modules'][$mod]['desc']}");
+				}
 			}
 			return true;
 		}
