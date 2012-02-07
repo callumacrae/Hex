@@ -29,10 +29,15 @@ class info {
 			if (empty($data['params'])) {
 				$this->bot->msg($data['chan'], "{$data['nick']}: This is who I am:");
 				$this->bot->msg($data['chan'], "Core version {$info['core']['version']}");
-				foreach ($info['modules'] as $id => $mod) {
-					$mods .= "{$mod['name']}($id), ";
+				if (count($info['modules']) == 0) {
+					$this->bot->msg($data['chan'], "There are no modules loaded");
+				} else {
+					foreach ($info['modules'] as $id => $mod) {
+						$mods .= "{$mod['name']}($id), ";
+					}
+					$mods = trim(trim($mods), ',');
+					$this->bot->msg($data['chan'], "The following modules are loaded: $mods");
 				}
-				$this->bot->msg($data['chan'], "The following modules are loaded: {trim(trim($mods), ',')}");
 			} else {
 				$mods = explode(' ', $data['params']);
 				foreach ($mods as $mod) {
