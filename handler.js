@@ -45,7 +45,6 @@ handler = function (info, admin, noreply) {
 							'help [all]                  - return a list of commands [and what they do]. (1)',
 							'ban <user> [<channel>]      - bans a user from a channel. If channel is not specified, defaults to current. (4)',
 							'devoice <user> [<channel>]  - devoice a user in a channel. If channel is not specified, defaults to current. (2)',
-							'gline <user>                - glines the specified user. Feature not yet operational. (9)',
 							'join <channel>              - join a specified channel. (7)',
 							'kick <user> [<channel>]     - kick a user from a channel. If channel is not specified, defaults to current. (3)',
 							'part [<channel>]            - part a specified channel. If channel is not specified, defaults to current. (7)',
@@ -54,7 +53,6 @@ handler = function (info, admin, noreply) {
 							'remove <command>            - deletes a command. Please bear in mind that some commands cannot be removed. (6)',
 							'restart                     - restarts the bot. (10)',
 							'set <command> <message>     - sets a responce to a specified command (eg "set test hello world" will cause the bot to say "hello world" when the user says "hex: test"). (6)',
-							'shun <user>                 - tempshuns the specified user. Feature not yet operational. (9)',
 							'voice <user> [<chan>]       - voice a user in a channel. If channel is not specified, defaults to current. (2)',
 							'End of help.'
 						];
@@ -96,14 +94,6 @@ handler = function (info, admin, noreply) {
 				case 'flush':
 					flush = true;
 					reply = 'Flushing...';
-					break;
-
-				case 'gline':
-					if (admin < 9) {
-						reply = 'Admin level 9 required for this operation.';
-						break;
-					}
-					reply = 'Feature hasn\'t yet been developed.';
 					break;
 
 				case 'join':
@@ -203,14 +193,6 @@ handler = function (info, admin, noreply) {
 					reply = 'Successfully set ' + cmd;
 					break;
 
-				case 'shun':
-					if (admin < 9) {
-						reply = 'Admin level 9 required for this operation.';
-						break;
-					}
-					reply = 'Feature hasn\'t yet been developed.';
-					break;
-
 				case 'su':
 					//dont check whether admin is level 10 yet - level 3s can list admins
 					cmd = cmd_end.split(' ', 3);
@@ -292,61 +274,6 @@ handler = function (info, admin, noreply) {
 					reply = 'Muted for half an hour.';
 					break;
 
-				case 'topic':
-					if (admin < 10) {
-						reply = 'Admin level 10 required for this operation.';
-						break;
-					}
-					if (cmd_end === null) {
-						reply = 'You need to specify a command, such as append / set / root.';
-						break;
-					}
-					var end, topic;
-					end = (cmd_end.indexOf(' ') === -1) ? undefined : cmd_end.indexOf(' ');
-					cmd = cmd_end.slice(0, end);
-					cmd_end = cmd_end.slice(end + 1);
-
-					if (cmd_end === cmd) {
-						cmd_end = null;
-					}
-
-					if (config.tmp.topic === undefined) {
-						config.tmp.topic = config.topic.root.join(' ' + config.topic.seperator + ' ');
-					}
-
-					switch (cmd.toLowerCase()) {
-						case 'append':
-							log = 'topic append';
-							topic = config.topic.root;
-							topic.push(cmd_end);
-							topic = topic.join(' ' + config.topic.seperator + ' ');
-							break;
-
-						case 'set':
-							log = 'topic set';
-							topic = config.topic.root;
-							topic[cmd_end.slice(0, 1) - 1] = cmd_end.slice(2);
-							topic = topic.join(' ' + config.topic.seperator + ' ');
-							break;
-
-						case 'root':
-							log = 'topic root';
-							topic = config.tmp.topic;
-							break;
-
-						default:
-							topic = cmd + (cmd_end ? ' ' + cmd_end : '');
-							topic = topic.split(' ' + config.topic.seperator + ' ');
-							config.topic.root = topic;
-							topic = config.topic.root.join(' ' + config.topic.seperator + ' ');
-							break;
-					}
-					if (topic) {
-						topic = '\xE2\x96\xBA ' + topic + ' \xE2\x97\x84';
-						hex.raw('TOPIC ' + chan + ' :' + topic);
-					}
-					break;
-
 				case 'unmute':
 					if (admin < 4) {
 						reply = 'Admin level 4 required for this operation.';
@@ -423,7 +350,6 @@ handler = function (info, admin, noreply) {
 
 		case 'uptime':
 			var num, uptime = new Date().getTime() - start.getTime();
-			//86400000
 			reply = 'Uptime: ';
 			if (uptime > 86400000) {
 				num = Math.floor(uptime / 86400000)
