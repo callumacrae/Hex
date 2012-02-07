@@ -142,7 +142,7 @@ class IRCBot{
 			}
 			if (isset($ex[5])) {
 				for ($i = 5; $i < count($ex); $i++) {
-					$hook_data['params'] .= strtolower($ex[$i]) . ' ';
+					$hook_data['params'] .= $ex[$i] . ' ';
 				}
 				$hook_data['params'] = trim($hook_data['params']);
 			}
