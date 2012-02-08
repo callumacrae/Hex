@@ -138,7 +138,11 @@ class IRCBot{
 				continue;
 			}
 
-			if (preg_match('/^:(.*)!(.*)@(.*) PRIVMSG (?:[^#].*) :([.\S]*) ([.\S]*)(?: (.*))?$/', $data, $matches)) {
+			if (preg_match('/^:(.*)!(.*)@(.*) PRIVMSG (?:[^#])(.*) :([.\S]*)(?: (.*))?$/', $data, $matches)) {
+				if (empty($matches[5])) {
+					continue;
+				}
+
 				$hook_data = array(
 					'raw' => $data,
 					'params' => '',
