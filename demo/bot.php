@@ -74,11 +74,11 @@ class IRCBot{
 
 			$ex = explode(" ", $data);
 
-			if ($ex[0] == "PING") {
+			if (preg_match('/^PING :(.*)$/i', $data, $matches)) { //$ex[0] == "PING") {
 				if (!$this->run_hook('pre_ping')) {
 					continue;
 				}
-					$this->raw("PONG {$ex[1]}", true);
+					$this->raw("PONG :{$matches[1]}", true);
 					$this->run_hook('post_ping');
 
 					continue;
