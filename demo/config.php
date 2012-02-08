@@ -9,6 +9,7 @@ $config['core'] = array(
 	'date' => 'Europe/London',
 	'name' => 'x10hosting bot',
 	'version' => 'demo',
+	'command_word' => 'x10bot',
 );
 $config['irclog'] = array(
 	'file_location' => './irc.log',

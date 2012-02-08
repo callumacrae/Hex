@@ -22,6 +22,7 @@ class IRCBot{
 		'pre_ping',
 		'post_ping',
 		'on_message_received',
+		'on_private_message_received',
 		'pre_on_message_send',
 		'post_on_message_send',
 		'pre_nick_change',
@@ -74,7 +75,7 @@ class IRCBot{
 
 			$ex = explode(" ", $data);
 
-			if (preg_match('/^PING :(.*)$/i', $data, $matches)) { //$ex[0] == "PING") {
+			if (preg_match('/^PING :(.*)$/i', $data, $matches)) {
 				if (!$this->run_hook('pre_ping')) {
 					continue;
 				}
@@ -115,49 +116,28 @@ class IRCBot{
 				}
 			}
 			
-			$hook_data = array(
-				'raw' => $data,
-				'ex' => $ex,
-				'chan' => '',
-				'cmd' => '',
-				'params' => '',
-				'nick' => '',
-				'host' => '',
-			);
-
-			if (isset($ex[3])) {
-				$target = str_replace(array(':', ',', '.', '/', '<', '>', '?', ';', '\'', '\\', ':', '\"', '|', '[', '{', ']', '}', '!', '@', '£', '$', '%', '^', '&', '*', '\(', '\)', '-', '_', '=', '+'), '', strtolower(substr($ex[3], 1)));
-				if ($target != 'x10bot') {
+			if(preg_match('/^:(.*)!(.*)@(.*) PRIVMSG #(.*) :([.\S]*) ([.\S]*) (.*)$/', $data, $matches)) {
+				if ($matches[5] != $this->config['core']['command_word']) {
 					continue;
 				}
-			}
-			if (isset($ex[4])) {
-				$hook_data['cmd'] = trim(strtolower($ex[4]));
-			}
-			if (isset($ex[5])) {
-				for ($i = 5; $i < count($ex); $i++) {
-					$hook_data['params'] .= $ex[$i] . ' ';
-				}
-				$hook_data['params'] = trim($hook_data['params']);
-			}
+				
+				$hook_data = array(
+					'raw' => $data,
+					'params' => '',
+					'nick' => $matches[1],
+					'host' => $matches[3],
+					'chan' => $matches[4],
+					'cmd' => $matches[6],
+				);
 
-			$user = explode("!", $ex[0]);
-			if (isset($user[1])) {
-				$hook_data['nick'] = substr($user[0], 1);
-				$host = explode("@", $user[1]);
-				$hook_data['host'] = $host[1];
-			}
-			
-			if (isset($ex[2])) {
-				if ($ex[2] == $this->config['core']['nick']) {
-					$hook_data['chan'] = $hook_data['nick'];
-				}else{
-					$hook_data['chan'] = $ex[2];
+				if (isset($matches[7])) {
+					$hook_data['params'] = $matches[6]);
 				}
+	
+				//run on_message_received
+				$this->run_hook('on_message_received', $hook_data);
+				continue;
 			}
-
-			//run on_message_received
-			$this->run_hook('on_message_received', $hook_data);
 		}
 
 		$this->log->error("No longer connected.", "core", "IRCBot", null, IRCBot_Log::TO_FILE | IRCBot_Log::TO_STDOUT | IRCBot_Log::TO_EMAIL);
