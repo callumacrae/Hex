@@ -114,13 +114,7 @@ class IRCBot{
 				}
 			}
 
-			$this->log->debug(preg_match('/^:(.*)!(.*)@(.*) PRIVMSG #(.*) :([.\S]*) ([.\S]*) (.*)$/', $data) . " = " . $data, 'core', 'channel');
-			
-			if (preg_match('/^:(.*)!(.*)@(.*) PRIVMSG #(.*) :([.\S]*) ([.\S]*) (.*)$/', $data, $matches)) {
-				$this->log->debug(($matches[5] != $this->config['core']['command_word'])? 'different' : 'same', 'core', 'channel');
-				$this->log->debug($matches[5], 'core', 'channel');
-				$this->log->debug($this->config['core']['command_word'], 'core', 'channel');
-
+			if (preg_match('/^:(.*)!(.*)@(.*) PRIVMSG #(.*) :([.\S]*) ([.\S]*)(?: (.*))?$/', $data, $matches)) {
 				if ($matches[5] != $this->config['core']['command_word']) {
 					continue;
 				}
