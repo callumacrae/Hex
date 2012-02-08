@@ -122,10 +122,6 @@ class IRCBot{
 				'host' => '',
 			);
 
-			if (isset($ex[2])) {
-				$hook_data['chan'] = $ex[2];
-			}
-
 			if (isset($ex[3])) {
 				$target = str_replace(array(':', ',', '.', '/', '<', '>', '?', ';', '\'', '\\', ':', '\"', '|', '[', '{', ']', '}', '!', '@', '£', '$', '%', '^', '&', '*', '\(', '\)', '-', '_', '=', '+'), '', strtolower(substr($ex[3], 1)));
 				if ($target != 'x10bot') {
@@ -147,6 +143,14 @@ class IRCBot{
 				$hook_data['nick'] = substr($user[0], 1);
 				$host = explode("@", $user[1]);
 				$hook_data['host'] = $host[1];
+			}
+			
+			if (isset($ex[2])) {
+				if ($ex[2] == $this->config['core']['nick']) {
+					$hook_data['chan'] = $hook_data['nick'];
+				}else{
+					$hook_data['chan'] = $ex[2];
+				}
 			}
 
 			//run on_message_received
