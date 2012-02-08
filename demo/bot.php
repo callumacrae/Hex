@@ -113,9 +113,12 @@ class IRCBot{
 					continue;
 				}
 			}
+
 			
-			if(preg_match('/^:(.*)!(.*)@(.*) PRIVMSG #(.*) :([.\S]*) ([.\S]*) (.*)$/', $data, $matches)) {
-				$this->log->debug($this->config['core']['command_word'], 'core', 'channel');
+			$this->log->debug($this->config['core']['command_word'], 'core', 'channel');
+			$this->log->debug($data, 'core', 'main');
+			
+			if (preg_match('/^:(.*)!(.*)@(.*) PRIVMSG #(.*) :([.\S]*) ([.\S]*) (.*)$/', $data, $matches)) {
 				if ($matches[5] != $this->config['core']['command_word']) {
 					continue;
 				}
@@ -135,6 +138,7 @@ class IRCBot{
 	
 				//run on_message_received
 				$this->run_hook('on_message_received', $hook_data);
+
 				continue;
 			}
 		}
