@@ -1,18 +1,19 @@
 <?php
 $config['core'] = array(
-	"server" => "irc.x10hosting.com:6667",
-	"channels" => "#x10bot,#x10bot-backend",
-	"nick" => "x10bot[demo]",
-	"nickserv" => "leetx10",
-	"serverpass" => "",
-	"date" => "Europe/London",
+	'server' => 'irc.x10hosting.com',
+	'port' => '6667',
+	'channels' => '#x10bot,#x10bot-backend',
+	'nick' => 'x10bot[demo]',
+	'nickserv' => 'leetx10',
+	'serverpass' => '',
+	'date' => 'Europe/London',
 	'name' => 'x10hosting bot',
 	'version' => 'demo',
 );
 $config['irclog'] = array(
 	'file_location' => './irc.log',
 	'format' => 'plaintext',
-	'line_format' => '[%1$s] #%2$s', // order of parameters: time, text
+	'line_format' => '[%1$s] %2$s', // order of parameters: time, text
 );
 $config['botlog'] = array(
 	'file_location' => './bot.log',
