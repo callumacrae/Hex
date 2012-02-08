@@ -88,7 +88,7 @@ class IRCBot{
 			$this->log->irc_log($data, IRCBot_Log::TO_FILE | IRCBot_LOG::TO_STDOUT);
 
 			if (!$this->is_identified()) {
-				if (strpos($data, '001') == (strlen($this->config['core']['channel'])+2)) { //Checks for code sent by IRC saying that a connection has been made
+				if (strpos($data, '001') == (strlen($this->config['core']['server'])+2)) { //Checks for code sent by IRC saying that a connection has been made
 					$this->log->info("Identifying as {$this->config['core']['nick']}", 'core', 'identify');
 					if (!$this->run_hook('pre_identify')) {
 						continue;
@@ -99,7 +99,7 @@ class IRCBot{
 					continue;
 				}
 
-				if (strpos($data, '900') == (strlen($this->config['core']['channel'])+2)) { //checks for code send by nickserv that we are identified
+				if (strpos($data, '900') == (strlen($this->config['core']['server'])+2)) { //checks for code send by nickserv that we are identified
 					$this->log->info("Identified as {$this->nick}", 'core', 'identify');
 					$this->log->info("Joining initial channels", 'core', 'join');
 					if (!$this->run_hook('pre_join')) {
