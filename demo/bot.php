@@ -40,7 +40,6 @@ class IRCBot{
 
 		$this->config = $config;
 		$this->log = IRCBot_Log::getInstance($this);
-		$serverdetails = explode(":",$this->config['core']['server']);
 
 		//load the modules
 		$this->load_modules();
@@ -48,9 +47,9 @@ class IRCBot{
 			return;
 		}
 
-		$this->log->info("Connecting to server {$serverdetails[0]}:{$serverdetails[1]}", "core", "connect");
-		$this->log->debug("server:$serverdetails[0], port:$serverdetails[1]", "core", "connect");
-		if (!$this->sock = fsockopen($serverdetails[0], $serverdetails[1])) {
+		$this->log->info("Connecting to server {$this->config['core']['server']}:{$this->config['core']['port']}", "core", "connect");
+		$this->log->debug("server:{$this->config['core']['server']}, port:{$this->config['core']['port']}", "core", "connect");
+		if (!$this->sock = fsockopen($this->config['core']['server'], $this->config['core']['port'])) {
 			$this->log->error("Failed to gains a connection", "core", 'connect');
 			return;
 		}
@@ -79,7 +78,7 @@ class IRCBot{
 				if (!$this->run_hook('pre_ping')) {
 					continue;
 				}
-					$this->raw("PONG {$ex[1]}", true);
+					$this->raw("PONG {$ex[1]}", false);
 					$this->run_hook('post_ping');
 
 					continue;
@@ -87,29 +86,33 @@ class IRCBot{
 
 			$this->log->irc_log($data, IRCBot_Log::TO_FILE | IRCBot_LOG::TO_STDOUT);
 
-			if ($ex[1] == "001") { //Checks for code sent by IRC saying that a connection has been made
-				$this->log->info("Identifying as {$this->config['core']['nick']}", 'core', 'identify');
-				if (!$this->run_hook('pre_identify')) {
+			if (!$this->is_identified()) {
+				if (strpos($data, '001') == (strlen($this->config['core']['channel'])+2)) { //Checks for code sent by IRC saying that a connection has been made
+					$this->log->info("Identifying as {$this->config['core']['nick']}", 'core', 'identify');
+					if (!$this->run_hook('pre_identify')) {
+						continue;
+					}
+					$this->msg("NickServ","IDENTIFY {$this->config['core']['nickserv']}");
+					$this->run_hook('post_identify');
+
 					continue;
 				}
-				$this->msg("NickServ","IDENTIFY {$this->config['core']['nickserv']}");
-				$this->run_hook('post_identify');
 
-				continue;
-			}
+				if (strpos($data, '900') == (strlen($this->config['core']['channel'])+2)) { //checks for code send by nickserv that we are identified
+					$this->log->info("Identified as {$this->nick}", 'core', 'identify');
+					$this->log->info("Joining initial channels", 'core', 'join');
+					if (!$this->run_hook('pre_join')) {
+						continue;
+					}
+					foreach (explode(',', $this->config['core']['channels']) as $channel) {
+						$this->join($channel);
+					}
+					$this->run_hook('post_join');
 
-			if ($ex[1] == "900") { //checks for code send by nickserv that we are identified
-				$this->log->info("Identified as {$this->nick}", 'core', 'identify');
-				$this->log->info("Joining initial channels", 'core', 'join');
-				if (!$this->run_hook('pre_join')) {
+					$this->identified = true;
+
 					continue;
 				}
-				foreach (explode(',', $this->config['core']['channels']) as $channel) {
-					$this->join($channel);
-				}
-				$this->run_hook('post_join');
-
-				$this->identified = true;
 			}
 			
 			$hook_data = array(
