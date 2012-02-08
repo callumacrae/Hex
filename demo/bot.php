@@ -73,9 +73,7 @@ class IRCBot{
 				continue;
 			}
 
-			$ex = explode(" ", $data);
-
-			if (preg_match('/^PING :(.*)$/i', $data, $matches)) {
+			if (preg_match('/^PING :(.*)$/', $data, $matches)) {
 				if (!$this->run_hook('pre_ping')) {
 					continue;
 				}
