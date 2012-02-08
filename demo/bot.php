@@ -124,7 +124,7 @@ class IRCBot{
 					'params' => '',
 					'nick' => $matches[1],
 					'host' => $matches[3],
-					'chan' => $matches[4],
+					'chan' => '#' . $matches[4],
 					'cmd' => $matches[6],
 				);
 
