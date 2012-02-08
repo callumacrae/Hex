@@ -26,11 +26,11 @@ echo 'CHANNEL MESSAGE PARAM';
 var_dump(preg_match('/^:(.*)!(.*)@(.*) PRIVMSG #(.*) :([.\S]*) ([.\S]*)(?: (.*))?$/', $lines['param'], $matchesp), $matchesp);
 
 echo 'PRIVATE MESSAGE NO COMMAND';
-var_dump(preg_match('/^:(.*)!(.*)@(.*) PRIVMSG (?:[^#].*) :([.\S]*)(?: (.*))?$/', $lines['priv no command'], $matchespnc), $matchespnc);
+var_dump(preg_match('/^:(.*)!(.*)@(.*) PRIVMSG (?:[^#])(.*) :([.\S]*)(?: (.*))?$/', $lines['priv no command'], $matchespnc), $matchespnc);
 
 echo 'PRIVATE MESSAGE NO PARAM';
-var_dump(preg_match('/^:(.*)!(.*)@(.*) PRIVMSG (?:[^#].*) :([.\S]*)(?: (.*))?$/', $lines['priv no param'], $matchespnp), $matchespnp);
+var_dump(preg_match('/^:(.*)!(.*)@(.*) PRIVMSG (?:[^#])(.*) :([.\S]*)(?: (.*))?$/', $lines['priv no param'], $matchespnp), $matchespnp);
 
 echo 'PRIVATE MESSAGE PARAM';
-var_dump(preg_match('/^:(.*)!(.*)@(.*) PRIVMSG (?:[^#].*) :([.\S]*)(?: (.*))?$/', $lines['priv param'], $matchespp), $matchespp);
+var_dump(preg_match('/^:(.*)!(.*)@(.*) PRIVMSG (?:[^#])(.*) :([.\S]*)(?: (.*))?$/', $lines['priv param'], $matchespp), $matchespp);
 
