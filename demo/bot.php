@@ -78,8 +78,7 @@ class IRCBot{
 				if (!$this->run_hook('pre_ping')) {
 					continue;
 				}
-				$this->log->bot_log($data, 'core', 'pong', null, IRCBot_Log::TO_CHANNEL);
-					$this->raw("PONG {$ex[1]}", false);
+					$this->raw("PONG {$ex[1]}", true);
 					$this->run_hook('post_ping');
 
 					continue;
