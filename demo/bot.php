@@ -129,7 +129,7 @@ class IRCBot{
 				);
 
 				if (isset($matches[7])) {
-					$hook_data['params'] = $matches[6]);
+					$hook_data['params'] = $matches[6];
 				}
 	
 				//run on_message_received
