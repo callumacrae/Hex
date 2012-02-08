@@ -3,7 +3,7 @@
 $lines['connect'] = ':irc.x10hosting.com 001 x10bot[demo] :Welcome to the x10IRC IRC Network x10bot[demo]!x10bot[demo]@toxic-productions.com';
 $lines['login'] = ':irc.x10hosting.com 900 x10bot[demo] x10bot[demo]!x10bot[demo]@x10IRC\user-ba8.g5m.7u6lih.IP x10Bot[demo] :You are now logged in as x10Bot[demo]';
 $lines['no command'] = ':Dead-i!Dead-i@x10Hosting.CommunitySupport PRIVMSG #x10bot :x10bot';
-$lines['no param'] = ':Dead-i!Dead-i@x10Hosting.CommunitySupport PRIVMSG #x10bot :x10bot news';
+$lines['no param'] = ':xav0989[web]!Mibbit@x10Hosting.CommunitySupport PRIVMSG #x10bot :x10bot news';
 $lines['param'] = ':Dead-i!Dead-i@x10Hosting.CommunitySupport PRIVMSG #x10bot :x10bot news set testing testing I\'m just suggesting';
 
 
