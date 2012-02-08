@@ -115,6 +115,7 @@ class IRCBot{
 			}
 			
 			if(preg_match('/^:(.*)!(.*)@(.*) PRIVMSG #(.*) :([.\S]*) ([.\S]*) (.*)$/', $data, $matches)) {
+				$this->log->debug($this->config['core']['command_word'], 'core', 'channel');
 				if ($matches[5] != $this->config['core']['command_word']) {
 					continue;
 				}
@@ -162,7 +163,9 @@ class IRCBot{
 			return true;
 		}
 
-		$this->log->debug("Sending message to server \"{$msg}\"", "core", "raw");
+		if (!$silence) {
+			$this->log->debug("Sending message to server \"{$msg}\"", "core", "raw");
+		}
 		$this->run_hook('pre_on_message_send', $msg);
 		
 		if (!is_resource($this->sock)) {
@@ -191,7 +194,7 @@ class IRCBot{
 		}
 		$this->log->info("Changing nick", 'core', 'change_nick');
 		$this->log->debug("New nick: $new", 'core', 'change_nick');
-		$return = $this->raw("NICK $new");
+		$return = $this->raw("NICK $new", false, true);
 		$this->run_hook('post_nick_change', $new);
 		if ($return) {
 			$this->nick = $new;
@@ -208,7 +211,7 @@ class IRCBot{
 			return false;
 		}
 		$this->log->info("Joining channel $channel", 'core', 'join');
-		$return = $this->raw("JOIN $channel");
+		$return = $this->raw("JOIN $channel", false, true);
 		$this->run_hook('post_channel_join', $channel);
 		if ($return) {
 			$this->channel[] = $channel;
@@ -222,7 +225,7 @@ class IRCBot{
 		}
 		$this->log->info("Quitting", 'core', 'quit');
 		$this->log->debug("Quit message: $msg", 'core', 'quit');
-		$return = $this->raw("QUIT $msg");
+		$return = $this->raw("QUIT $msg",  false, true);
 		$this->run_hook('post_quit', $msg);
 		return $return;
 	}
