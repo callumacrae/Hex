@@ -18,6 +18,7 @@ class info {
 			'access' => 1,
 			'hooks' => array(
 				'on_message_received' => 'parse_message',
+				'on_private_message_received' => 'parse_message',
 			),
 		);
 	}

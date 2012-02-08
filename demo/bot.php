@@ -129,11 +129,31 @@ class IRCBot{
 				);
 
 				if (isset($matches[7])) {
-					$hook_data['params'] = $matches[6];
+					$hook_data['params'] = $matches[7];
 				}
 	
 				//run on_message_received
 				$this->run_hook('on_message_received', $hook_data);
+
+				continue;
+			}
+
+			if (preg_match('/^:(.*)!(.*)@(.*) PRIVMSG (?:[^#].*) :([.\S]*) ([.\S]*)(?: (.*))?$/', $data, $matches)) {
+				$hook_data = array(
+					'raw' => $data,
+					'params' => '',
+					'nick' => $matches[1],
+					'host' => $matches[3],
+					'chan' => $matches[4],
+					'cmd' => $matches[5],
+				);
+
+				if (isset($matches[6])) {
+					$hook_data['params'] = $matches[6];
+				}
+	
+				//run on_message_received
+				$this->run_hook('on_private_message_received', $hook_data);
 
 				continue;
 			}
