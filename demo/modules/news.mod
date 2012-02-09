@@ -18,6 +18,7 @@ class news {
 			'access' => 1,
 			'hooks' => array(
 				'on_message_received' => 'parse_message',
+				'on_private_message_received' => 'parse_private_message',
 			),
 		);
 	}
@@ -82,8 +83,13 @@ class news {
 			return true;
 		}
 	}
+
+	public function parse_private_message($hook, $data) {
+		$data['chan'] = $data['nick'];
+		return $this->parse_message($hook, $data);
+	}
 	
-	public function bitly($url) {
+	private function bitly($url) {
 		global $config;		
                 // Retrieve the resulting XML document
                 $result = json_decode(file_get_contents("http://api.bit.ly/shorten?version=2.0.1&longUrl=".urlencode($url)."&login={$config['url']['user']}&apiKey={$config['url']['api_key']}&format=json"));
