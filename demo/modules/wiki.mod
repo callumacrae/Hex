@@ -18,6 +18,7 @@ class wiki {
 			'access' => 1,
 			'hooks' => array(
 				'on_message_received' => 'parse_message',
+				'on_private_message_received' => 'parse_private_message',
 			),
 		);
 	}
@@ -46,6 +47,11 @@ var url = 'http://x10hosting.com/wiki/index.php?title=Special%3ASearch&search=' 
 			}
 			return true;
 		}
+	}
+
+	public function parse_private_message ($hook, $data) {
+		$data['chan'] = $data['nick'];
+		return $this->parse_message($hook, $data);
 	}
 }
 
