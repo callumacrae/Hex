@@ -33,6 +33,7 @@ class info {
 				if (count($info['modules']) == 0) {
 					$this->bot->msg($data['chan'], "There are no modules loaded");
 				} else {
+					$mods = '';
 					foreach ($info['modules'] as $id => $mod) {
 						$mods .= "{$mod['name']}($id), ";
 					}
