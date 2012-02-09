@@ -18,6 +18,7 @@ class quit {
 			'access' => 3,
 			'hooks' => array(
 				'on_message_received' => 'parse_message',
+				'on_private_message_received' => 'parse_private_message',
 			),
 		);
 	}
@@ -28,6 +29,11 @@ class quit {
 			$this->bot->quit($data['params']);
 			return true;
 		}
+	}
+
+	public function parse_private_message ($hook, $data) {
+		$data['chan'] = $data['nick'];
+		return $this->parse_message($hook, $data);
 	}
 }
 
