@@ -44,6 +44,16 @@ class news {
 					$news = '';
 					$this->log->info("Received unsetnews command from {$data['nick']}", 'news', 'unset');
 					$this->bot->msg($data['chan'], "{$data['nick']}: News has been unset, and will now be pulled from the forums and status blog.");
+				} elseif ($subcmd == 'vps' || $subcmd == 'premium' || $subcmd == 'paid') {
+					$this->log->info("Received vps news command from {$data['nick']}", 'news', 'main');
+					$wrss = new SimpleXMLElement("https://clients.x10hosting.com/announcementsrss.php", null, true);
+					$wrss = $wrss->xpath('channel/item');
+					$this->bot->msg($data['chan'], "{$data['nick']}: ".chr(2).strip_tags($wrss[0]->title).chr(2)." - More: ".$this->bitly($wrss[0]->link));
+				} elseif ($subcmd == 'twitter') {
+					$this->log->info("Received twitter news command from {$data['nick']}", 'news', 'main');
+					$trss = new SimpleXMLElement("https://clients.x10hosting.com/announcementsrss.php", null, true);
+					$trss = $trss->xpath('channel/item');
+					$this->bot->msg($data['chan'], "{$data['nick']}: ".chr(2).$wrss[0]->title.chr(2)." - More: ".$this->bitly($wrss[0]->link));
 				}
 				return true;
 			}
@@ -81,30 +91,6 @@ class news {
                         
                     	}
 			return true;
-		}
-		
-		if ($data['cmd'] == 'vps') {
-			$params = explode(' ', $data['params']);
-			$subcmd = array_shift($params);
-			$text = implode(' ', $params);
-			if ($subcmd == 'news') {
-				$this->log->info("Received vps news command from {$data['nick']}", 'news', 'main');
-				$wrss = new SimpleXMLElement("https://clients.x10hosting.com/announcementsrss.php", null, true);
-                        	$wrss = $vbrss->xpath('channel/item');
-				$this->bot->msg($data['chan'], "{$data['nick']}: ".chr(2).strip_tags($wrss[0]->title).chr(2)." - More: ".$this->bitly($wrss[0]->link));
-			}
-		}
-		
-		if ($data['cmd'] == 'twitter') {
-			$params = explode(' ', $data['params']);
-			$subcmd = array_shift($params);
-			$text = implode(' ', $params);
-			if ($subcmd == 'news') {
-				$this->log->info("Received twitter news command from {$data['nick']}", 'news', 'main');
-				$wrss = new SimpleXMLElement("https://clients.x10hosting.com/announcementsrss.php", null, true);
-                        	$wrss = $vbrss->xpath('channel/item');
-				$this->bot->msg($data['chan'], "{$data['nick']}: ".chr(2).$wrss[0]->title.chr(2)." - More: ".$this->bitly($wrss[0]->link));
-			}
 		}
 	}
 
