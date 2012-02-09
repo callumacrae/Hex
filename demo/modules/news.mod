@@ -82,6 +82,30 @@ class news {
                     	}
 			return true;
 		}
+		
+		if ($data['cmd'] == 'vps') {
+			$params = explode(' ', $data['params']);
+			$subcmd = array_shift($params);
+			$text = implode(' ', $params);
+			if ($subcmd == 'news') {
+				$this->log->info("Received vps news command from {$data['nick']}", 'news', 'main');
+				$wrss = new SimpleXMLElement("https://clients.x10hosting.com/announcementsrss.php", null, true);
+                        	$wrss = $vbrss->xpath('channel/item');
+				$this->bot->msg($data['chan'], "{$data['nick']}: ".chr(2).strip_tags($wrss[0]->title).chr(2)." - More: ".$this->bitly($wrss[0]->link));
+			}
+		}
+		
+		if ($data['cmd'] == 'twitter') {
+			$params = explode(' ', $data['params']);
+			$subcmd = array_shift($params);
+			$text = implode(' ', $params);
+			if ($subcmd == 'news') {
+				$this->log->info("Received twitter news command from {$data['nick']}", 'news', 'main');
+				$wrss = new SimpleXMLElement("https://clients.x10hosting.com/announcementsrss.php", null, true);
+                        	$wrss = $vbrss->xpath('channel/item');
+				$this->bot->msg($data['chan'], "{$data['nick']}: ".chr(2).$wrss[0]->title.chr(2)." - More: ".$this->bitly($wrss[0]->link));
+			}
+		}
 	}
 
 	public function parse_private_message($hook, $data) {
