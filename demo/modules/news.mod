@@ -53,7 +53,7 @@ class news {
 					$this->log->info("Received twitter news command from {$data['nick']}", 'news', 'main');
 					$trss = new SimpleXMLElement("https://clients.x10hosting.com/announcementsrss.php", null, true);
 					$trss = $trss->xpath('channel/item');
-					$this->bot->msg($data['chan'], "{$data['nick']}: ".chr(2).$wrss[0]->title.chr(2)." - More: ".$this->bitly($wrss[0]->link));
+					$this->bot->msg($data['chan'], "{$data['nick']}: ".chr(2).$trss[0]->title.chr(2)." - More: ".$this->bitly($trss[0]->link));
 				}
 				return true;
 			}
