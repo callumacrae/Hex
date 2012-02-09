@@ -51,7 +51,7 @@ class news {
 					$this->bot->msg($data['chan'], "{$data['nick']}: ".chr(2).strip_tags($wrss[0]->title).chr(2)." - More: ".$this->bitly($wrss[0]->link));
 				} elseif ($subcmd == 'twitter') {
 					$this->log->info("Received twitter news command from {$data['nick']}", 'news', 'main');
-					$trss = new SimpleXMLElement("https://clients.x10hosting.com/announcementsrss.php", null, true);
+					$trss = new SimpleXMLElement("http://api.twitter.com/1/statuses/user_timeline.rss?screen_name=x10hosting", null, true);
 					$trss = $trss->xpath('channel/item');
 					$this->bot->msg($data['chan'], "{$data['nick']}: ".chr(2).$trss[0]->title.chr(2)." - More: ".$this->bitly($trss[0]->link));
 				}
