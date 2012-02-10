@@ -1,4 +1,5 @@
 <?php
+require_once 'helper.php';
 require_once 'config.php';
 require_once 'log.php';
 
@@ -116,7 +117,6 @@ class IRCBot{
 
 			if (preg_match('/^:(.*)!(.*)@(.*) PRIVMSG #(.*) :([.\S]*) ([.\S]*)(?: (.*))?$/', $data, $matches)) {
 				if (str_replace(array(':', ',', '.', '/', '<', '>', '?', ';', '\'', '\\', ':', '\"', '|', '[', '{', ']', '}', '!', '@', '£', '$', '%', '^', '&', '*', '\(', '\)', '-', '_', '=', '+'), '', $matches[5]) != $this->config['core']['command_word']) {
-					var_dump(str_replace(array(':', ',', '.', '/', '<', '>', '?', ';', '\'', '\\', ':', '\"', '|', '[', '{', ']', '}', '!', '@', '£', '$', '%', '^', '&', '*', '\(', '\)', '-', '_', '=', '+'), '', $matches[5]));
 					continue;
 				}
 				

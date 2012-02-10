@@ -48,12 +48,12 @@ class news {
 					$this->log->info("Received vps news command from {$data['nick']}", 'news', 'main');
 					$wrss = new SimpleXMLElement("https://clients.x10hosting.com/announcementsrss.php", null, true);
 					$wrss = $wrss->xpath('channel/item');
-					$this->bot->msg($data['chan'], "{$data['nick']}: ".chr(2).strip_tags($wrss[0]->title).chr(2)." - More: ".$this->bitly($wrss[0]->link));
+					$this->bot->msg($data['chan'], "{$data['nick']}: ".chr(2).strip_tags($wrss[0]->title).chr(2)." - More: ".IRCBot_Helper::bitly($wrss[0]->link));
 				} elseif ($subcmd == 'twitter') {
 					$this->log->info("Received twitter news command from {$data['nick']}", 'news', 'main');
 					$trss = new SimpleXMLElement("http://api.twitter.com/1/statuses/user_timeline.rss?screen_name=x10hosting", null, true);
 					$trss = $trss->xpath('channel/item');
-					$this->bot->msg($data['chan'], "{$data['nick']}: ".chr(2).$trss[0]->title.chr(2)." - More: ".$this->bitly($trss[0]->link));
+					$this->bot->msg($data['chan'], "{$data['nick']}: ".chr(2).$trss[0]->title.chr(2)." - More: ".IRCBot_Helper::bitly($trss[0]->link));
 				}
 				return true;
 			}
@@ -84,9 +84,9 @@ class news {
                         
                         	// Use the final time data to find the latest one
                         	if ($vbrssdate[3].$vbrssdate[2].$vbrssdate[1].$vbrssdate[4] <= $trrssdate[3].$trrssdate[2].$trrssdate[1].$trrssdate[4]) {
-                        		$this->bot->msg($data['chan'], "{$data['nick']}: ".chr(2).$trrss[0]->title.chr(2)." - More: ".$this->bitly($trrss[0]->link));
+                        		$this->bot->msg($data['chan'], "{$data['nick']}: ".chr(2).$trrss[0]->title.chr(2)." - More: ".IRCBot_Helper::bitly($trrss[0]->link));
                         	} else {
-					$this->bot->msg($data['chan'], "{$data['nick']}: ".chr(2).$vbrss[0]->title.chr(2)." - More: ".$this->bitly($vbrss[0]->link));
+					$this->bot->msg($data['chan'], "{$data['nick']}: ".chr(2).$vbrss[0]->title.chr(2)." - More: ".IRCBot_Helper::bitly($vbrss[0]->link));
 				}
                         
                     	}
