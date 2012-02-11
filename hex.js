@@ -1,4 +1,4 @@
-var IRC = require('./bot'),
+var IRC = require('bot'),
 	config = require('./config'),
 	Logger = require('logger'),
 	fs = require('fs'),
