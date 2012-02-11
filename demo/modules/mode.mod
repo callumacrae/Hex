@@ -27,9 +27,9 @@ class mode {
 		if ($data['cmd'] == 'kickban') {
                         if (!empty($data['params'])) {
                                 $params = explode(' ', $data['params']);
-                                $this->log->info("Received kickban for {$params[1]} from {$data['nick']}", 'mode', 'main');
-                                $this->bot->raw("KICK {$data['chan']} {$params[1]} :Your behavior is not conducive to the desired environment. Requested by {$data['nick']}");
-                                $this->bot->raw("MODE {$data['chan']} +bb {$data['nick']}!*@* *!*@{$data['host']}");
+                                $this->log->info("Received kickban for {$params[0]} from {$data['nick']}", 'mode', 'main');
+                                $this->bot->raw("KICK {$data['chan']} {$params[0]} :Your behavior is not conducive to the desired environment. Requested by {$data['nick']}");
+                                $this->bot->raw("MODE {$data['chan']} +bb {$params[0]}!*@*");
                                 return true;
                         }else{
                                 $this->bot->msg($data['chan'], "{$data['nick']}: You must specify a user to kickban.");
