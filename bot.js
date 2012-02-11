@@ -1,7 +1,7 @@
 var net = require('net');
 
 function IRC(config, on) {
-	var __self = this;
+	var that = this;
 	this.info = {};
 	this.info.names = {};
 	this.socket = new net.Socket();
@@ -14,7 +14,7 @@ function IRC(config, on) {
 					on(data[i])
 				}
 				console.log(data[i]);
-				__self.handle(data[i]);
+				that.handle(data[i]);
 			}
 		}
 	});
@@ -28,22 +28,22 @@ function IRC(config, on) {
 
 	this.socket.on('connect', function () {
 		console.log('Established connection, registering and shit...');
-		__self.on(/^PING :(.+)$/i, function (info) {
-			__self.raw('PONG :' + info[1]);
+		that.on(/^PING :(.+)$/i, function (info) {
+			that.raw('PONG :' + info[1]);
 		});
-		__self.on(/^[^ ]+ 001 ([0-9a-zA-Z\[\]\\`_\^{|}\-]+) :.+ [^ !]+!([^ !@]+)@([^ @]+)$/, function (info){
-			__self.info.nick = info[1];
-			__self.info.user = info[2];
-			__self.info.host = info[3];
+		that.on(/^[^ ]+ 001 ([0-9a-zA-Z\[\]\\`_\^{|}\-]+) :.+ [^ !]+!([^ !@]+)@([^ @]+)$/, function (info){
+			that.info.nick = info[1];
+			that.info.user = info[2];
+			that.info.host = info[3];
 		});
-		__self.on(/^:([^!]+)![^@]+@[^ ]+ NICK :(.+)$/, function (info) {
-			if (info[1] === __self.info.nick) {
-				__self.info.nick = info[2];
+		that.on(/^:([^!]+)![^@]+@[^ ]+ NICK :(.+)$/, function (info) {
+			if (info[1] === that.info.nick) {
+				that.info.nick = info[2];
 			}
 		});
-		__self.on(/^:([^!]+)!([^@]+)@([^ ]+) (JOIN|PRIVMSG) (#[^ ]+)/, function (info) {
-			if (__self.info.names[info[5]][info[1]] === undefined) {
-				__self.info.names[info[5]][info[1]] = {
+		that.on(/^:([^!]+)!([^@]+)@([^ ]+) (JOIN|PRIVMSG) (#[^ ]+)/, function (info) {
+			if (that.info.names[info[5]][info[1]] === undefined) {
+				that.info.names[info[5]][info[1]] = {
 					nick: info[1],
 					user: info[2],
 					host: info[3]
@@ -51,12 +51,12 @@ function IRC(config, on) {
 			}
 		});
 		setTimeout(function () {
-			__self.raw('NICK ' + config.user.nick);
-			__self.raw('USER ' + config.user.user + ' 8 * :' + config.user.real);
-			__self.msg('NickServ', 'IDENTIFY ' + config.user.pass);
+			that.raw('NICK ' + config.user.nick);
+			that.raw('USER ' + config.user.user + ' 8 * :' + config.user.real);
+			that.msg('NickServ', 'IDENTIFY ' + config.user.pass);
 			setTimeout(function () {
 				for (var i = 0; i < config.chans.length; i++) {
-					__self.join(config.chans[i]);
+					that.join(config.chans[i]);
 				}
 			}, 2000);
 		}, 1000);
@@ -86,23 +86,23 @@ function IRC(config, on) {
 	 * "convenience" methods (see below).
 	 */
 	this.raw = function (data) {
-		__self.socket.write(data + '\n', 'ascii', function () {
-			var info = __self.info;
+		that.socket.write(data + '\n', 'ascii', function () {
+			var info = that.info;
 			if (on !== undefined) {
 				on(':' + info.nick + '!' + info.user + '@' + info.host + ' ' + data)
 			}
 		});
-		return __self;
+		return that;
 	};
 
 	listeners = [];
 	this.on = function (data, callback) {
 		listeners.push([data, callback, false])
-		return __self;
+		return that;
 	};
 	this.on_once = function (data, callback) {
 		listeners.push([data, callback, true]);
-		return __self;
+		return that;
 	};
 
 
@@ -112,11 +112,11 @@ function IRC(config, on) {
 
 	this.join = function (chan, callback) {
 		if (callback !== undefined) {
-			__self.on_once(new RegExp('^:' + __self.info.nick + '![^@]+@[^ ]+ JOIN :' + chan), callback);
+			that.on_once(new RegExp('^:' + that.info.nick + '![^@]+@[^ ]+ JOIN :' + chan), callback);
 		}
-		__self.info.names[chan] = {};
-		__self.raw('JOIN ' + chan);
-		return __self;
+		that.info.names[chan] = {};
+		that.raw('JOIN ' + chan);
+		return that;
 	};
 
 	this.part = function(chan, msg, callback) {
@@ -125,11 +125,11 @@ function IRC(config, on) {
 			msg = undefined;
 		}
 		if (callback !== undefined) {
-			__self.on_once(new RegExp('^:' + __self.info.nick + '![^@]+@[^ ]+ PART ' + chan), callback);
+			that.on_once(new RegExp('^:' + that.info.nick + '![^@]+@[^ ]+ PART ' + chan), callback);
 		}
-		delete __self.info.names[chan];
-		__self.raw('PART ' + chan + ((msg !== undefined) ? ' :' + msg : ''));
-		return __self;
+		delete that.info.names[chan];
+		that.raw('PART ' + chan + ((msg !== undefined) ? ' :' + msg : ''));
+		return that;
 	};
 
 	this.msg = function(chan, msg) {
@@ -139,51 +139,51 @@ function IRC(config, on) {
 		msgs =  msg.match(new RegExp('.{1,' + max_length + '}', 'g'));
 
 		interval = setInterval(function () {
-			__self.raw('PRIVMSG ' + chan + ' :' + msgs[0]);
+			that.raw('PRIVMSG ' + chan + ' :' + msgs[0]);
 			msgs.splice(0, 1);
 			if (msgs.length === 0) {
 				clearInterval(interval);
 			}
 		}, 1000);
-		return __self;
+		return that;
 	};
 
 	this.nick = function (nick) {
-		__self.raw('NICK ' + nick);
-		return __self;
+		that.raw('NICK ' + nick);
+		return that;
 	};
 
 	this.kick = function (nick, chan, msg, ban) {
 		if (ban !== undefined) {
-			__self.ban(nick, chan, function () {
-				__self.kick(nick, chan, msg);
+			that.ban(nick, chan, function () {
+				that.kick(nick, chan, msg);
 			});
-			return __self;
+			return that;
 		}
-		__self.raw('KICK ' + chan + ' ' + nick + ((msg !== undefined) ? ' :' + msg : ''));
-		return __self;
+		that.raw('KICK ' + chan + ' ' + nick + ((msg !== undefined) ? ' :' + msg : ''));
+		return that;
 	};
 
 	this.ban = function (nick, chan, callback) {
 		var host, regex;
-		if (__self.info.names[chan][nick] === undefined) {
-			return __self;
+		if (that.info.names[chan][nick] === undefined) {
+			return that;
 		}
-		host = __self.info.names[chan][nick].host;
-		regex = '^:' + __self.info.nick + '![^@]+@[^ ]+ MODE ' + chan + ' \\+b \\*!\\*@' + host;
+		host = that.info.names[chan][nick].host;
+		regex = '^:' + that.info.nick + '![^@]+@[^ ]+ MODE ' + chan + ' \\+b \\*!\\*@' + host;
 		console.log(regex);
 		if (callback !== undefined) {
-			__self.on_once(new RegExp(regex), function () {
+			that.on_once(new RegExp(regex), function () {
 				callback();
 			});
 		}
-		__self.raw('MODE ' + chan + ' +b *!*@' + host);
-		return __self;
+		that.raw('MODE ' + chan + ' +b *!*@' + host);
+		return that;
 	};
 
 	this.quit = function (reason) {
-		__self.raw('QUIT :' + reason);
-		__self.socket.end();
+		that.raw('QUIT :' + reason);
+		that.socket.end();
 	};
 }
 

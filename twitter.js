@@ -2,8 +2,8 @@ var http = require('http');
 
 function Twitter(options, track) {
 	var user, pass, authstring,
-		__self, req, emitter, tweet;
-	__self = this;
+		that, req, emitter, tweet;
+	that = this;
 	emitter  = new process.EventEmitter()
 	authstring = (new Buffer(options.user + ':' + options.pass, 'ascii')).toString('base64');
 
@@ -40,7 +40,7 @@ function Twitter(options, track) {
 	this.on = function (event, callback) {
 		callback = callback.bind(this);
 		emitter.addListener(event, callback);
-		return __self;
+		return that;
 	};
 
 	//start request
