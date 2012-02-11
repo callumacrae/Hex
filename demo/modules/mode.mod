@@ -1,6 +1,6 @@
 <?php
 
-class ping {
+class mode {
 	private $bot;
 	private $log;
 
