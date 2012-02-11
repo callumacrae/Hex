@@ -9,4 +9,9 @@ An IRC bot for the x10hosting IRC written completely in Node.js
 
 Still under development. No dependencies that aren't already packaged.
 
-supervisor --watch README hex.js
+To install, copy config/index.sample.js to config/index.js and modify config settings.
+
+To run, use either of these two commands:
+
+nohup node hex.js >> log &
+supervisor --watch README hex.js >> log &
