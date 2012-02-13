@@ -39,6 +39,19 @@ the coding standards used in there. A basic summary:
 * No micro-optimisations. It's a robot.
 
 
+### Contributors ###
+
+* **callumacrae** - GIT Janitor
+* **Dead-i** - Server Slave
+* **GtoXic** - Server Admin
+* **xav0989** - Awesome Coder
+* **Sharky** - THE BOSS
+* **The Weather Guy** - That guy
+* **Sierra** - Administrative Suspendotron of many names
+* **stpvoice** - The VOICE of Silver, Turquoise and Purple
+* **zachary** - The Bot Whisperer
+
+
 ### Committing ###
 
 Only a few guidelines here. Commits should use the following syntax:
