@@ -57,3 +57,16 @@ diff - a commit message can never be too long!
 
 If you notice an error in a previous commit which you haven't pushed yet,
 amend it instead of making a new commit.
+
+
+### Contributors ###
+
+* **callumacrae** - GIT Janitor
+* **Dead-i** - Server Slave
+* **GtoXic** - Server Admin
+* **xav0989** - Awesome Coder
+* **Sharky** - THE BOSS
+* **The Weather Guy** - That guy
+* **Sierra** - Administrative Suspendotron of many names
+* **stpvoice** - The VOICE of Silver, Turquoise and Purple
+* **zachary** - The Bot Whisperer
