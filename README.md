@@ -17,6 +17,8 @@ nohup node hex.js >> log &
 supervisor --watch README hex.js >> log &
 ```
 
+Run them from inside the Hex directory.
+
 
 ## Contributing ##
 
