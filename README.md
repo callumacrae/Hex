@@ -27,6 +27,12 @@ that you're fixing it - this lets everyone else know that you're fixing it, so
 that they don't fix it themselves.
 
 
+### IRC ###
+
+We're on IRC (obviously); go to #x10bot on irc.x10hosting.com. Standard
+ports and stuff.
+
+
 ### Coding Standards ###
 
 Most of this is fairly obvious - look at `hex.js` and `handler.js`, and copy
