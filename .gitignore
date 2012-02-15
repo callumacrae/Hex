@@ -1,2 +1,3 @@
 config/index.js
 *.log
+log
