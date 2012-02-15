@@ -1,9 +1,0 @@
-
-node.js:134
-        throw e; // process.nextTick error, or 'error' event on first tick
-        ^
-Error: Cannot find module '/home/admin/x10bot/config/hex.js'
-    at Function._resolveFilename (module.js:326:11)
-    at Function._load (module.js:271:25)
-    at Array.<anonymous> (module.js:430:10)
-    at EventEmitter._tickCallback (node.js:126:26)
