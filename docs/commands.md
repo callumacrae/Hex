@@ -8,7 +8,6 @@ This is in addition to `Hex: help` and `Hex: a help`, as it is more
 comprehensive and detailed (and easier to read). It is divided into two
 sections; user commands and admin commands.
 
-
 ## User Commands ##
 
 ### google ###
@@ -27,7 +26,6 @@ Replies with a link to google with the specified search.
 <@Hex> callumacrae: http://google.com/
 ```
 
-
 ### javascript ###
 **Aliases:** js
 
@@ -41,7 +39,6 @@ Execute the specified JavaScript and returns the value / error.
 12:52 <callumacrae> Hex: js 2 + 4
 12:52 <Hex> callumacrae: 6
 ```
-
 
 ### lmgtfy ###
 **Aliases:** None
@@ -60,7 +57,6 @@ That For You) instead.
 <@Hex> callumacrae: http://lmgtfy.com/
 ```
 
-
 ### uptime ###
 **Aliases:** None
 
@@ -74,7 +70,6 @@ Outputs the uptime of the bot.
 <callumacrae> Hex: uptime
 <@Hex> callumacrae: Uptime: 4 days, 7 hours, 11 minutes and 4 seconds.
 ```
-
 
 ### regex ###
 **Aliases:** regexp
@@ -90,7 +85,6 @@ The regex cannot contain spaces, but the string can.
 <callumacrae> hex regex ([c-d])[b-e]+ abcdefg
 <@Hex> callumacrae: 'cde', 'c'
 ```
-
 
 ### wiki ###
 **Aliases:** w
@@ -110,7 +104,6 @@ Searches the [x10hosting wiki](http://x10hosting.com/wiki/Main_Page) for the spe
 <@Hex> callumacrae: http://x10hosting.com/wiki/
 ```
 
-
 ### wolframalpha ###
 **Aliases:** wa, wolfram
 
@@ -126,7 +119,6 @@ Searches wolframalpha for the specified string.
 <callumacrae> hex wa
 <@Hex> callumacrae: http://www.wolframalpha.com/
 ```
-
 
 ### whoami ###
 **Aliases:** None
@@ -144,12 +136,11 @@ admin level).
             "lynxphp.com". You are admin level 10000.
 ```
 
-
 ### Static Commands ###
 
 There are also some other commands that can be called that are not
 hard-coded. These can be set and destroyed through the bot, and may
-change at any time. The below list contains most of them, as of 16/	02/12.
+change at any time. The below list contains most of them, as of 16/02/12.
 
 * **about:** Returns some information about the bot.
 * **bugdomain:** Links the user to the domain purchase page.
