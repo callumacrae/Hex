@@ -151,15 +151,15 @@ change at any time. The below list contains most of them, as of 16/	02/12.
 
 * **about:** Returns some information about the bot.
 * **bugdomain:** Links the user to the domain purchase page.
-* **cpanel:**  Tells the user how to access their cPanel. Alias: cp
+* **cpanel:**  Tells the user how to access their cPanel. *Alias: cp*
 * **dns:** Links the user to the x10hosting wiki namservers page.
 * **domainadd:** Tells the user how to add their own domain to their account.
 * **flushdns:** Links the user to the kb page on how to flush their DNS.
 * **h:** Tells the user to just ask the question, instead of asking to ask.
 * **help:** Returns a list of available commands.
 * **mysql:** Tells the user how to access their MySQL database.
-* **paid:** Tells the user how to upgrade to premium. Alias: upgrade.
-* **password:** Tells the user to check their spam folder. Alias: pass
+* **paid:** Tells the user how to upgrade to premium. *Alias: upgrade.*
+* **password:** Tells the user to check their spam folder. *Alias: pass*
 * **ping:** Shouts PONG at the user.
 * **tickets:** Tells the user how to create a ticket.
 * **tos:** Links the user to the ToS.
