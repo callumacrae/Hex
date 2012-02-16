@@ -96,7 +96,7 @@ The regex cannot contain spaces, but the string can.
 **Aliases:** w
 
 ```
-Hex: wiki <search>
+Hex: wiki [ <search> ]
 ```
 
 Searches the [x10hosting wiki](http://x10hosting.com/wiki/Main_Page) for the specified input.
@@ -106,6 +106,8 @@ Searches the [x10hosting wiki](http://x10hosting.com/wiki/Main_Page) for the spe
 <@Hex> callumacrae: http://x10hosting.com/wiki/High_Resource_Usage
 <callumacrae> hex: w doesntexist
 <@Hex> callumacrae: http://x10hosting.com/wiki/index.php?title=Special%3ASearch&search=doesntexist
+<callumacrae> hex: w
+<@Hex> callumacrae: http://x10hosting.com/wiki/
 ```
 
 
