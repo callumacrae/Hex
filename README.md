@@ -84,6 +84,12 @@ Now it links to the wiki main page.
 ref #19
 ```
 
+#### Branching ####
+
+Every issue should have its own branch; branch the master branch, make
+changes, send a pull request. This means that you can continue working
+on something else while your pull request is waiting to be merged.
+
 
 ### Contributors ###
 
