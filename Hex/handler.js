@@ -398,6 +398,11 @@ handler = function (info, admin, noreply) {
 
 		case 'w':
 		case 'wiki':
+			if (!cmd_end) {
+				reply = 'http://x10hosting.com/wiki/';
+				break;
+			}
+
 			var options = {
 				host: 'x10hosting.com',
 				port: 80,
