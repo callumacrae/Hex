@@ -61,6 +61,21 @@ That For You) instead.
 ```
 
 
+### login ###
+**Aliases:** None
+
+```
+Hex: login
+```
+
+Logs the user in as an admin, instead of them having to cycle.
+
+```irc
+<callumacrae> Hex: login
+<@Hex> callumacrae: You have been identified as an admin.
+```
+
+
 ### uptime ###
 **Aliases:** None
 
