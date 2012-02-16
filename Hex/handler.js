@@ -373,6 +373,7 @@ handler = function (info, admin, noreply) {
 			break;
 
 		case 'regex':
+		case 'regexp':
 			if (cmd_end === null) {
 				reply = 'The correct syntax for this is "regex [pattern] [test]".';
 				break;
