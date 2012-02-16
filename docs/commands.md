@@ -5,8 +5,21 @@ completely up to date, just throw something at one of us on irc or file an
 issue if you find any out of date content.
 
 This is in addition to `Hex: help` and `Hex: a help`, as it is more
-comprehensive and detailed (and easier to read). It is divided into two
+comprehensive and detailed (and easier to read). It is divided into two main
 sections; user commands and admin commands.
+
+
+## Calling the bot ##
+
+There are a couple ways to call the bot. You can either send it a private
+message, or you can send it in the channel by prefixing "Hex" to it:
+
+```
+<callumacrae> Hex: help
+```
+
+The colon is entirely optional, and both the bot name and commands are
+not case sensitive.
 
 
 ## User Commands ##
