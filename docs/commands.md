@@ -77,7 +77,7 @@ Outputs the uptime of the bot.
 
 
 ### regex ###
-**Aliases:** None
+**Aliases:** regexp
 
 ```
 Hex: regex <pattern> <string>
