@@ -58,12 +58,14 @@ the coding standards used in there. A basic summary:
 Only a few guidelines here. Commits should use the following syntax:
 
 ```
-Basic description of the commit.
+[issue/#] Basic description of the commit.
 
 Longer description of what the commit does and how it does it. Can wrap
 multiple lines. The commit message should not be any longer than 79 characters
 wide at any point - you editor should do this for you, anyway. Second line
 should remain empty.
+
+ref #ticketnumber
 ```
 
 I should be able to tell exactly what the commit does without reading the
@@ -71,6 +73,16 @@ diff - a commit message can never be too long!
 
 If you notice an error in a previous commit which you haven't pushed yet,
 amend it instead of making a new commit.
+
+So an example commit:
+
+```
+[issue/19] Fixed a bug where blank wiki command would link nowhere.
+
+Now it links to the wiki main page.
+
+ref #19
+```
 
 
 ### Contributors ###
