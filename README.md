@@ -20,6 +20,12 @@ supervisor --watch README hex.js >> log &
 Run them from inside the Hex directory.
 
 
+## Demo Bot ##
+
+There is a small bot written in PHP in /demo/. It's not used, and is just there
+for reference.
+
+
 ## Contributing ##
 
 If you wish to contribute to Hex, run it past me first. If you're adding a
