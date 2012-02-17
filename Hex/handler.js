@@ -4,13 +4,13 @@ handler = function (info, admin, noreply) {
 	nick = info[1];
 	chan = info[3];
 
-	// If it is a PM, set chan to be the nick.
+	// If recieved as a PM, reply to the PM.
 	pm = chan.search(/^[^#]/) !== -1;
 	if (pm) {
 		chan = nick;
 	}
 
-	// If it is @ someone, set the nick to be them
+	// If it is @ someone, set the nick to be them (see commands.md)
 	reply = /^(.+) @ ?(.+)/.exec(info[4]);
 	if (reply) {
 		info[4] = reply[1];
