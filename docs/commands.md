@@ -14,12 +14,29 @@ sections; user commands and admin commands.
 There are a couple ways to call the bot. You can either send it a private
 message, or you can send it in the channel by prefixing "Hex" to it:
 
-```
+```irc
 <callumacrae> Hex: help
+<@Hex> callumacrae: Currently available commands:
+<@Hex> callumacrae: about, admin (a), buydomain, cpanel (cp), dns, domainadd,
+            flushdns, google (d), help, lmgtfy, mysql, paid, tickets, tos, upgrade,
+            uptime, wiki (w), wolframalpha (wa) and whoami.
 ```
 
 The colon is entirely optional, and both the bot name and commands are
 not case sensitive.
+
+
+### Directing a command ###
+
+You can direct a command at someone using the `@` operator:
+
+```irc
+<callumacrae> Hex: help @ GtoXic
+<@Hex> GtoXic: Currently available commands:
+<@Hex> GtoXic: about, admin (a), buydomain, cpanel (cp), dns, domainadd, flushdns,
+            google (d), help, lmgtfy, mysql, paid, tickets, tos, upgrade, uptime, wiki
+            (w), wolframalpha (wa) and whoami.
+```
 
 
 ## User Commands ##
