@@ -445,7 +445,7 @@ handler = function (info, admin, noreply) {
 		default:
 			var file, fs = require('fs');
 			try {
-				file = fs.readFileSync('./msgs/' + cmd, 'utf8');
+				file = fs.readFileSync('./msgs/' + cmd.toLowerCase(), 'utf8');
 			} catch(err) {
 				if (pm) {
 					reply = 'Command not found. Please try "help" for a list of commands.';
