@@ -128,7 +128,7 @@ http.createServer(function (req, res) {
 console.log('Server now listening.');
 
 /**
- * Listen to the x10hosting twitter, and forward any tweets into #x10hosting
+ * Listens to the x10hosting twitter, and forwards any tweets into #x10hosting
  */
 var Twitter = require('twitter');
 var twit = new Twitter({
@@ -146,7 +146,7 @@ twit.on('tweet', function (tweet) {
 });
 
 /**
- * Log any uncaught exceptions, so that the bot doesn't shut down whenever
+ * Logs any uncaught exceptions, so that the bot doesn't shut down whenever
  * anyone finds a bug.
  */
 process.on('uncaughtException', function (error) {

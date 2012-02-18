@@ -4,13 +4,13 @@ handler = function (info, admin, noreply) {
 	nick = info[1];
 	chan = info[3];
 
-	// If recieved as a PM, reply to the PM.
+	// If received as a PM, replies to the PM.
 	pm = chan.search(/^[^#]/) !== -1;
 	if (pm) {
 		chan = nick;
 	}
 
-	// If it is @ someone, set the nick to be them (see commands.md)
+	// If it is @ someone, sets the nick to be them (see commands.md)
 	reply = /^(.+) @ ?(.+)/.exec(info[4]);
 	if (reply) {
 		info[4] = reply[1];
@@ -18,12 +18,12 @@ handler = function (info, admin, noreply) {
 	}
 	reply = null;
 
-	// set cmd and cmd_end
+	// sets cmd and cmd_end
 	index = info[4].indexOf(' ');
 	cmd = (index === -1) ? info[4] : info[4].slice(0, index);
 	cmd_end = (index === -1) ? null : info[4].slice(index + 1);
 
-	// prevent h4x!
+	// prevents h4x!
 	if (cmd.search(/(\.|\/)/) !== -1) {
 		return false;
 	}
@@ -36,7 +36,7 @@ handler = function (info, admin, noreply) {
 				return false;
 			}
 
-			// split cmd_end; find the subcommand.
+			// splits cmd_end; find the subcommand.
 			index = cmd_end.indexOf(' ');
 			cmd = (index === -1) ? cmd_end : cmd_end.slice(0, index);
 			cmd_end = (index === -1) ? null : cmd_end.slice(index + 1);
@@ -44,7 +44,7 @@ handler = function (info, admin, noreply) {
 			switch (cmd.toLowerCase()) {
 
 				/**
-				 * Send a list of admin commands to the user via PM.
+				 * Sends a list of admin commands to the user via PM.
 				 */
 				case 'help':
 				case 'h':
@@ -76,7 +76,7 @@ handler = function (info, admin, noreply) {
 					break;
 
 				/**
-				 * Ban user from current or specified channel.
+				 * Bans user from current or specified channel.
 				 */
 				case 'ban':
 					if (admin < 4) {
@@ -92,7 +92,7 @@ handler = function (info, admin, noreply) {
 					break;
 
 				/**
-				 * Devoice user in current or specified channel.
+				 * Devoices user in current or specified channel.
 				 */
 				case 'devoice':
 					if (admin < 2) {
@@ -108,7 +108,7 @@ handler = function (info, admin, noreply) {
 					break;
 
 				/**
-				 * Reload handler.js
+				 * Reloads handler.js
 				 */
 				case 'flush':
 					flush = true;
@@ -130,7 +130,7 @@ handler = function (info, admin, noreply) {
 					break;
 
 				/**
-				 * Kick user from current or specified channel.
+				 * Kicks user from current or specified channel.
 				 */
 				case 'kick':
 					if (admin < 3) {
@@ -146,7 +146,7 @@ handler = function (info, admin, noreply) {
 					break;
 
 				/**
-				 * Mute the bot in the current channel.
+				 * Mutes the bot in the current channel.
 				 */
 				case 'mute':
 					if (admin < 6) {
@@ -160,7 +160,7 @@ handler = function (info, admin, noreply) {
 					break;
 
 				/**
-				 * Part the current or specified channel.
+				 * Parts the current or specified channel.
 				 */
 				case 'part':
 					if (admin < 7) {
@@ -176,7 +176,7 @@ handler = function (info, admin, noreply) {
 					break;
 
 				/**
-				 * Restart the bot.
+				 * Restarts the bot.
 				 */
 				case 'quit':
 				case 'q':
@@ -191,7 +191,7 @@ handler = function (info, admin, noreply) {
 					break;
 
 				/**
-				 * Send raw data to the IRC server.
+				 * Sends raw data to the IRC server.
 				 */
 				case 'raw':
 					if (admin < 10) {
@@ -237,10 +237,10 @@ handler = function (info, admin, noreply) {
 					break;
 
 				/**
-				 * Add, modify, remove or list super users.
+				 * Adds, modifies, removes or lists super users.
 				 */
 				case 'su':
-					//dont check whether admin is level 10 yet - level 3s can list admins
+					// Don't check whether admin is level 10 yet - level 3s can list admins
 					cmd = cmd_end.split(' ', 3);
 					switch (cmd[0].toLowerCase()) {
 						case 'add':
@@ -302,7 +302,7 @@ handler = function (info, admin, noreply) {
 					break;
 
 				/**
-				 * Mute for half an hour.
+				 * Mutes bot for half an hour.
 				 */
 				case 'tmpmute':
 					if (admin < 4) {
@@ -324,7 +324,9 @@ handler = function (info, admin, noreply) {
 					break;
 
 				/**
-				 * Unmute the bot.
+				 * Unmutes the bot.
+				 *
+				 * Can unmute mutes set using both mute and tmpmute.
 				 */
 				case 'unmute':
 					if (admin < 4) {
@@ -340,7 +342,7 @@ handler = function (info, admin, noreply) {
 					break;
 
 				/**
-				 * Voice specified user in current or specified channel.
+				 * Voices specified user in current or specified channel.
 				 */
 				case 'voice':
 					if (admin < 2) {
@@ -362,7 +364,7 @@ handler = function (info, admin, noreply) {
 			break;
 
 		/**
-		 * Return a link to a specified google search.
+		 * Returns a link to a specified google search.
 		 */
 		case 'g':
 		case 'google':
@@ -373,7 +375,7 @@ handler = function (info, admin, noreply) {
 			break;
 
 		/**
-		 * Execute given JavaScript and return value.
+		 * Executes given JavaScript and returns value.
 		 */
 		case 'js':
 		case 'javascript':
@@ -403,7 +405,7 @@ handler = function (info, admin, noreply) {
 			break;
 
 		/**
-		 * Return a link to a specified lmgtfy search.
+		 * Returns a link to a specified lmgtfy search.
 		 */
 		case 'lmgtfy':
 			reply = 'http://lmgtfy.com/';
@@ -413,7 +415,7 @@ handler = function (info, admin, noreply) {
 			break;
 
 		/**
-		 * Show the bot uptime.
+		 * Shows the bot uptime.
 		 */
 		case 'uptime':
 			var num, uptime = new Date().getTime() - start.getTime();
@@ -462,7 +464,7 @@ handler = function (info, admin, noreply) {
 			break;
 
 		/**
-		 * Display a wiki link
+		 * Displays a wiki link
 		 */
 		case 'w':
 		case 'wiki':
@@ -491,7 +493,7 @@ handler = function (info, admin, noreply) {
 			break;
 
 		/**
-		 * Display a wolframalpha link.
+		 * Displays a wolframalpha link.
 		 */
 		case 'wa':
 		case 'wolfram':
@@ -503,7 +505,7 @@ handler = function (info, admin, noreply) {
 			break;
 
 		/**
-		 * Display info the bot has on the user.
+		 * Displays info the bot has on the user.
 		 */
 		case 'whoami':
 			nick = info[1];
@@ -512,7 +514,7 @@ handler = function (info, admin, noreply) {
 			break;
 
 		/**
-		 * Searches the msgs directory for other messages set using set.
+		 * Searches the msgs directory for other messages set using the set command.
 		 */
 		default:
 			var file, fs = require('fs');
