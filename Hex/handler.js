@@ -348,6 +348,24 @@ handler = function (info, admin, noreply) {
 			}
 			break;
 
+		case 'login':
+			if (config.su[nick] !== undefined) {
+				var regex = '^:NickServ![^@]+@[^ ]+ NOTICE [^ ]+ :' + nick + ' ACC ([0-3])';
+				hex.on_once(new RegExp(regex), function (status) {
+					if (status[1] === '3') {
+						console.log(nick + ' added as admin.');
+						admins[nick] = {
+							host: info[2],
+							level: config.su[nick]
+						};
+
+						hex.msg(chan, nick + ': You have been identified as an admin.');
+					}
+				});
+				hex.msg('NickServ', 'ACC ' + nick);
+			}
+			break;
+
 		case 'uptime':
 			var num, uptime = new Date().getTime() - start.getTime();
 			reply = 'Uptime: ';
