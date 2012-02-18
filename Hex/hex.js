@@ -25,6 +25,10 @@ hex = new IRC(config, function (msg) {
 
 global.mute = [];
 
+/**
+ * Handles all private messages. Handles messages sent to the bot, but also
+ * handles stuff like flooding.
+ */
 hex.on(/^:([^!]+)![^@]+@([^ ]+) PRIVMSG ([^ ]+) :(.+)$/i, function (info) {
 	var admin, ad_info, flush;
 	admin = (admins[info[1]] === undefined) ? 0 : admins[info[1]].level;
@@ -64,6 +68,11 @@ hex.on(/^:([^!]+)![^@]+@([^ ]+) PRIVMSG ([^ ]+) :(.+)$/i, function (info) {
 	}
 });
 
+/**
+ * Listens for kicks, and if it is the bot which is kicked then it rejoin and
+ * sends an angry message to whoever kicked it. If it cannot rejoin, it waits
+ * until it can rejoin before sending said angry message.
+ */
 hex.on(/^:([^!]+)![^@]+@[^ ]+ KICK (#[^ ]+) ([^ ]+) :/, function(info) {
 	if (info[3] === hex.info.nick) {
 		console.log('Kicked from ' + info[2] + ' by ' + info[1] + '. Rejoining.');
@@ -74,6 +83,11 @@ hex.on(/^:([^!]+)![^@]+@[^ ]+ KICK (#[^ ]+) ([^ ]+) :/, function(info) {
 	}
 });
 
+/**
+ * Handles bot admin stuff - when someone joins, it checks whether they
+ * are a super user or not and if they are it validates it. If they quit, it clears
+ * up the admin array.
+ */
 hex.on(/^:([^!]+)![^@]+@([^ ]+) (JOIN|QUIT)/, function (info) {
 	if (config.su[info[1]] !== undefined) {
 		if (info[3] === 'JOIN') {
@@ -94,6 +108,9 @@ hex.on(/^:([^!]+)![^@]+@([^ ]+) (JOIN|QUIT)/, function (info) {
 	}
 });
 
+/**
+ * Handles admins who change nick.
+ */
 hex.on(/^:([^!]+)![^@]+@[^ ]+ NICK :(.+)$/, function (info) {
 	if (admins[info[1]] !== undefined) {
 		admins[info[2]] = admins[info[1]];
@@ -101,11 +118,18 @@ hex.on(/^:([^!]+)![^@]+@[^ ]+ NICK :(.+)$/, function (info) {
 	}
 });
 
+/**
+ * Creates the server for displaying logs. May also handle more, in the
+ * distant and faraway future…
+ */
 http.createServer(function (req, res) {
 	server(req, res); //wrapper here so that we can edit server()
 }).listen(config.log.web.port, config.log.web.addr);
 console.log('Server now listening.');
 
+/**
+ * Listens to the x10hosting twitter, and forwards any tweets into #x10hosting
+ */
 var Twitter = require('twitter');
 var twit = new Twitter({
 	user: config.twitter.user,
@@ -121,6 +145,10 @@ twit.on('tweet', function (tweet) {
 	console.log('Tweet streamer error: ' + err);
 });
 
+/**
+ * Logs any uncaught exceptions, so that the bot doesn't shut down whenever
+ * anyone finds a bug.
+ */
 process.on('uncaughtException', function (error) {
 	console.log('Uncaught Exception: ' + error);
 });
