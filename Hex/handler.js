@@ -4,11 +4,13 @@ handler = function (info, admin, noreply) {
 	nick = info[1];
 	chan = info[3];
 
+	// If received as a PM, replies to the PM.
 	pm = chan.search(/^[^#]/) !== -1;
 	if (pm) {
 		chan = nick;
 	}
 
+	// If it is @ someone, sets the nick to be them (see commands.md)
 	reply = /^(.+) @ ?(.+)/.exec(info[4]);
 	if (reply) {
 		info[4] = reply[1];
@@ -16,10 +18,12 @@ handler = function (info, admin, noreply) {
 	}
 	reply = null;
 
+	// sets cmd and cmd_end
 	index = info[4].indexOf(' ');
 	cmd = (index === -1) ? info[4] : info[4].slice(0, index);
 	cmd_end = (index === -1) ? null : info[4].slice(index + 1);
 
+	// prevents h4x!
 	if (cmd.search(/(\.|\/)/) !== -1) {
 		return false;
 	}
@@ -31,11 +35,17 @@ handler = function (info, admin, noreply) {
 				console.log(nick + ' tried to access admin without correct permissions.')
 				return false;
 			}
+
+			// splits cmd_end; find the subcommand.
 			index = cmd_end.indexOf(' ');
 			cmd = (index === -1) ? cmd_end : cmd_end.slice(0, index);
 			cmd_end = (index === -1) ? null : cmd_end.slice(index + 1);
 
 			switch (cmd.toLowerCase()) {
+
+				/**
+				 * Sends a list of admin commands to the user via PM.
+				 */
 				case 'help':
 				case 'h':
 					chan = nick;
@@ -65,6 +75,9 @@ handler = function (info, admin, noreply) {
 					];
 					break;
 
+				/**
+				 * Bans user from current or specified channel.
+				 */
 				case 'ban':
 					if (admin < 4) {
 						reply = 'Admin level 4 required for this operation.';
@@ -78,6 +91,9 @@ handler = function (info, admin, noreply) {
 					log = 'ban ' + cmd_end + ' (from ' + chan + ')';
 					break;
 
+				/**
+				 * Devoices user in current or specified channel.
+				 */
 				case 'devoice':
 					if (admin < 2) {
 						reply = 'Admin level 2 required for this operation.';
@@ -91,11 +107,17 @@ handler = function (info, admin, noreply) {
 					log = 'devoice ' + cmd_end + ' (from ' + chan + ')';
 					break;
 
+				/**
+				 * Reloads handler.js
+				 */
 				case 'flush':
 					flush = true;
 					reply = 'Flushing...';
 					break;
 
+				/**
+				 * Makes the bot join specified channel.
+				 */
 				case 'join':
 					if (admin < 7) {
 						reply = 'Admin level 7 required for this operation.';
@@ -107,6 +129,9 @@ handler = function (info, admin, noreply) {
 					flush = true;
 					break;
 
+				/**
+				 * Kicks user from current or specified channel.
+				 */
 				case 'kick':
 					if (admin < 3) {
 						reply = 'Admin level 3 required for this operation.';
@@ -120,6 +145,9 @@ handler = function (info, admin, noreply) {
 					log = 'kick ' + cmd_end + ' (from ' + chan + ')';
 					break;
 
+				/**
+				 * Mutes the bot in the current channel.
+				 */
 				case 'mute':
 					if (admin < 6) {
 						reply = 'Admin level 6 required for this operation.';
@@ -131,6 +159,9 @@ handler = function (info, admin, noreply) {
 					reply = 'Muted.';
 					break;
 
+				/**
+				 * Parts the current or specified channel.
+				 */
 				case 'part':
 					if (admin < 7) {
 						reply = 'Admin level 7 required for this operation.';
@@ -144,6 +175,9 @@ handler = function (info, admin, noreply) {
 					flush = true;
 					break;
 
+				/**
+				 * Restarts the bot.
+				 */
 				case 'quit':
 				case 'q':
 				case 'restart':
@@ -156,6 +190,9 @@ handler = function (info, admin, noreply) {
 					process.exit();
 					break;
 
+				/**
+				 * Sends raw data to the IRC server.
+				 */
 				case 'raw':
 					if (admin < 10) {
 						reply = 'Admin level 10 required for this operation.';
@@ -165,6 +202,9 @@ handler = function (info, admin, noreply) {
 					console.log(nick + ' sent RAW: ' + cmd_end);
 					break;
 
+				/**
+				 * Removes the specified command.
+				 */
 				case 'remove':
 				case 'rm':
 					if (admin < 6) {
@@ -177,6 +217,9 @@ handler = function (info, admin, noreply) {
 					log = cmd + ' ' + cmd_end;
 					break;
 
+				/**
+				 * Adds or sets the specified command.
+				 */
 				case 'set':
 					if (admin < 6) {
 						reply = 'Admin level 6 required for this operation.';
@@ -193,8 +236,11 @@ handler = function (info, admin, noreply) {
 					reply = 'Successfully set ' + cmd;
 					break;
 
+				/**
+				 * Adds, modifies, removes or lists super users.
+				 */
 				case 'su':
-					//dont check whether admin is level 10 yet - level 3s can list admins
+					// Don't check whether admin is level 10 yet - level 3s can list admins
 					cmd = cmd_end.split(' ', 3);
 					switch (cmd[0].toLowerCase()) {
 						case 'add':
@@ -255,6 +301,9 @@ handler = function (info, admin, noreply) {
 					log = 'su ' + cmd;
 					break;
 
+				/**
+				 * Mutes bot for half an hour.
+				 */
 				case 'tmpmute':
 					if (admin < 4) {
 						reply = 'Admin level 4 required for this operation.';
@@ -274,6 +323,11 @@ handler = function (info, admin, noreply) {
 					reply = 'Muted for half an hour.';
 					break;
 
+				/**
+				 * Unmutes the bot.
+				 *
+				 * Can unmute mutes set using both mute and tmpmute.
+				 */
 				case 'unmute':
 					if (admin < 4) {
 						reply = 'Admin level 4 required for this operation.';
@@ -287,6 +341,9 @@ handler = function (info, admin, noreply) {
 					}
 					break;
 
+				/**
+				 * Voices specified user in current or specified channel.
+				 */
 				case 'voice':
 					if (admin < 2) {
 						reply = 'Admin level 2 required for this operation.';
@@ -306,6 +363,9 @@ handler = function (info, admin, noreply) {
 			console.log('"admin ' + ((log === undefined) ? cmd : log) + '" called by ' + nick);
 			break;
 
+		/**
+		 * Returns a link to a specified google search.
+		 */
 		case 'g':
 		case 'google':
 			reply = 'http://google.com/';
@@ -314,6 +374,9 @@ handler = function (info, admin, noreply) {
 			}
 			break;
 
+		/**
+		 * Executes given JavaScript and returns value.
+		 */
 		case 'js':
 		case 'javascript':
 			var exec = require('child_process').exec;
@@ -341,6 +404,9 @@ handler = function (info, admin, noreply) {
 			});
 			break;
 
+		/**
+		 * Returns a link to a specified lmgtfy search.
+		 */
 		case 'lmgtfy':
 			reply = 'http://lmgtfy.com/';
 			if (cmd_end) {
@@ -348,6 +414,9 @@ handler = function (info, admin, noreply) {
 			}
 			break;
 
+		/**
+		 * Shows the bot uptime.
+		 */
 		case 'uptime':
 			var num, uptime = new Date().getTime() - start.getTime();
 			reply = 'Uptime: ';
@@ -395,7 +464,9 @@ handler = function (info, admin, noreply) {
 			}
 			break;
 
-
+		/**
+		 * Displays a wiki link
+		 */
 		case 'w':
 		case 'wiki':
 			if (!cmd_end) {
@@ -427,6 +498,9 @@ handler = function (info, admin, noreply) {
 			req.end();
 			break;
 
+		/**
+		 * Displays a wolframalpha link.
+		 */
 		case 'wa':
 		case 'wolfram':
 		case 'wolframalpha':
@@ -436,12 +510,18 @@ handler = function (info, admin, noreply) {
 			}
 			break;
 
+		/**
+		 * Displays info the bot has on the user.
+		 */
 		case 'whoami':
 			nick = info[1];
 			reply = 'Your nick is "' + info[1] + '". Your hostmask is "' + info[2] + '". ';
 			reply += (admin) ? 'You are admin level ' + admin + '.' : 'You are not an admin.';
 			break;
 
+		/**
+		 * Searches the msgs directory for other messages set using the set command.
+		 */
 		default:
 			var file, fs = require('fs');
 			try {
@@ -456,6 +536,7 @@ handler = function (info, admin, noreply) {
 			break;
 	}
 
+	// Splits the message and sends them one by one.
 	if (reply && !noreply) {
 		if (typeof reply === 'string') {
 			reply = [reply];
@@ -472,6 +553,11 @@ handler = function (info, admin, noreply) {
 	return flush;
 };
 
+/**
+ * Turns HTML into a string.
+ *
+ * @param s The HTML string.
+ */
 html_decode = function (s) {
 	var c, m, d = s;
 
@@ -492,6 +578,13 @@ html_decode = function (s) {
 	return d;
 };
 
+/**
+ * Function called by Hex on every message; simply monitors how many messages
+ * users are sending to a channel. Takes action if they're flooding.
+ *
+ * @param nick The nick of the user.
+ * @param chan The channel the message was sent to.
+ */
 antiflood = function (nick, chan) {
 	if (hex.info.names[chan][nick] === undefined) {
 		return;
@@ -562,6 +655,9 @@ antiflood = function (nick, chan) {
 	}
 };
 
+/**
+ * Simple server to handle HTTP requests to the logs.
+ */
 server = function (req, res) {
 	var date, file, output;
 
