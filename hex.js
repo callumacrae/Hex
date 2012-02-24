@@ -34,13 +34,13 @@ hex.on(/^:([^!]+)![^@]+@([^ ]+) PRIVMSG ([^ ]+) :(.+)$/i, function (info) {
 	}
 
 	if (info[3].search('#') !== -1) {
-		ad_info = /^x10bot:? (.+)$/i.exec(info[4]);
+		ad_info = /^hex:? (.+)$/i.exec(info[4]);
 		if (ad_info) {
 			info[4] = ad_info[1];
 			flush = handler(info, admin, mute.indexOf(info[3]) !== -1);
 		}
 	} else {
-		ad_info = /^x10bot:? (.+)$/i.exec(info[4]);
+		ad_info = /^hex:? (.+)$/i.exec(info[4]);
 		if (ad_info) {
 			info[4] = ad_info[1];
 		}
@@ -87,11 +87,11 @@ hex.on(/^:([^!]+)![^@]+@([^ ]+) (JOIN|QUIT)/, function (info) {
 					}
 				}
 			});
-			//hex.msg('NickServ', 'ACC ' + info[1]);
-			admins[info[1]] = {
-				host: info[2],
-				level: config.su[info[1]]
-			}
+			hex.msg('NickServ', 'ACC ' + info[1]);
+			//admins[info[1]] = {
+			//	host: info[2],
+			//	level: config.su[info[1]]
+			//}
 		} else {
 			delete admins[info[1]];
 		}
