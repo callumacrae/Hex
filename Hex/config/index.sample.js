@@ -1,6 +1,6 @@
 var config = {
 	user: {
-		nick: '',
+		nick: 'Hex',
 		user: 'Hex',
 		real: 'Hexidecimal',
 		pass: ''
@@ -22,8 +22,8 @@ var config = {
 		web: {
 			chans: [
 				'#x10hosting',
-				'#x10gaming',
-				'#cjasdklj'
+				'#x10bot',
+				'#x10bot-backend'
 			],
 			port: 9000,
 			addr: '192.168.2.102'
