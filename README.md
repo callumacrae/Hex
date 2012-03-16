@@ -97,7 +97,7 @@ on something else while your pull request is waiting to be merged.
 * **Dead-i** - Server Slave
 * **GtoXic** - Server Admin
 * **xav0989** - Awesome Coder
-* **Sharky** - THE NOOB
+* **Sharky** - THE BOSS
 * **The Weather Guy** - That guy
 * **Sierra** - Administrative Suspendotron of many names
 * **stpvoice** - The VOICE of Silver, Turquoise and Purple
